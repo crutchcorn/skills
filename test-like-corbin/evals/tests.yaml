@@ -244,7 +244,7 @@
         Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
 
         - Uses Vitest Browser Mode with Playwright
-        - Consults current documentation for version-sensitive configuration
+        - Requires checking current official documentation and package versions before applying version-sensitive configuration. In this tools-unavailable evaluation, a concrete plan or instructions making that check a prerequisite satisfy the requirement; any example must be identified as unverified. Do not require an actual documentation fetch or first-person wording. An optional check only if configuration fails or versions differ is insufficient.
         - Must NOT: Writes tests for every component just because the runner is now configured
 - description: "Testing: add date parser coverage with the existing Jest runner"
   metadata:

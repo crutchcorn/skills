@@ -48,7 +48,7 @@ Avoid mocks wherever practical. If isolation requires a substitute, put it at a 
 - Use Vitest for JavaScript/TypeScript tests on both frontend and backend.
 - Use Vitest Browser Mode with Playwright for frontend tests.
 - Use the project's existing setup when extending it; changing runners or adding a new testing layer is a separate scope decision.
-- Consult current official documentation before writing version-sensitive configuration.
+- Before writing version-sensitive configuration, identify the installed or intended versions and consult current official documentation, including the [Vitest Browser Mode setup guide](https://vitest.dev/guide/browser/) for frontend setup. Make this a prerequisite, not a fallback after configuration fails. When tools are unavailable, explicitly include documentation verification before applying the setup in your plan and label any configuration example as unverified.
 
 ## Verify the coverage
 
