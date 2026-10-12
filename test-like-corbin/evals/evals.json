@@ -25,7 +25,7 @@
         "Renders the real form and interacts through labeled controls",
         "Intercepts the HTTP request with MSW to return a failure",
         "Asserts that the input is retained and an actionable error is visible",
-        "Confirms the test exposes the bug before the fix and passes after"
+        "Confirms the new test fails against the current buggy behavior before any fix"
       ],
       "mustNot": [
         "Mocks the submission hook or child components",

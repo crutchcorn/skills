@@ -133,6 +133,8 @@ async function runBehavior(skill: Skill, behavior: EvalFile["behaviors"][number]
     "so narrate exactly what you would do: files you would inspect, commands you would run, changes you",
     "would make, questions you would ask, and what you would tell the user. Be concrete. Make reasonable",
     "assumptions about the repository and state them.",
+    "When the deliverable is prose, a message, or an assessment, write the deliverable itself instead of",
+    "describing how you would write it.",
     "",
     "The following skill is active. Follow it.",
     "",
@@ -155,6 +157,9 @@ async function runBehavior(skill: Skill, behavior: EvalFile["behaviors"][number]
 
   const judgeSystem = [
     "You grade an AI coding agent's narrated response against assertions.",
+    "The agent had no tool access, so it could only describe what it would do. Treat a concrete, committed",
+    "plan to perform a step as satisfying an assertion about performing that step. Fail an assertion only",
+    "when the response omits the step, does it incorrectly, defers it to the user, or does a forbidden thing.",
     "An assertion beginning with 'Does NOT:' passes only when the response avoids the described behavior.",
     "Judge what the response actually does or commits to doing, not what it merely mentions.",
     "Quote brief evidence for each verdict.",
