@@ -96,6 +96,39 @@ Labels are **proposed**, pending human review; inspect each response and rationa
 before treating agreement as validated judge accuracy. Labels stay outside the
 grader prompt.
 
+## GitHub Actions
+
+[The Promptfoo workflow](.github/workflows/promptfoo.yml) runs on every push to
+`main`, including merges, and on pull requests targeting `main`. It uses the
+[pinned CLI through the package scripts](https://www.promptfoo.dev/docs/integrations/ci-cd/)
+and installs dependencies with `pnpm install --frozen-lockfile`. The pnpm action
+reads `packageManager`; pnpm installs the Node runtime recorded in the lockfile.
+
+Configuration validation runs first. Three independent jobs then run the
+skill-enabled candidate, judge calibration, and real Codex agent suites with
+their configured three uncached repetitions. Any assertion or provider error
+fails its job; the remaining suites still finish. No-skill controls remain a
+local comparison and do not gate CI.
+
+Configure these under **Settings → Secrets and variables → Actions**:
+
+| Setting | GitHub Actions location | Required? |
+| --- | --- | --- |
+| `OPENAI_API_KEY` | Repository secret | Yes, for live evals |
+| `EVAL_MODEL` | Repository variable | Optional; uses the existing default |
+| `OPENAI_BASE_URL` | Repository variable | Optional; uses the existing default |
+
+Fork and Dependabot PRs run configuration validation only because GitHub does
+not supply the repository API secret. Live evals run for same-repository PRs
+and pushes to `main`. To evaluate a fork before merging, review its changes and
+place the reviewed revision on a trusted branch in this repository.
+A missing API secret fails live jobs with a setup error.
+
+Each live job uploads its JSON report as a `promptfoo-*` artifact, including when
+evals fail. Download reports from the workflow run's **Artifacts** section; they
+are retained for 14 days. Reports are not published to Promptfoo. New commits
+cancel older runs for the same PR; each push to `main` keeps its own run.
+
 ## Compare runs and add cases
 
 `pnpm eval:view` opens the local `.promptfoo` history. Use the no-skill column as
