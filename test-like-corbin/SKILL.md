@@ -43,8 +43,6 @@ Avoid mocks wherever practical. If isolation requires a substitute, put it at a 
 - Do not mock child components, internal hooks, application services, or helpers merely to make a test easier to write.
 - Treat every boundary substitution as a limit on what the test demonstrates. If the bug lies across that boundary, include the real dependency in the test instead.
 
-For PostgreSQL tests, prefer the user-selected [postgresql-embedded](https://github.com/theseus-rs/postgresql-embedded) project. It is a Rust library that downloads and runs real PostgreSQL binaries, not a pure in-memory emulator or a JavaScript database driver. A Node.js suite needs a suitable process/helper lifecycle for setup and teardown. Preserve this choice rather than silently substituting SQLite or an emulator; check current upstream integration requirements when implementing the fixture.
-
 ## Use the preferred tooling when choosing a setup
 
 - Use Vitest for JavaScript/TypeScript tests on both frontend and backend.

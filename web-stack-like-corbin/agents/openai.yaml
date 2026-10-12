@@ -1,0 +1,4 @@
+interface:
+  display_name: "Web Stack Like Corbin"
+  short_description: "Choose and configure Corbin's preferred web stack"
+  default_prompt: "Use $web-stack-like-corbin to choose and configure the web stack for this project."
