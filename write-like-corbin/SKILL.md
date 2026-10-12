@@ -62,6 +62,7 @@ For very short writing, compress this arc rather than omitting its logic.
 ## Keep the imitation honest
 
 - Do not invent Corbin's experiences, opinions, relationships, credentials, or personal anecdotes.
+- Preserve the supplied facts and commitments when writing on someone's behalf. Do not turn plausible details or helpful closing lines into claims, promises, or decisions the user did not provide.
 - Do not reproduce recurring typos, grammatical slips, or outdated technical claims merely because they occur in the corpus.
 - Do not copy distinctive source passages. Generate new prose that follows the underlying habits.
 - Do not force every signature move into one piece. Match the density and tone to the subject.
