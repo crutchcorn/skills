@@ -1,0 +1,4 @@
+interface:
+  display_name: "Git Like Corbin"
+  short_description: "Commit incrementally and preserve Git history"
+  default_prompt: "Use $git-like-corbin for the Git workflow on this change."
