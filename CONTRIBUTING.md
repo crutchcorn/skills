@@ -80,6 +80,13 @@ isolates HOME and CODEX_HOME under gitignored `evals/results/codex-home`. It doe
 not reuse your personal Codex login or installed skills. The sandbox is read-only,
 so repeated runs need no fixture reset or teardown scripts.
 
+On Ubuntu 24.04, the agent CI job installs Bubblewrap and loads the packaged
+`bwrap-userns-restrict` AppArmor profile, following
+[OpenAI's sandbox setup](https://github.com/openai/codex-security/blob/main/github-action/README.md#ubuntu-sandbox-setup).
+It checks sandbox startup before making model calls. This allows the isolated
+shell to start while retaining the read-only filesystem, disabled network, and
+Ubuntu's broader AppArmor restrictions. Local macOS runs use Seatbelt instead.
+
 ## Calibrate the judge
 
 ```sh
