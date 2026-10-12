@@ -1,6 +1,6 @@
 ---
 name: web-stack-like-corbin
-description: "Choose and configure Corbin Crutchley's preferred web stack when starting a web app, selecting frontend or backend tooling, or making an explicit stack migration. Covers runtime, frameworks, styling, API clients, data, testing, and deployment preferences. Do not use an unrelated feature or bug fix as a reason to replace an existing stack."
+description: "Choose and configure Corbin Crutchley's preferred web stack when starting a web app, selecting frontend or backend tooling, or making an explicit stack migration. Covers runtime, frameworks, routing, forms, validation, state, styling, API clients, data, auth, testing, and deployment preferences. Load it for any library choice in a web application, including a single library such as a form or routing library, so the preferred option is considered first. Do not use an unrelated feature or bug fix as a reason to replace an existing stack."
 ---
 
 # Web Stack Like Corbin

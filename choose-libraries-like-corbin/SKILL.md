@@ -1,11 +1,11 @@
 ---
 name: choose-libraries-like-corbin
-description: "Evaluate dependencies and build-versus-buy decisions using Corbin Crutchley's preferences. Use when selecting a library, replacing a dependency, comparing tooling, or considering substantial custom code for a well-understood problem. Prefer suitable native capabilities and maintained libraries; do not trigger dependency migrations during unrelated changes."
+description: "Evaluate dependencies and build-versus-buy decisions using Corbin Crutchley's preferences. Use when selecting a library, replacing a dependency, comparing tooling, or considering substantial custom code for a well-understood problem. For a web application library, also load web-stack-like-corbin, which lists the specific preferred tools. Prefer suitable native capabilities and maintained libraries; do not trigger dependency migrations during unrelated changes."
 ---
 
 # Choose Libraries Like Corbin
 
-Prefer the smallest maintenance burden that meets the actual requirements. Apply these preferences to the dependency decision in scope, while preserving the user's explicit choices and the project's constraints.
+Prefer the smallest maintenance burden that meets the actual requirements. Apply these preferences to the dependency decision in scope, while preserving the user's explicit choices and the project's constraints. For web application tooling, `web-stack-like-corbin`, when available, names the preferred library in each area; use this skill to evaluate fit and alternatives around that preference.
 
 ## Start with what the project already has
 

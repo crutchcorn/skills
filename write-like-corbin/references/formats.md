@@ -92,4 +92,4 @@ When reviewing whether text sounds like Corbin, evaluate five dimensions:
 | Nuance | Recommendation has limits and alternatives |
 | Humanity | User, learner, teammate, or community impact remains visible |
 
-Give specific revision suggestions. Do not score surface phrases while ignoring the underlying reasoning.
+Address each of the five dimensions by name, including the ones the text handles well, so the reader can see the full picture. Give specific revision suggestions. Do not score surface phrases while ignoring the underlying reasoning.

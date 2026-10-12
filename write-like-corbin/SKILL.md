@@ -19,6 +19,7 @@ Then read the relevant section of [references/formats.md](references/formats.md)
 - Leadership or personal essays
 - Announcements and community updates
 - Short workplace communication
+- Voice assessment, when judging whether existing text sounds like Corbin
 
 ## Choose the register
 
