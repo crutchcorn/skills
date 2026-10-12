@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/crutchcorn/skills/evals/schema.json",
+  "title": "Skill evals",
+  "description": "Trigger and behavior evals for one skill. Lives at <skill>/evals/evals.json.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["skill", "triggers", "behaviors"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "skill": {
+      "type": "string",
+      "description": "Must match the skill directory name and SKILL.md `name`."
+    },
+    "triggers": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["positive", "negative"],
+      "description": "Prompts that test the SKILL.md description. The agent sees only the catalog of skill names and descriptions.",
+      "properties": {
+        "positive": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Prompts that should cause the agent to load this skill."
+        },
+        "negative": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Near-miss prompts that should not load this skill. They may legitimately load a different skill."
+        }
+      }
+    },
+    "behaviors": {
+      "type": "array",
+      "description": "Task prompts run with the full skill loaded. A judge model grades the narrated response against the assertions.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "prompt"],
+        "anyOf": [{ "required": ["must"] }, { "required": ["mustNot"] }],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "prompt": { "type": "string", "minLength": 1 },
+          "context": {
+            "type": "string",
+            "description": "Repository state the agent would otherwise discover with tools."
+          },
+          "must": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "description": "Behaviors the response must exhibit."
+          },
+          "mustNot": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "description": "Behaviors the response must avoid."
+          }
+        }
+      }
+    }
+  }
+}

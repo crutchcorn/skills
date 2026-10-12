@@ -1,0 +1,72 @@
+{
+  "$schema": "../../evals/schema.json",
+  "skill": "web-stack-like-corbin",
+  "triggers": {
+    "positive": [
+      "I'm starting a new web app. What stack should I use?",
+      "Pick a form library for this React app.",
+      "We're moving off Express. Recommend a backend framework.",
+      "Set up the backend for this project.",
+      "What should we use for styling?"
+    ],
+    "negative": [
+      "Fix the off-by-one in the pagination.",
+      "Write a blog post comparing React and Vue.",
+      "Commit my changes.",
+      "Our Vue app has a bug in the router."
+    ]
+  },
+  "behaviors": [
+    {
+      "id": "default-ssr-stack",
+      "prompt": "Set up a new SSR web app with a database.",
+      "must": [
+        "Uses TanStack Start for the SSR app and a separate Hono backend in a pnpm monorepo",
+        "Uses PostgreSQL with Drizzle v1 RC",
+        "Consults references/stack.md before selecting tools, or reflects its choices"
+      ],
+      "mustNot": [
+        "Adds Tailwind",
+        "Installs tools with no present requirement",
+        "Deploys anything"
+      ]
+    },
+    {
+      "id": "form-library-v2",
+      "context": "An existing React app with TanStack Query. No form library yet.",
+      "prompt": "Add a form library.",
+      "must": [
+        "Chooses TanStack Form v2 and resolves a concrete v2 release",
+        "Uses the matching React adapter and v2 documentation"
+      ],
+      "mustNot": [
+        "Substitutes v1 because it is stable"
+      ]
+    },
+    {
+      "id": "respect-existing-vue-stack",
+      "context": "An existing Vue 3 + Vite app using Pinia and Vue Router.",
+      "prompt": "Add a date picker to the booking page.",
+      "must": [
+        "Keeps Vue and the existing stack",
+        "Chooses a Vue-compatible solution"
+      ],
+      "mustNot": [
+        "Suggests migrating to React or TanStack Router",
+        "Replaces Pinia with TanStack Query"
+      ]
+    },
+    {
+      "id": "formatting-and-linting",
+      "context": "A new TypeScript project with CSS Modules and no formatter or linter.",
+      "prompt": "Set up formatting and linting.",
+      "must": [
+        "Uses Prettier and ESLint, or the acceptable alternatives, as independently runnable commands",
+        "Adds Stylelint for the CSS"
+      ],
+      "mustNot": [
+        "Runs Prettier through an ESLint plugin"
+      ]
+    }
+  ]
+}

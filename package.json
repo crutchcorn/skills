@@ -1,0 +1,16 @@
+{
+  "name": "@crutchcorn/skills",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.11.2",
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "^24.21.0",
+      "onFail": "download"
+    }
+  },
+  "scripts": {
+    "eval": "node --env-file-if-exists=.env evals/run.ts"
+  }
+}

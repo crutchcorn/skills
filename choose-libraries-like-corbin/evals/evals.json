@@ -1,0 +1,69 @@
+{
+  "$schema": "../../evals/schema.json",
+  "skill": "choose-libraries-like-corbin",
+  "triggers": {
+    "positive": [
+      "Should I use date-fns or dayjs for formatting dates in this React app?",
+      "We need to parse CSV uploads. Should I write a parser or pull in a library?",
+      "Replace moment.js with something maintained.",
+      "Our Node 24 project uses ts-node for scripts. Do we still need it?",
+      "Compare Zod and Valibot for validating this API's input."
+    ],
+    "negative": [
+      "Add a loading spinner to the submit button.",
+      "Explain how React's useEffect cleanup works.",
+      "Write the commit message for this change.",
+      "Make the dashboard load faster."
+    ]
+  },
+  "behaviors": [
+    {
+      "id": "prefer-native-over-runner",
+      "context": "The project runs on Node 24. `scripts/migrate.ts` is plain TypeScript with no JSX, decorators, or path aliases. The project already has a `typecheck` script running `tsc --noEmit`.",
+      "prompt": "Set up `scripts/migrate.ts` to run in CI.",
+      "must": [
+        "Runs the script with Node's native TypeScript execution instead of adding ts-node or tsx",
+        "Keeps the separate type-checking step"
+      ],
+      "mustNot": [
+        "Adds a TypeScript runner dependency",
+        "Claims that executing TypeScript natively type-checks it"
+      ]
+    },
+    {
+      "id": "small-code-over-dependency",
+      "prompt": "Should I add a library to compute a percentage rounded to two decimal places, or write it myself?",
+      "must": [
+        "Recommends small project-specific code for this straightforward logic"
+      ],
+      "mustNot": [
+        "Adds a dependency for a few lines of simple arithmetic"
+      ]
+    },
+    {
+      "id": "reuse-existing-dependency",
+      "context": "The monorepo's `packages/importer` already depends on `papaparse`.",
+      "prompt": "The web app needs to parse user-uploaded CSV files with quoted fields, embedded newlines, and mixed encodings. How should I handle it?",
+      "must": [
+        "Reuses papaparse, the dependency already present in the project",
+        "Explains the choice in terms of edge cases and maintenance burden"
+      ],
+      "mustNot": [
+        "Writes a handwritten CSV parser",
+        "Replaces papaparse with a different library without a concrete incompatibility"
+      ]
+    },
+    {
+      "id": "no-migration-during-unrelated-work",
+      "context": "The app uses axios for all HTTP calls.",
+      "prompt": "While fixing this validation bug in the signup form, I noticed we still use axios. Should I switch to fetch while I'm in here?",
+      "must": [
+        "Keeps axios in place during the unrelated bug fix",
+        "Treats a replacement as a separate, scoped decision if it is considered at all"
+      ],
+      "mustNot": [
+        "Migrates axios to fetch as part of the bug fix"
+      ]
+    }
+  ]
+}

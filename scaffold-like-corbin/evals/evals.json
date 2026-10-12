@@ -1,0 +1,65 @@
+{
+  "$schema": "../../evals/schema.json",
+  "skill": "scaffold-like-corbin",
+  "triggers": {
+    "positive": [
+      "Start a new project: a web app with SSR and a REST API.",
+      "Add a shared api-contracts package to this monorepo.",
+      "Set up CI so local checks and GitHub Actions run the same thing.",
+      "Configure npm publishing for our packages.",
+      "Combine our three repos into one monorepo."
+    ],
+    "negative": [
+      "Fix the bug in the checkout form.",
+      "Write the README intro paragraph.",
+      "Why is Nx faster than Turborepo?",
+      "Add a test for the date parser."
+    ]
+  },
+  "behaviors": [
+    {
+      "id": "smallest-useful-monorepo",
+      "prompt": "Scaffold a new project: a React app with SSR and a substantial backend API. No marketing site yet.",
+      "must": [
+        "Creates a pnpm monorepo with separate TanStack Start and Hono apps",
+        "Creates only the apps and packages needed now",
+        "Exposes root-level development and verification commands",
+        "Keeps Node and pnpm versions in one authoritative declaration"
+      ],
+      "mustNot": [
+        "Adds placeholder packages such as an empty UI library with no consumer",
+        "Deploys or creates remote infrastructure",
+        "Adds Nx or Turborepo without a stated coordination need"
+      ]
+    },
+    {
+      "id": "ci-matches-local",
+      "context": "The repo has root scripts: `lint`, `typecheck`, `test`, `build`. Node and pnpm versions are declared in `package.json` `engines` and `packageManager`.",
+      "prompt": "Add a GitHub Actions workflow that runs our checks.",
+      "must": [
+        "Calls the same root commands developers run locally",
+        "Lets failures propagate with a non-zero exit",
+        "Derives Node and pnpm versions from the existing declarations instead of pinning separately",
+        "Lints the workflow with Zizmor configured so findings fail the check"
+      ],
+      "mustNot": [
+        "Uses continue-on-error or similar to make the pipeline pass",
+        "Uploads Zizmor SARIF alone and treats that as the gate"
+      ]
+    },
+    {
+      "id": "trusted-publishing",
+      "context": "`packages/*` contains two public libraries. No release tooling exists.",
+      "prompt": "Set up npm publishing.",
+      "must": [
+        "Uses Changesets for versioning and release notes",
+        "Uses npm Trusted Publishing with GitHub OIDC and grants id-token: write to the publish job",
+        "Verifies current runner and publisher compatibility rather than copying an old example"
+      ],
+      "mustNot": [
+        "Introduces a long-lived NPM_TOKEN as the publish mechanism",
+        "Publishes a package to test the setup"
+      ]
+    }
+  ]
+}

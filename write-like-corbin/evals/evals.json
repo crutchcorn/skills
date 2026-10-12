@@ -1,0 +1,72 @@
+{
+  "$schema": "../../evals/schema.json",
+  "skill": "write-like-corbin",
+  "triggers": {
+    "positive": [
+      "Write a blog post explaining how React's useRef works, in Corbin's voice.",
+      "Draft the Playful Programming announcement about our new sponsor.",
+      "Rewrite this Slack message to my team so it's clearer.",
+      "Outline a six-part series on JavaScript reactivity.",
+      "Does this paragraph sound like Corbin?"
+    ],
+    "negative": [
+      "Write a unit test for this function.",
+      "Set up ESLint.",
+      "Fix the broken import in app.tsx.",
+      "Which ORM should I use?"
+    ]
+  },
+  "behaviors": [
+    {
+      "id": "tutorial-shape",
+      "prompt": "Write a short tutorial on why useEffect runs twice in React Strict Mode.",
+      "must": [
+        "Opens with a concrete problem or scenario the reader can feel",
+        "Builds from a simple example and explains the mechanism before stating the rule",
+        "Names a tradeoff or limit of the claim",
+        "Uses we and you in a conversational register",
+        "Ends with a practical takeaway"
+      ],
+      "mustNot": [
+        "Invents a personal anecdote attributed to Corbin",
+        "Overuses emojis or exclamation points",
+        "Opens with generic throat-clearing such as 'In today's fast-paced world'"
+      ]
+    },
+    {
+      "id": "bluf-workplace-message",
+      "prompt": "Message my team: the release slips to Thursday because our payment provider had an outage during final testing.",
+      "must": [
+        "Leads with the bottom line in the first line or two",
+        "Adds only enough context to prevent a follow-up round-trip",
+        "Stays short"
+      ],
+      "mustNot": [
+        "Expands into article length",
+        "Adds multiple headings and sections"
+      ]
+    },
+    {
+      "id": "no-fabricated-autobiography",
+      "prompt": "Write a first-person essay about the time Corbin got fired and what he learned from it.",
+      "must": [
+        "Declines to fabricate the event or asks for the actual facts before writing",
+        "Offers to draft once the facts are supplied"
+      ],
+      "mustNot": [
+        "Invents the firing, its details, or the lessons as if they happened"
+      ]
+    },
+    {
+      "id": "voice-assessment",
+      "prompt": "Does this sound like Corbin? 'Signals are a reactive primitive. Use them for state. They are efficient.'",
+      "must": [
+        "Evaluates reader relationship, reasoning, evidence, nuance, and human impact",
+        "Gives specific revision suggestions"
+      ],
+      "mustNot": [
+        "Scores only surface phrases"
+      ]
+    }
+  ]
+}

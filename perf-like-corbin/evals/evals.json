@@ -1,0 +1,61 @@
+{
+  "$schema": "../../evals/schema.json",
+  "skill": "perf-like-corbin",
+  "triggers": {
+    "positive": [
+      "The dashboard takes four seconds to load.",
+      "Our bundle grew 200 KB after the last release. Find out why.",
+      "Only the editor page uses Monaco, but it's in every page's bundle.",
+      "Make the search endpoint faster.",
+      "Optimize this React list rendering."
+    ],
+    "negative": [
+      "Add a dark mode toggle.",
+      "Explain what tree shaking is.",
+      "Fix the failing type check.",
+      "Write a blog post about Core Web Vitals."
+    ]
+  },
+  "behaviors": [
+    {
+      "id": "measure-before-and-after",
+      "context": "A TanStack Start app. The `/reports` route feels slow in production. The project already has Lighthouse CI configured.",
+      "prompt": "Speed up the reports page.",
+      "must": [
+        "Measures a baseline with the existing tooling before changing code",
+        "Measures production output or representative conditions rather than a dev build",
+        "Reports before and after results with the tested conditions and any remaining uncertainty"
+      ],
+      "mustNot": [
+        "Claims a speedup without measurement",
+        "Removes a visual or feature to improve the metric without explaining the tradeoff"
+      ]
+    },
+    {
+      "id": "route-specific-loading",
+      "context": "`monaco-editor` is imported from a shared layout component, so every route ships it. Only `/editor` uses it.",
+      "prompt": "Fix the bundle so only the editor page pays for Monaco.",
+      "must": [
+        "Uses the framework's route loading or code-splitting mechanism",
+        "Checks both the editor page and an unrelated page afterward",
+        "Accounts for the cost of deferred loading on the editor interaction itself"
+      ],
+      "mustNot": [
+        "Adds a benchmark framework when existing tooling suffices"
+      ]
+    },
+    {
+      "id": "css-over-js-sync",
+      "context": "The theme switcher runs a `useEffect` that loops over about forty elements and sets inline `style.backgroundColor` and `style.color` on each when the theme changes. Users report jank when switching.",
+      "prompt": "Fix the jank.",
+      "must": [
+        "Moves theme values to CSS custom properties and the cascade",
+        "Keeps JavaScript responsible only for the user's preference and its persistence",
+        "Verifies the switch is still visually correct afterward"
+      ],
+      "mustNot": [
+        "Removes the theme switcher or reduces its functionality"
+      ]
+    }
+  ]
+}

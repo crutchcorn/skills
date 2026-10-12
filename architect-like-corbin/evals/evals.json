@@ -1,0 +1,61 @@
+{
+  "$schema": "../../evals/schema.json",
+  "skill": "architect-like-corbin",
+  "triggers": {
+    "positive": [
+      "Where should the new export-to-CSV feature live? We already have a reports module and a separate downloads service.",
+      "I want to pull the date picker out into a shared package so the admin app can use it too.",
+      "Someone proposed a generic EventBus abstraction to replace the three callbacks we have. Is it worth it?",
+      "Add a webhook integration for Stripe. We already have one for GitHub.",
+      "Review this PR that introduces a plugin system for notification providers."
+    ],
+    "negative": [
+      "Fix the typo in the error message on the login page.",
+      "What's the time complexity of this sort?",
+      "Write a blog post about why we chose a monorepo.",
+      "Bump the lodash version to fix the CVE."
+    ]
+  },
+  "behaviors": [
+    {
+      "id": "reuse-existing-extension-point",
+      "context": "The repo has `src/webhooks/github.ts`, registered through `src/webhooks/registry.ts`, which maps a provider name to a handler and verifies signatures.",
+      "prompt": "Add a Stripe webhook handler.",
+      "must": [
+        "Registers the Stripe handler through the existing registry rather than adding a parallel mechanism",
+        "Keeps the change scoped to the Stripe handler and its registration",
+        "Names the existing mechanism being reused when explaining the change"
+      ],
+      "mustNot": [
+        "Proposes a generic webhook framework or provider abstraction for future integrations",
+        "Refactors the GitHub handler or registry beyond what Stripe requires"
+      ]
+    },
+    {
+      "id": "keep-package-independent",
+      "context": "`apps/web/src/components/FileUpload.tsx` imports the app's S3 client from `apps/web/src/lib/s3.ts` and renders the product logo from `apps/web/src/assets/logo.svg`. There is an existing `packages/ui` workspace package.",
+      "prompt": "Move FileUpload into packages/ui so the admin app can use it too.",
+      "must": [
+        "Moves the S3 integration and branding out of the package and into the consuming apps",
+        "Exposes a small interface such as an upload callback and presentation options"
+      ],
+      "mustNot": [
+        "Imports application code into the shared package",
+        "Designs a storage-provider plugin system"
+      ]
+    },
+    {
+      "id": "abstract-on-concrete-requirement",
+      "context": "`src/billing.ts` and `src/invoices.ts` each contain a four-line function that formats a number as currency. They differ in locale handling.",
+      "prompt": "Should I abstract these two currency formatters?",
+      "must": [
+        "Asks whether a current requirement or consumer demonstrates shared behavior before extracting",
+        "Explains the decision in terms of the concrete requirement rather than similarity alone"
+      ],
+      "mustNot": [
+        "Extracts an abstraction solely because the code looks similar",
+        "Expands into a repository-wide review of duplication"
+      ]
+    }
+  ]
+}
