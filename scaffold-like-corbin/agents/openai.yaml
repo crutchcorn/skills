@@ -1,0 +1,4 @@
+interface:
+  display_name: "Scaffold Like Corbin"
+  short_description: "Set up focused monorepos, CI, and package releases"
+  default_prompt: "Use $scaffold-like-corbin to set up this project's workspace and verification workflow."
