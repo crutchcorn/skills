@@ -1,0 +1,4 @@
+interface:
+  display_name: "Perf Like Corbin"
+  short_description: "Measure improvements while preserving the experience"
+  default_prompt: "Use $perf-like-corbin to investigate this performance problem and verify an improvement against a representative baseline."
