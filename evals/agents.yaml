@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+
+description: Read-only documentation review with real Codex skill and reference reads
+sharing: false
+outputPath: evals/results/agents.json
+prompts:
+  - '{{request}}'
+providers:
+  - id: openai:codex-sdk
+    config:
+      model: '{{env.EVAL_MODEL or "gpt-6.1-sol"}}'
+      base_url: '{{env.OPENAI_BASE_URL or "https://api.openai.com/v1"}}'
+      working_dir: fixtures/docs-review
+      sandbox_mode: read-only
+      approval_policy: never
+      network_access_enabled: false
+      web_search_mode: disabled
+      inherit_process_env: false
+      enable_streaming: true
+      # Package scripts run from the repository root. Keep personal skills,
+      # configuration, and login state out of this API-key-backed evaluation.
+      cli_env:
+        HOME: '{{env.PWD}}/evals/results/codex-home'
+        CODEX_HOME: '{{env.PWD}}/evals/results/codex-home'
+# Streaming emits Codex command spans directly; no separate OTLP server is needed.
+tracing:
+  enabled: true
+defaultTest:
+  options:
+    provider: file://judge.yaml
+    rubricPrompt: file://grader-prompt.json
+evaluateOptions:
+  cache: false
+  timeoutMs: 300000
+  maxConcurrency: 1
+  repeat: 3
+tests:
+  - description: Review misplaced documentation and verify the reservation timeout
+    vars:
+      request: >-
+        Use the docs-like-corbin skill at
+        .agents/skills/docs-like-corbin/SKILL.md to review this repository's
+        documentation. Inspect README.md, ARCHITECTURE.md, INVESTIGATION.md, and
+        src/reservations.mjs. Give a concrete cleanup plan that preserves useful
+        user instructions, checks the documented behavior against the source,
+        and explains how future agents should handle investigation notes.
+        Review only; do not modify files or commit.
+      context: >-
+        This is an executed read-only review. README.md contains a user-facing
+        curl quickstart and an Internal architecture section.
+        ARCHITECTURE.md claims a 30-minute reservation expiry, while
+        src/reservations.mjs sets RESERVATION_TTL_MS to 17 * 60 * 1000.
+        INVESTIGATION.md explicitly describes an unverified missing-stock
+        hypothesis. No docs/ or notes/ catalogs or AGENTS.md exist in the fixture.
+        The docs-like-corbin skill points to references/documentation-patterns.md.
+    assert:
+      - type: skill-used
+        value: docs-like-corbin
+        metric: skill-read
+      - type: trajectory:step-count
+        value:
+          type: command
+          pattern: '*documentation-patterns.md*'
+          min: 1
+        metric: reference-read
+      - type: trajectory:step-count
+        value:
+          type: command
+          pattern: '*reservations.mjs*'
+          min: 1
+        metric: source-read
+      - type: llm-rubric
+        metric: review-quality
+        value: >-
+          Give an actual documentation review, not a promise to inspect later.
+          Identify that source defines 17 minutes and the architecture document's
+          30-minute claim is stale. Preserve the curl quickstart in the user-facing
+          README. Recommend keeping durable architecture material in docs/ and
+          provisional investigation material in notes/, with README catalogs and
+          relevant AGENTS.md navigation guidance. Treat investigation claims as
+          untrusted or unverified evidence that must be checked before acting on
+          them. Do not present the missing-stock hypothesis as established fact
+          or claim that files were already changed. Accept different valid file
+          names, ordering, and concise wording.

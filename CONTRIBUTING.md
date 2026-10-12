@@ -49,6 +49,30 @@ Each behavior response also needs a grading call. Native filters, `--repeat`,
 and `--max-concurrency` control cost and scope. Check the reported row count:
 Promptfoo treats a filter matching zero cases as a successful empty run.
 
+## Check real skill use
+
+```sh
+pnpm eval:agents --repeat 1
+```
+
+The native Codex SDK provider performs a read-only documentation review of a
+small static repository fixture. Its `.agents/skills/docs-like-corbin` symlink
+points to the current skill, so there is no copied skill text to maintain.
+The model must discover the required reference, inspect source, and identify a
+stale documented timeout without editing files. The fixture contains no secrets.
+
+Built-in `skill-used` and trajectory assertions check skill use and commands
+referencing the required files; a rubric checks the source-grounded review.
+Codex's skill-use signal is heuristic, and command matching does not independently
+prove successful reads. This suite exercises a real review workflow, not file
+editing or every skill behavior. It replaces the custom fixture lifecycle with
+native provider and assertion configuration.
+
+The provider uses the same three API settings, disables network/web tools, and
+isolates HOME and CODEX_HOME under gitignored `evals/results/codex-home`. It does
+not reuse your personal Codex login or installed skills. The sandbox is read-only,
+so repeated runs need no fixture reset or teardown scripts.
+
 ## Calibrate the judge
 
 ```sh
