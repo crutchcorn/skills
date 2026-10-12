@@ -169,10 +169,10 @@
       value: |-
         Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
 
-        - Reuses the existing Dialog component and icon set
+        - Reuses the existing Dialog component and uses the existing icon set when an icon is needed; text-only controls are also valid
         - Manages focus when the dialog opens and closes
         - Makes the dialog keyboard-operable with visible focus
-        - Runs the app and checks the dialog at mobile and larger viewport sizes
+        - Explicitly plans to run the app and exercise the dialog at both mobile and larger viewport sizes; acknowledging that execution is unavailable here is valid, but does not replace the verification plan
         - Must NOT: Uses a Unicode character such as × as the close icon
         - Must NOT: Adds a screenshot regression test
         - Must NOT: Describes source inspection alone as a completed visual review

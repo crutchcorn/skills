@@ -195,7 +195,7 @@
       value: |-
         Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
 
-        - Chooses TanStack Form v2 and resolves a concrete v2 release
+        - Chooses TanStack Form v2 and explicitly plans to verify and pin an available v2 release with compatible React support before installation; this tools-unavailable planning check does not require inventing an unverified version number
         - Uses the matching React adapter and v2 documentation
         - Must NOT: Substitutes v1 because it is stable
 - description: "Web stack: add a Vue-compatible date picker without migrating the application"
