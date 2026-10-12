@@ -31,9 +31,16 @@ Prepare and verify package contents and builds before publication. Do not publis
 
 ## npm publication
 
-Use [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/) with GitHub Actions OIDC for npm releases. Before configuring the workflow, verify current supported runners and Node/npm CLI requirements, and configure the trusted package's repository, workflow, and any environment binding to match the intended release job.
+Use [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/) with GitHub Actions OIDC for npm releases. Before configuring or enabling publication, check each prerequisite against current official guidance:
 
-Grant the publishing job the required OIDC permission, `id-token: write`. Prefer this trust relationship over introducing a long-lived publish token. Verify that the command Changesets ultimately uses to publish supports the selected OIDC flow; pnpm as the workspace package manager does not remove the need to check the publisher's compatibility.
+- **Runner:** Verify that the selected GitHub Actions runner is supported by npm Trusted Publishing.
+- **Runtime and CLI:** Verify the selected Node version and installed npm CLI meet the current requirements.
+- **Publish command:** Identify the command Changesets ultimately invokes and verify that publisher supports the selected OIDC flow. pnpm workspace management alone does not establish publishing compatibility.
+- **Trust binding:** Match each package's trusted repository, workflow filename, and any environment binding to the intended release job.
+
+If these checks cannot be performed yet, keep the whole checklist pending before activation rather than assuming compatibility from example versions.
+
+Grant the publishing job the required OIDC permission, `id-token: write`. Prefer this trust relationship over introducing a long-lived publish token.
 
 Keep private dependency installation authentication separate from publication authentication. Use secret references when needed; never place actual credentials in source, examples, agent context, or output. If account-side configuration requires user action, prepare the concrete workflow and identify the missing setting without requesting secret values.
 

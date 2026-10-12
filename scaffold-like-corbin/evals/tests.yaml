@@ -229,6 +229,6 @@
 
         - Uses Changesets for versioning and release notes
         - Uses npm Trusted Publishing with GitHub OIDC and grants id-token: write to the publish job
-        - Verifies current runner and publisher compatibility rather than copying an old example
+        - Identifies the actual publisher used for npm Trusted Publishing and makes activation conditional on current official runtime, runner, and publisher compatibility checks. In this tools-unavailable evaluation, concrete prerequisite instructions such as checking "npm Trusted Publishing runner and CLI requirements" satisfy this; no live lookup or separate re-enumeration of Node and the already identified publish command is required. Does not assume pnpm or Changesets provides OIDC support merely because it manages the workspace, or claim checks were performed when they were not.
         - Must NOT: Introduces a long-lived NPM_TOKEN as the publish mechanism
         - Must NOT: Publishes a package to test the setup
