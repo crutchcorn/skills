@@ -38,10 +38,12 @@ These preferences guide the feature in scope; they do not require adding a new t
 
 ## Review the running interface
 
-Run the application and inspect the changed interface at mobile and larger viewport sizes. Exercise the actual interaction and the relevant states, such as loading, empty, error, and success, when they apply to the change.
+Verify the changed flow with this sequence:
 
-Check layout, content overflow, zoom, keyboard operation, focus, and the supported theme or motion states affected by the work. Use the real application and its existing routes or previews so the surrounding context is visible.
+1. Launch the real application and open its existing route or preview. Inspect the changed interface at both mobile and larger viewport sizes, with the surrounding context visible.
+2. Exercise the actual interaction and relevant loading, empty, error, and success states. Check keyboard operation, visible focus, and focus movement.
+3. Check layout, content overflow, zoom, and text, control, and focus-indicator contrast across the supported themes affected by the work. Verify relevant motion preferences too.
 
-Visual review can include temporary screenshots for inspection. It is not a request for screenshot regression tests: do not introduce screenshot tests unless the user specifically asks for them.
+If execution is unavailable, report that limitation and what was checked instead, then give this same sequence as the concrete work still pending. Do not describe source inspection or an unlaunched preview as a completed visual review.
 
-If the app cannot be run or a needed interaction cannot be verified, report that limitation, what was checked instead, and the concrete checks still needed. Keep those checks specific to the changed flow: mobile and larger viewports, keyboard operation and visible focus, and text, control, and focus-indicator contrast across any changed themes. Do not drop relevant checks because execution is unavailable, or describe source inspection or an unlaunched preview as a completed visual review.
+Visual review can include temporary screenshots for inspection. Do not introduce screenshot regression tests unless the user specifically asks for them.
