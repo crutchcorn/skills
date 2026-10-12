@@ -1,0 +1,4 @@
+interface:
+  display_name: "Maintain Like Corbin"
+  short_description: "Fix underlying causes and finish scoped maintenance"
+  default_prompt: "Use $maintain-like-corbin to resolve this maintenance problem at its source and clean up obsolete pieces within the requested scope."
