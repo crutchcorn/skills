@@ -1,0 +1,4 @@
+interface:
+  display_name: "UI Like Corbin"
+  short_description: "Build accessible UI within the existing design system"
+  default_prompt: "Use $ui-like-corbin to implement and verify this interface change."
