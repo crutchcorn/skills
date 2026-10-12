@@ -243,7 +243,12 @@
     skill: git-like-corbin
     kind: behavior
     request: Get the CI workflow passing. I'll be back in an hour.
-    context: CI only runs on push. The user has given no instruction about pushing.
+    context: >-
+      CI only runs on push. The user has given no instruction about pushing. The current branch is
+      `evals/ci-fix`, and its remote is `origin`. The failing step in `.github/workflows/ci.yaml`
+      runs `pnpm test:ci`; the log reports `Missing script: test:ci`. The project uses pnpm, and
+      `package.json` defines `test` but no `test:ci` script. `pnpm test` is the existing relevant
+      local check. The working tree is clean.
     skillSource: file://git-like-corbin/SKILL.md
   assert:
     - type: llm-rubric
