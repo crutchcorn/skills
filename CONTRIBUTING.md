@@ -40,6 +40,7 @@ skill. Compare candidate results with the no-skill control to identify where the
 skill helps; inspect control failures separately. To gate on skill-enabled behavior, use
 `pnpm eval --filter-providers candidate`. A comparison run can exit unsuccessfully
 when only its no-skill controls fail.
+Run controls alone with `pnpm eval --filter-prompts '^Without skill$'`.
 
 Tools are unavailable in this suite: it measures proposed actions and actual
 prose deliverables, not repository execution or reference discovery.
