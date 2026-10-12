@@ -1,0 +1,41 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "Architecture & Setup",
+      "description": "Choose a stack, evaluate dependencies, shape the architecture, and scaffold the apps and packages you need.",
+      "skills": [
+        "web-stack-like-corbin",
+        "choose-libraries-like-corbin",
+        "architect-like-corbin",
+        "scaffold-like-corbin"
+      ]
+    },
+    {
+      "title": "UI & Performance",
+      "description": "Build accessible, consistent interfaces and improve application performance while preserving the intended experience.",
+      "skills": [
+        "ui-like-corbin",
+        "perf-like-corbin"
+      ]
+    },
+    {
+      "title": "Quality & Workflow",
+      "description": "Protect real behavior, fix underlying problems, and keep repository changes easy to review.",
+      "skills": [
+        "test-like-corbin",
+        "maintain-like-corbin",
+        "git-like-corbin"
+      ]
+    },
+    {
+      "title": "Writing & Docs",
+      "description": "Explain ideas clearly and give people the context they need to use and maintain a project.",
+      "skills": [
+        "write-like-corbin",
+        "docs-like-corbin"
+      ]
+    }
+  ]
+}
