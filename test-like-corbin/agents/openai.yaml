@@ -1,0 +1,4 @@
+interface:
+  display_name: "Test Like Corbin"
+  short_description: "Choose useful, user-centered regression tests"
+  default_prompt: "Use $test-like-corbin to choose and implement the right tests for this change."
