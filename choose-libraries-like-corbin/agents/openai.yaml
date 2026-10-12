@@ -1,0 +1,4 @@
+interface:
+  display_name: "Choose Libraries Like Corbin"
+  short_description: "Choose maintained tools with fewer dependencies"
+  default_prompt: "Use $choose-libraries-like-corbin to decide whether this task needs a library and compare suitable options."
