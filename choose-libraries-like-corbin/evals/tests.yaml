@@ -213,7 +213,10 @@
         Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
 
         - Reuses papaparse, the dependency already present in the project
-        - Explains the choice in terms of edge cases and maintenance burden
+        - Explains how the existing parser fits the CSV edge cases and limits code or dependency
+        ownership, for example by reusing the existing parser or API instead of custom parsing or
+        a second CSV library. Concrete reuse and integration decisions can establish that rationale;
+        no separate maintenance paragraph or specific wording is required
         - Must NOT: Writes a handwritten CSV parser
         - Must NOT: Replaces papaparse with a different library without a concrete incompatibility
 - description: "Dependencies: keep an axios migration out of a signup validation fix"
