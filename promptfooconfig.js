@@ -26,7 +26,16 @@ export default {
     { id: 'file://evals/no-skill-prompt.json', label: 'Without skill' },
   ],
   providers: [
-    { id: `openai:responses:${model}`, label: 'candidate', prompts: ['With skill'], config },
+    {
+      id: `openai:responses:${model}`,
+      label: 'candidate',
+      prompts: ['With skill'],
+      config: {
+        ...config,
+        // Routing measures skill selection; prose formatting is not its target.
+        response_format: { type: "{{ 'json_object' if kind == 'trigger' else 'text' }}" },
+      },
+    },
     { id: `openai:responses:${model}`, label: 'no-skill', prompts: ['Without skill'], config },
   ],
   defaultTest: {

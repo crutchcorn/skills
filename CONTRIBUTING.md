@@ -34,8 +34,10 @@ pnpm eval --filter-pattern 'Writing: lead with' --repeat 1
 pnpm eval:view
 ```
 
-`pnpm eval` runs all 141 cases. Routing cases see only skill descriptions;
-behavior cases receive skill text and supporting references through native
+`pnpm eval` runs all 141 cases. Routing cases see only skill descriptions and
+classify the request using native JSON mode; schema and skill-selection assertions
+still check the result. Behavior cases keep text output and receive skill text
+and supporting references through native
 `file://` variables. Behavior cases compare the same model with and without the
 skill. Compare candidate results with the no-skill control to identify where the
 skill helps; inspect control failures separately. To gate on skill-enabled behavior, use
