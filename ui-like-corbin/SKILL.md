@@ -19,7 +19,7 @@ Make the requested interface usable across input methods, display sizes, and use
 Keyboard interaction, screen-reader behavior, focus, and zoom are part of correctness, not optional polish.
 
 - Prefer native semantic controls and existing accessible components. Expose the name, role, state, and relationships users need to understand the interaction.
-- Make the changed flow work with a keyboard. Keep focus visible and in a logical order; manage focus deliberately when content opens, closes, or changes context.
+- Make the changed flow work with a keyboard. Verify that each focused control has a visible indicator in the changed interface, including reused design-system controls. Moving, trapping, or restoring focus does not establish that its indicator is visible. Keep focus in a logical order and manage it deliberately when content opens, closes, or changes context.
 - Make errors, status changes, and required input understandable without relying on color or visual position alone.
 - Ensure text resizing and browser zoom preserve access to content and controls. Check that the changed layout can reflow without hiding essential actions.
 - Use screen-reader verification for interactions whose announcements or focus behavior changed when the environment supports it. An accessibility-tree inspection can help, but does not by itself demonstrate the full screen-reader experience.
