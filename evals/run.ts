@@ -78,17 +78,27 @@ for (const skill of targets) {
   if (evals.skill !== skill.name) fail(`${skill.name}/evals/evals.json: "skill" is "${evals.skill}"`);
 
   if (flags.only !== "behaviors") {
-    for (const prompt of evals.triggers.positive) jobs.push(() => runTrigger(skill, prompt, true));
-    for (const prompt of evals.triggers.negative) jobs.push(() => runTrigger(skill, prompt, false));
+    for (const prompt of evals.triggers.positive) jobs.push(guard(skill.name, "trigger", prompt, () => runTrigger(skill, prompt, true)));
+    for (const prompt of evals.triggers.negative) jobs.push(guard(skill.name, "trigger", prompt, () => runTrigger(skill, prompt, false)));
   }
   if (flags.only !== "triggers") {
-    for (const behavior of evals.behaviors) jobs.push(() => runBehavior(skill, behavior));
+    for (const behavior of evals.behaviors) jobs.push(guard(skill.name, "behavior", behavior.id, () => runBehavior(skill, behavior)));
   }
 }
 
 const results = (await runPool(jobs, Number(flags.concurrency))).flat();
 report(results);
 process.exit(results.some((r) => !r.pass) ? 1 : 0);
+
+function guard(skill: string, kind: Result["kind"], label: string, job: () => Promise<Result[]>) {
+  return async (): Promise<Result[]> => {
+    try {
+      return await job();
+    } catch (error) {
+      return [{ skill, kind, label, pass: false, detail: `error: ${(error as Error).message}` }];
+    }
+  };
+}
 
 async function runTrigger(skill: Skill, prompt: string, shouldLoad: boolean): Promise<Result[]> {
   const system = [
@@ -185,7 +195,7 @@ async function chat(model: string, messages: Message[], attempt = 0): Promise<st
   const res = await fetch(`${baseUrl}/chat/completions`, {
     method: "POST",
     headers: { "content-type": "application/json", authorization: `Bearer ${apiKey}` },
-    body: JSON.stringify({ model, messages, temperature: 0 }),
+    body: JSON.stringify({ model, messages }),
   });
 
   if ((res.status === 429 || res.status >= 500) && attempt < 3) {
