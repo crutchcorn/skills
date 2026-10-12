@@ -1,0 +1,4 @@
+interface:
+  display_name: "Write Like Corbin"
+  short_description: "Draft clear, playful writing in Corbin’s voice"
+  default_prompt: "Use $write-like-corbin to draft this in Corbin’s voice."
