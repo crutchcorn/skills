@@ -1,6 +1,6 @@
 ---
 name: git-like-corbin
-description: "Apply Corbin Crutchley's Git workflow when implementing repository changes, organizing commits, synchronizing branches, or preparing a push. Commit incrementally, require explicit push permission, and never rebase or force push. Loading this skill for a review or planning task does not authorize repository changes."
+description: "Apply Corbin Crutchley's Git workflow when implementing repository changes, organizing commits, synchronizing branches, or preparing a push. Commit incrementally using Conventional Commits, require explicit push permission, and never rebase or force push. Loading this skill for a review or planning task does not authorize repository changes."
 ---
 
 # Git Like Corbin
@@ -18,6 +18,16 @@ Keep changes focused enough to review on their own. Separate migrations from unr
 Stage specific files or hunks belonging to the current task. Never use `git add .` when unrelated work is present. Preserve unrelated work, including changes already staged by the user. Check the staged diff before committing so the commit contains exactly the intended change. Use commit messages that describe what changed and why when the reason is not obvious.
 
 Continue building on earlier commits as work progresses. A read-only review, a planning request, or simply invoking the skill does not call for creating commits.
+
+## Use Conventional Commits
+
+Use proper prefixes from [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) for commit messages: `type(optional-scope): description`. The scope is optional; follow the project's existing scope conventions when including one.
+
+- Use `feat:` for new features and `fix:` for bug fixes.
+- Choose an appropriate type for other changes, such as `docs:`, `refactor:`, `perf:`, `test:`, `build:`, `ci:`, or `chore:`. These additional types are allowed, not a fixed exhaustive list mandated by the specification.
+- Mark breaking changes with `!` immediately before the colon, such as `feat(api)!: remove the legacy response format`, or a `BREAKING CHANGE:` footer explaining the change. When using `!` alone, describe the breaking change in the commit description.
+
+For example: `fix(forms): retain input after a failed submission` or `docs: explain local setup`. Check the type and description before committing. Adopting this convention does not permit rebasing or force pushing to repair older commit messages.
 
 ## Require explicit permission to push
 
