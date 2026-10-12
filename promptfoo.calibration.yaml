@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+description: Judge agreement with proposed calibration labels (pending human review)
+sharing: false
+prompts:
+  - '{{request}}'
+providers:
+  - echo
+defaultTest:
+  options:
+    disableVarExpansion: true
+    provider: file://evals/judge.yaml
+    rubricPrompt: file://evals/grader-prompt.json
+tests: file://evals/calibration/tests.yaml
+evaluateOptions:
+  repeat: 3
+  maxConcurrency: 4
+  cache: false
+  timeoutMs: 120000
+outputPath: evals/results/calibration.json

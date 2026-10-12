@@ -11,6 +11,14 @@
     }
   },
   "scripts": {
-    "eval": "node --env-file-if-exists=.env evals/run.ts"
+    "eval": "PROMPTFOO_CONFIG_DIR=.promptfoo promptfoo eval -c promptfooconfig.js --env-file .env",
+    "eval:calibrate": "PROMPTFOO_CONFIG_DIR=.promptfoo promptfoo eval -c promptfoo.calibration.yaml --env-file .env",
+    "eval:view": "promptfoo view .promptfoo",
+    "test:evals": "promptfoo validate config -c promptfooconfig.js && promptfoo validate config -c promptfoo.calibration.yaml"
+  },
+  "devDependencies": {
+    "@openai/codex-sdk": "0.156.1",
+    "promptfoo": "0.124.1",
+    "yaml": "2.9.1"
   }
 }

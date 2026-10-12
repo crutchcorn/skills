@@ -1,0 +1,224 @@
+- description: "Architecture routing: select for placing CSV exports in existing modules"
+  metadata:
+    skill: architect-like-corbin
+    kind: trigger
+    caseId: architect-like-corbin/trigger-positive-1
+  providers:
+    - candidate
+  vars:
+    skill: architect-like-corbin
+    kind: trigger
+    request: Where should the new export-to-CSV feature live? We already have a reports module and a
+      separate downloads service.
+    context: ""
+    shouldLoad: true
+  assert: &a1
+    - type: is-json
+      value:
+        type: object
+        additionalProperties: false
+        required:
+          - skills
+        properties:
+          skills:
+            type: array
+            uniqueItems: true
+            items:
+              type: string
+              minLength: 1
+              enum:
+                - architect-like-corbin
+                - choose-libraries-like-corbin
+                - docs-like-corbin
+                - git-like-corbin
+                - maintain-like-corbin
+                - perf-like-corbin
+                - scaffold-like-corbin
+                - test-like-corbin
+                - ui-like-corbin
+                - web-stack-like-corbin
+                - write-like-corbin
+    - type: javascript
+      value: JSON.parse(output).skills.includes(context.vars.skill) === context.vars.shouldLoad
+- description: "Architecture routing: select for extracting a date picker into a shared package"
+  metadata:
+    skill: architect-like-corbin
+    kind: trigger
+    caseId: architect-like-corbin/trigger-positive-2
+  providers:
+    - candidate
+  vars:
+    skill: architect-like-corbin
+    kind: trigger
+    request: I want to pull the date picker out into a shared package so the admin app can use it too.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Architecture routing: select for evaluating an EventBus abstraction"
+  metadata:
+    skill: architect-like-corbin
+    kind: trigger
+    caseId: architect-like-corbin/trigger-positive-3
+  providers:
+    - candidate
+  vars:
+    skill: architect-like-corbin
+    kind: trigger
+    request: Someone proposed a generic EventBus abstraction to replace the three callbacks we have. Is
+      it worth it?
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Architecture routing: select for adding Stripe beside an existing webhook integration"
+  metadata:
+    skill: architect-like-corbin
+    kind: trigger
+    caseId: architect-like-corbin/trigger-positive-4
+  providers:
+    - candidate
+  vars:
+    skill: architect-like-corbin
+    kind: trigger
+    request: Add a webhook integration for Stripe. We already have one for GitHub.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Architecture routing: select for reviewing a notification plugin system"
+  metadata:
+    skill: architect-like-corbin
+    kind: trigger
+    caseId: architect-like-corbin/trigger-positive-5
+  providers:
+    - candidate
+  vars:
+    skill: architect-like-corbin
+    kind: trigger
+    request: Review this PR that introduces a plugin system for notification providers.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Architecture routing: skip a login error message typo"
+  metadata:
+    skill: architect-like-corbin
+    kind: trigger
+    caseId: architect-like-corbin/trigger-negative-1
+  providers:
+    - candidate
+  vars:
+    skill: architect-like-corbin
+    kind: trigger
+    request: Fix the typo in the error message on the login page.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Architecture routing: skip a sorting complexity explanation"
+  metadata:
+    skill: architect-like-corbin
+    kind: trigger
+    caseId: architect-like-corbin/trigger-negative-2
+  providers:
+    - candidate
+  vars:
+    skill: architect-like-corbin
+    kind: trigger
+    request: What's the time complexity of this sort?
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Architecture routing: skip a blog post about an existing monorepo decision"
+  metadata:
+    skill: architect-like-corbin
+    kind: trigger
+    caseId: architect-like-corbin/trigger-negative-3
+  providers:
+    - candidate
+  vars:
+    skill: architect-like-corbin
+    kind: trigger
+    request: Write a blog post about why we chose a monorepo.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Architecture routing: skip a security dependency version bump"
+  metadata:
+    skill: architect-like-corbin
+    kind: trigger
+    caseId: architect-like-corbin/trigger-negative-4
+  providers:
+    - candidate
+  vars:
+    skill: architect-like-corbin
+    kind: trigger
+    request: Bump the lodash version to fix the CVE.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Architecture: add Stripe through the existing webhook registry"
+  metadata:
+    skill: architect-like-corbin
+    kind: behavior
+    behaviorId: reuse-existing-extension-point
+    caseId: architect-like-corbin/reuse-existing-extension-point
+  vars:
+    skill: architect-like-corbin
+    kind: behavior
+    request: Add a Stripe webhook handler.
+    context: The repo has `src/webhooks/github.ts`, registered through `src/webhooks/registry.ts`, which
+      maps a provider name to a handler and verifies signatures.
+    skillSource: file://architect-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: >-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+
+        - Registers the Stripe handler through the existing registry rather than adding a parallel
+        mechanism
+
+        - Keeps the change scoped to the Stripe handler and its registration
+
+        - Names the existing mechanism being reused when explaining the change
+
+        - Must NOT: Proposes a generic webhook framework or provider abstraction for future
+        integrations
+
+        - Must NOT: Refactors the GitHub handler or registry beyond what Stripe requires
+- description: "Architecture: share FileUpload while keeping S3 and branding in the apps"
+  metadata:
+    skill: architect-like-corbin
+    kind: behavior
+    behaviorId: keep-package-independent
+    caseId: architect-like-corbin/keep-package-independent
+  vars:
+    skill: architect-like-corbin
+    kind: behavior
+    request: Move FileUpload into packages/ui so the admin app can use it too.
+    context: "`apps/web/src/components/FileUpload.tsx` imports the app's S3 client from
+      `apps/web/src/lib/s3.ts` and renders the product logo from `apps/web/src/assets/logo.svg`.
+      There is an existing `packages/ui` workspace package."
+    skillSource: file://architect-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Moves the S3 integration and branding out of the package and into the consuming apps
+        - Exposes a small interface such as an upload callback and presentation options
+        - Must NOT: Imports application code into the shared package
+        - Must NOT: Designs a storage-provider plugin system
+- description: "Architecture: judge currency formatter reuse by requirements and preserve locale behavior"
+  metadata:
+    skill: architect-like-corbin
+    kind: behavior
+    behaviorId: abstract-on-concrete-requirement
+    caseId: architect-like-corbin/abstract-on-concrete-requirement
+  vars:
+    skill: architect-like-corbin
+    kind: behavior
+    request: Should I abstract these two currency formatters?
+    context: "`src/billing.ts` and `src/invoices.ts` each contain a four-line function that formats a
+      number as currency. They differ in locale handling."
+    skillSource: file://architect-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: file://architect-like-corbin/evals/rubrics/abstract-on-concrete-requirement.txt

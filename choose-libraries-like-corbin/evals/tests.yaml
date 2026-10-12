@@ -1,0 +1,239 @@
+- description: "Dependency routing: select for comparing date-fns and dayjs"
+  metadata:
+    skill: choose-libraries-like-corbin
+    kind: trigger
+    caseId: choose-libraries-like-corbin/trigger-positive-1
+  providers:
+    - candidate
+  vars:
+    skill: choose-libraries-like-corbin
+    kind: trigger
+    request: Should I use date-fns or dayjs for formatting dates in this React app?
+    context: ""
+    shouldLoad: true
+  assert: &a1
+    - type: is-json
+      value:
+        type: object
+        additionalProperties: false
+        required:
+          - skills
+        properties:
+          skills:
+            type: array
+            uniqueItems: true
+            items:
+              type: string
+              minLength: 1
+              enum:
+                - architect-like-corbin
+                - choose-libraries-like-corbin
+                - docs-like-corbin
+                - git-like-corbin
+                - maintain-like-corbin
+                - perf-like-corbin
+                - scaffold-like-corbin
+                - test-like-corbin
+                - ui-like-corbin
+                - web-stack-like-corbin
+                - write-like-corbin
+    - type: javascript
+      value: JSON.parse(output).skills.includes(context.vars.skill) === context.vars.shouldLoad
+- description: "Dependency routing: select for deciding whether to build or buy a CSV parser"
+  metadata:
+    skill: choose-libraries-like-corbin
+    kind: trigger
+    caseId: choose-libraries-like-corbin/trigger-positive-2
+  providers:
+    - candidate
+  vars:
+    skill: choose-libraries-like-corbin
+    kind: trigger
+    request: We need to parse CSV uploads. Should I write a parser or pull in a library?
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Dependency routing: select for replacing Moment with a maintained library"
+  metadata:
+    skill: choose-libraries-like-corbin
+    kind: trigger
+    caseId: choose-libraries-like-corbin/trigger-positive-3
+  providers:
+    - candidate
+  vars:
+    skill: choose-libraries-like-corbin
+    kind: trigger
+    request: Replace moment.js with something maintained.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Dependency routing: select for checking whether Node 24 still needs ts-node"
+  metadata:
+    skill: choose-libraries-like-corbin
+    kind: trigger
+    caseId: choose-libraries-like-corbin/trigger-positive-4
+  providers:
+    - candidate
+  vars:
+    skill: choose-libraries-like-corbin
+    kind: trigger
+    request: Our Node 24 project uses ts-node for scripts. Do we still need it?
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Dependency routing: select for comparing Zod and Valibot"
+  metadata:
+    skill: choose-libraries-like-corbin
+    kind: trigger
+    caseId: choose-libraries-like-corbin/trigger-positive-5
+  providers:
+    - candidate
+  vars:
+    skill: choose-libraries-like-corbin
+    kind: trigger
+    request: Compare Zod and Valibot for validating this API's input.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Dependency routing: skip adding a button loading spinner"
+  metadata:
+    skill: choose-libraries-like-corbin
+    kind: trigger
+    caseId: choose-libraries-like-corbin/trigger-negative-1
+  providers:
+    - candidate
+  vars:
+    skill: choose-libraries-like-corbin
+    kind: trigger
+    request: Add a loading spinner to the submit button.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Dependency routing: skip an explanation of useEffect cleanup"
+  metadata:
+    skill: choose-libraries-like-corbin
+    kind: trigger
+    caseId: choose-libraries-like-corbin/trigger-negative-2
+  providers:
+    - candidate
+  vars:
+    skill: choose-libraries-like-corbin
+    kind: trigger
+    request: Explain how React's useEffect cleanup works.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Dependency routing: skip writing a commit message"
+  metadata:
+    skill: choose-libraries-like-corbin
+    kind: trigger
+    caseId: choose-libraries-like-corbin/trigger-negative-3
+  providers:
+    - candidate
+  vars:
+    skill: choose-libraries-like-corbin
+    kind: trigger
+    request: Write the commit message for this change.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Dependency routing: skip a dashboard performance investigation"
+  metadata:
+    skill: choose-libraries-like-corbin
+    kind: trigger
+    caseId: choose-libraries-like-corbin/trigger-negative-4
+  providers:
+    - candidate
+  vars:
+    skill: choose-libraries-like-corbin
+    kind: trigger
+    request: Make the dashboard load faster.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Dependencies: run TypeScript with Node and retain separate type checking"
+  metadata:
+    skill: choose-libraries-like-corbin
+    kind: behavior
+    behaviorId: prefer-native-over-runner
+    caseId: choose-libraries-like-corbin/prefer-native-over-runner
+  vars:
+    skill: choose-libraries-like-corbin
+    kind: behavior
+    request: Set up `scripts/migrate.ts` to run in CI.
+    context: The project runs on Node 24. `scripts/migrate.ts` is plain TypeScript with no JSX,
+      decorators, or path aliases. The project already has a `typecheck` script running `tsc
+      --noEmit`.
+    skillSource: file://choose-libraries-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Runs the script with Node's native TypeScript execution instead of adding ts-node or tsx
+        - Keeps the separate type-checking step
+        - Must NOT: Adds a TypeScript runner dependency
+        - Must NOT: Claims that executing TypeScript natively type-checks it
+- description: "Dependencies: use simple arithmetic without adding a percentage library"
+  metadata:
+    skill: choose-libraries-like-corbin
+    kind: behavior
+    behaviorId: small-code-over-dependency
+    caseId: choose-libraries-like-corbin/small-code-over-dependency
+  vars:
+    skill: choose-libraries-like-corbin
+    kind: behavior
+    request: Should I add a library to compute a percentage rounded to two decimal places, or write it
+      myself?
+    context: ""
+    skillSource: file://choose-libraries-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Recommends small project-specific code for this straightforward logic
+        - Must NOT: Adds a dependency for a few lines of simple arithmetic
+- description: "Dependencies: reuse Papa Parse for CSV uploads with complex input"
+  metadata:
+    skill: choose-libraries-like-corbin
+    kind: behavior
+    behaviorId: reuse-existing-dependency
+    caseId: choose-libraries-like-corbin/reuse-existing-dependency
+  vars:
+    skill: choose-libraries-like-corbin
+    kind: behavior
+    request: The web app needs to parse user-uploaded CSV files with quoted fields, embedded newlines,
+      and mixed encodings. How should I handle it?
+    context: The monorepo's `packages/importer` already depends on `papaparse`.
+    skillSource: file://choose-libraries-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Reuses papaparse, the dependency already present in the project
+        - Explains the choice in terms of edge cases and maintenance burden
+        - Must NOT: Writes a handwritten CSV parser
+        - Must NOT: Replaces papaparse with a different library without a concrete incompatibility
+- description: "Dependencies: keep an axios migration out of a signup validation fix"
+  metadata:
+    skill: choose-libraries-like-corbin
+    kind: behavior
+    behaviorId: no-migration-during-unrelated-work
+    caseId: choose-libraries-like-corbin/no-migration-during-unrelated-work
+  vars:
+    skill: choose-libraries-like-corbin
+    kind: behavior
+    request: While fixing this validation bug in the signup form, I noticed we still use axios. Should I
+      switch to fetch while I'm in here?
+    context: The app uses axios for all HTTP calls.
+    skillSource: file://choose-libraries-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Keeps axios in place during the unrelated bug fix
+        - Treats a replacement as a separate, scoped decision if it is considered at all
+        - Must NOT: Migrates axios to fetch as part of the bug fix

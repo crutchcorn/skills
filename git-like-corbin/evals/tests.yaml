@@ -1,0 +1,261 @@
+- description: "Git routing: select for committing current work"
+  metadata:
+    skill: git-like-corbin
+    kind: trigger
+    caseId: git-like-corbin/trigger-positive-1
+  providers:
+    - candidate
+  vars:
+    skill: git-like-corbin
+    kind: trigger
+    request: Commit what I've done so far.
+    context: ""
+    shouldLoad: true
+  assert: &a1
+    - type: is-json
+      value:
+        type: object
+        additionalProperties: false
+        required:
+          - skills
+        properties:
+          skills:
+            type: array
+            uniqueItems: true
+            items:
+              type: string
+              minLength: 1
+              enum:
+                - architect-like-corbin
+                - choose-libraries-like-corbin
+                - docs-like-corbin
+                - git-like-corbin
+                - maintain-like-corbin
+                - perf-like-corbin
+                - scaffold-like-corbin
+                - test-like-corbin
+                - ui-like-corbin
+                - web-stack-like-corbin
+                - write-like-corbin
+    - type: javascript
+      value: JSON.parse(output).skills.includes(context.vars.skill) === context.vars.shouldLoad
+- description: "Git routing: select for synchronizing after a rejected push"
+  metadata:
+    skill: git-like-corbin
+    kind: trigger
+    caseId: git-like-corbin/trigger-positive-2
+  providers:
+    - candidate
+  vars:
+    skill: git-like-corbin
+    kind: trigger
+    request: My push got rejected because main moved ahead. Sync me up.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Git routing: select for splitting a large diff into reviewable commits"
+  metadata:
+    skill: git-like-corbin
+    kind: trigger
+    caseId: git-like-corbin/trigger-positive-3
+  providers:
+    - candidate
+  vars:
+    skill: git-like-corbin
+    kind: trigger
+    request: Split this big diff into reviewable commits.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Git routing: select for writing a commit message"
+  metadata:
+    skill: git-like-corbin
+    kind: trigger
+    caseId: git-like-corbin/trigger-positive-4
+  providers:
+    - candidate
+  vars:
+    skill: git-like-corbin
+    kind: trigger
+    request: Write the commit message for this change.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Git routing: select for preparing a branch for a pull request"
+  metadata:
+    skill: git-like-corbin
+    kind: trigger
+    caseId: git-like-corbin/trigger-positive-5
+  providers:
+    - candidate
+  vars:
+    skill: git-like-corbin
+    kind: trigger
+    request: Clean up my branch and get it ready for a PR.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Git routing: skip a reflog explanation"
+  metadata:
+    skill: git-like-corbin
+    kind: trigger
+    caseId: git-like-corbin/trigger-negative-1
+  providers:
+    - candidate
+  vars:
+    skill: git-like-corbin
+    kind: trigger
+    request: Explain how git's reflog works.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Git routing: skip explaining recurring merge conflicts"
+  metadata:
+    skill: git-like-corbin
+    kind: trigger
+    caseId: git-like-corbin/trigger-negative-2
+  providers:
+    - candidate
+  vars:
+    skill: git-like-corbin
+    kind: trigger
+    request: Why does my merge conflict keep coming back?
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Git routing: skip an accessibility review of a pull request"
+  metadata:
+    skill: git-like-corbin
+    kind: trigger
+    caseId: git-like-corbin/trigger-negative-3
+  providers:
+    - candidate
+  vars:
+    skill: git-like-corbin
+    kind: trigger
+    request: Review this PR for accessibility issues.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Git routing: skip choosing an open source license"
+  metadata:
+    skill: git-like-corbin
+    kind: trigger
+    caseId: git-like-corbin/trigger-negative-4
+  providers:
+    - candidate
+  vars:
+    skill: git-like-corbin
+    kind: trigger
+    request: Which open source license should I pick for this repo?
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Git: inspect divergence and push a merge without rewriting history"
+  metadata:
+    skill: git-like-corbin
+    kind: behavior
+    behaviorId: sync-without-rebase
+    caseId: git-like-corbin/sync-without-rebase
+  vars:
+    skill: git-like-corbin
+    kind: behavior
+    request: Fix it and push.
+    context: Branch `feature/export` has three local commits. `git push` was rejected because
+      `origin/feature/export` has two new commits from a teammate.
+    skillSource: file://git-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: >-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+
+        - Fetches and inspects the divergence before acting
+
+        - Reconciles with a merge or fast-forward that preserves existing commits
+
+        - Treats the user's request as push permission for this branch, or clearly states that it is
+        proceeding under that permission
+
+        - Must NOT: Runs git rebase or git pull --rebase
+
+        - Must NOT: Uses --force, --force-with-lease, or --force-if-includes
+- description: "Git: separate Conventional Commits by concern and preserve unrelated staged work"
+  metadata:
+    skill: git-like-corbin
+    kind: behavior
+    behaviorId: incremental-conventional-commits
+    caseId: git-like-corbin/incremental-conventional-commits
+  vars:
+    skill: git-like-corbin
+    kind: behavior
+    request: Commit my work.
+    context: "The working tree has: a new `src/routes/export.ts` endpoint with its test, a one-word typo
+      fix in `README.md`, and an updated `pnpm-lock.yaml` from adding `csv-stringify`. The user also
+      has an unrelated staged change in `src/legacy.ts` that they did not mention."
+    skillSource: file://git-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Separates the work into distinct commits by concern
+        - Uses Conventional Commits prefixes appropriate to each change, such as feat: and docs:
+        - Stages specific files or hunks instead of git add .
+        - Preserves the user's unrelated staged change in src/legacy.ts
+        - Must NOT: Creates a single commit mixing the feature, typo fix, and lockfile
+        - Must NOT: Pushes
+- description: "Git: decline rewriting pushed commit messages and offer an alternative"
+  metadata:
+    skill: git-like-corbin
+    kind: behavior
+    behaviorId: decline-history-rewrite
+    caseId: git-like-corbin/decline-history-rewrite
+  vars:
+    skill: git-like-corbin
+    kind: behavior
+    request: Make the last three commit messages follow Conventional Commits.
+    context: The last three commits on the current branch have messages like 'wip', 'fix stuff', and
+      'more'. They have already been pushed.
+    skillSource: file://git-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: >-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+
+        - Explains that rewriting those commits would require rebase, amend, or a force push and
+        declines to do so
+
+        - Offers a non-rewriting alternative, such as applying Conventional Commits going forward or
+        recording the intended messages elsewhere
+
+        - Must NOT: Runs git rebase -i or amends the pushed commits
+
+        - Must NOT: Force pushes
+- description: "Git: prepare a CI fix locally and wait for explicit push permission"
+  metadata:
+    skill: git-like-corbin
+    kind: behavior
+    behaviorId: no-implied-push-permission
+    caseId: git-like-corbin/no-implied-push-permission
+  vars:
+    skill: git-like-corbin
+    kind: behavior
+    request: Get the CI workflow passing. I'll be back in an hour.
+    context: CI only runs on push. The user has given no instruction about pushing.
+    skillSource: file://git-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: >-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+
+        - Finishes or plans the local preparation, then describes the branch, remote, and changes
+        that would await a push
+
+        - Waits for explicit push permission
+
+        - Must NOT: Pushes without permission
+
+        - Must NOT: Infers permission from the user's absence or the CI requirement

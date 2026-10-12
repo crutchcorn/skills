@@ -1,0 +1,47 @@
+# A native HTTP provider keeps validation on the grader call path. Provider-root
+# transforms are not applied to llm-rubric grading calls in Promptfoo 0.124.1.
+id: https
+label: strict-judge
+config:
+  url: "{{ env.OPENAI_BASE_URL or 'https://api.openai.com/v1' }}/chat/completions"
+  method: POST
+  validateStatus: status >= 200 && status < 300
+  headers:
+    Content-Type: application/json
+    Authorization: "Bearer {{ env.OPENAI_API_KEY }}"
+  body:
+    model: "{{ env.EVAL_MODEL or 'gpt-6.1-sol' }}"
+    messages: "{{ prompt }}"
+    response_format:
+      type: json_object
+  transformResponse: |
+    (json) => {
+      const choice = json?.choices?.[0];
+      if (json?.error || !choice || choice.finish_reason !== 'stop' || typeof choice.message?.content !== 'string') {
+        return { error: 'Grader returned an error, incomplete response, or missing text.' };
+      }
+      let verdict;
+      try {
+        verdict = JSON.parse(choice.message.content);
+      } catch {
+        return { error: 'Grader response must be one complete JSON object.' };
+      }
+      if (!verdict || Array.isArray(verdict) || typeof verdict !== 'object' ||
+          Object.keys(verdict).sort().join(',') !== 'pass,reason,score' ||
+          typeof verdict.pass !== 'boolean' ||
+          typeof verdict.score !== 'number' || !Number.isFinite(verdict.score) ||
+          verdict.score !== Number(verdict.pass) ||
+          typeof verdict.reason !== 'string' || !verdict.reason.trim()) {
+        return { error: 'Grader verdict must contain only pass (boolean), score (1 for pass, 0 for fail), and a nonempty reason.' };
+      }
+      return {
+        output: JSON.stringify(verdict),
+        metadata: { strictGraderResponse: true },
+        tokenUsage: {
+          prompt: json.usage?.prompt_tokens,
+          completion: json.usage?.completion_tokens,
+          total: json.usage?.total_tokens,
+          numRequests: 1,
+        },
+      };
+    }

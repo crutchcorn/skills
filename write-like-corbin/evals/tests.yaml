@@ -1,0 +1,263 @@
+- description: "Writing routing: select for explaining useRef in Corbin’s voice"
+  metadata:
+    skill: write-like-corbin
+    kind: trigger
+    caseId: write-like-corbin/trigger-positive-1
+  providers:
+    - candidate
+  vars:
+    skill: write-like-corbin
+    kind: trigger
+    request: Write a blog post explaining how React's useRef works, in Corbin's voice.
+    context: ""
+    shouldLoad: true
+  assert: &a1
+    - type: is-json
+      value:
+        type: object
+        additionalProperties: false
+        required:
+          - skills
+        properties:
+          skills:
+            type: array
+            uniqueItems: true
+            items:
+              type: string
+              minLength: 1
+              enum:
+                - architect-like-corbin
+                - choose-libraries-like-corbin
+                - docs-like-corbin
+                - git-like-corbin
+                - maintain-like-corbin
+                - perf-like-corbin
+                - scaffold-like-corbin
+                - test-like-corbin
+                - ui-like-corbin
+                - web-stack-like-corbin
+                - write-like-corbin
+    - type: javascript
+      value: JSON.parse(output).skills.includes(context.vars.skill) === context.vars.shouldLoad
+- description: "Writing routing: select for a Playful Programming sponsor announcement"
+  metadata:
+    skill: write-like-corbin
+    kind: trigger
+    caseId: write-like-corbin/trigger-positive-2
+  providers:
+    - candidate
+  vars:
+    skill: write-like-corbin
+    kind: trigger
+    request: Draft the Playful Programming announcement about our new sponsor.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Writing routing: select for clarifying a team Slack message"
+  metadata:
+    skill: write-like-corbin
+    kind: trigger
+    caseId: write-like-corbin/trigger-positive-3
+  providers:
+    - candidate
+  vars:
+    skill: write-like-corbin
+    kind: trigger
+    request: Rewrite this Slack message to my team so it's clearer.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Writing routing: select for outlining a JavaScript reactivity series"
+  metadata:
+    skill: write-like-corbin
+    kind: trigger
+    caseId: write-like-corbin/trigger-positive-4
+  providers:
+    - candidate
+  vars:
+    skill: write-like-corbin
+    kind: trigger
+    request: Outline a six-part series on JavaScript reactivity.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Writing routing: select for assessing whether a paragraph sounds like Corbin"
+  metadata:
+    skill: write-like-corbin
+    kind: trigger
+    caseId: write-like-corbin/trigger-positive-5
+  providers:
+    - candidate
+  vars:
+    skill: write-like-corbin
+    kind: trigger
+    request: Does this paragraph sound like Corbin?
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Writing routing: skip writing a unit test"
+  metadata:
+    skill: write-like-corbin
+    kind: trigger
+    caseId: write-like-corbin/trigger-negative-1
+  providers:
+    - candidate
+  vars:
+    skill: write-like-corbin
+    kind: trigger
+    request: Write a unit test for this function.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Writing routing: skip configuring ESLint"
+  metadata:
+    skill: write-like-corbin
+    kind: trigger
+    caseId: write-like-corbin/trigger-negative-2
+  providers:
+    - candidate
+  vars:
+    skill: write-like-corbin
+    kind: trigger
+    request: Set up ESLint.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Writing routing: skip repairing a broken import"
+  metadata:
+    skill: write-like-corbin
+    kind: trigger
+    caseId: write-like-corbin/trigger-negative-3
+  providers:
+    - candidate
+  vars:
+    skill: write-like-corbin
+    kind: trigger
+    request: Fix the broken import in app.tsx.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Writing routing: skip choosing an ORM"
+  metadata:
+    skill: write-like-corbin
+    kind: trigger
+    caseId: write-like-corbin/trigger-negative-4
+  providers:
+    - candidate
+  vars:
+    skill: write-like-corbin
+    kind: trigger
+    request: Which ORM should I use?
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Writing: teach Strict Mode effect cleanup with an accurate example and practical takeaway"
+  metadata:
+    skill: write-like-corbin
+    kind: behavior
+    behaviorId: tutorial-shape
+    caseId: write-like-corbin/tutorial-shape
+  vars:
+    skill: write-like-corbin
+    kind: behavior
+    request: Write a short tutorial on why useEffect runs twice in React Strict Mode.
+    context: A current React app has <StrictMode> around the root. The reader sees an Effect run again
+      on initial mount in a development build.
+    skillSource: file://write-like-corbin/SKILL.md
+    reference: file://write-like-corbin/references/formats.md
+    reference1: file://write-like-corbin/references/topic-and-series-architecture.md
+    reference2: file://write-like-corbin/references/voice-and-style.md
+  assert:
+    - type: llm-rubric
+      value: >-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+
+        - Opens with a concrete problem or scenario the reader can feel
+
+        - Builds from a simple example and explains the mechanism before stating the rule
+
+        - Names a tradeoff or limit of the claim
+
+        - Uses we and you in a conversational register
+
+        - Ends with a practical takeaway
+
+        - Explains that root Strict Mode runs setup, cleanup, then setup again on initial mount in
+        development to reveal missing or incorrect cleanup; this extra check does not run in
+        production
+
+        - Shows a technically correct example where cleanup undoes setup and recommends fixing
+        cleanup rather than suppressing the check
+
+        - Must NOT: Invents a personal anecdote attributed to Corbin
+
+        - Must NOT: Overuses emojis or exclamation points
+
+        - Must NOT: Opens with generic throat-clearing such as 'In today's fast-paced world'
+- description: "Writing: lead with the Thursday release delay and preserve the payment outage explanation"
+  metadata:
+    skill: write-like-corbin
+    kind: behavior
+    behaviorId: bluf-workplace-message
+    caseId: write-like-corbin/bluf-workplace-message
+  vars:
+    skill: write-like-corbin
+    kind: behavior
+    request: "Message my team: the release slips to Thursday because our payment provider had an outage
+      during final testing."
+    context: ""
+    skillSource: file://write-like-corbin/SKILL.md
+    reference: file://write-like-corbin/references/formats.md
+    reference1: file://write-like-corbin/references/topic-and-series-architecture.md
+    reference2: file://write-like-corbin/references/voice-and-style.md
+  assert:
+    - type: llm-rubric
+      value: file://write-like-corbin/evals/rubrics/bluf-workplace-message.txt
+- description: "Writing: ask for real facts before drafting a first-person account of Corbin being fired"
+  metadata:
+    skill: write-like-corbin
+    kind: behavior
+    behaviorId: no-fabricated-autobiography
+    caseId: write-like-corbin/no-fabricated-autobiography
+  vars:
+    skill: write-like-corbin
+    kind: behavior
+    request: Write a first-person essay about the time Corbin got fired and what he learned from it.
+    context: ""
+    skillSource: file://write-like-corbin/SKILL.md
+    reference: file://write-like-corbin/references/formats.md
+    reference1: file://write-like-corbin/references/topic-and-series-architecture.md
+    reference2: file://write-like-corbin/references/voice-and-style.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Declines to fabricate the event or asks for the actual facts before writing
+        - Offers to draft once the facts are supplied
+        - Must NOT: Invents the firing, its details, or the lessons as if they happened
+- description: "Writing: assess reasoning and reader connection with specific revision suggestions"
+  metadata:
+    skill: write-like-corbin
+    kind: behavior
+    behaviorId: voice-assessment
+    caseId: write-like-corbin/voice-assessment
+  vars:
+    skill: write-like-corbin
+    kind: behavior
+    request: Does this sound like Corbin? 'Signals are a reactive primitive. Use them for state. They
+      are efficient.'
+    context: ""
+    skillSource: file://write-like-corbin/SKILL.md
+    reference: file://write-like-corbin/references/formats.md
+    reference1: file://write-like-corbin/references/topic-and-series-architecture.md
+    reference2: file://write-like-corbin/references/voice-and-style.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Evaluates reader relationship, reasoning, evidence, nuance, and human impact
+        - Gives specific revision suggestions
+        - Must NOT: Scores only surface phrases

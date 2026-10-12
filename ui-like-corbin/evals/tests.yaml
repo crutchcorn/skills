@@ -1,0 +1,241 @@
+- description: "UI routing: select for an account deletion confirmation modal"
+  metadata:
+    skill: ui-like-corbin
+    kind: trigger
+    caseId: ui-like-corbin/trigger-positive-1
+  providers:
+    - candidate
+  vars:
+    skill: ui-like-corbin
+    kind: trigger
+    request: Add a modal for confirming account deletion.
+    context: ""
+    shouldLoad: true
+  assert: &a1
+    - type: is-json
+      value:
+        type: object
+        additionalProperties: false
+        required:
+          - skills
+        properties:
+          skills:
+            type: array
+            uniqueItems: true
+            items:
+              type: string
+              minLength: 1
+              enum:
+                - architect-like-corbin
+                - choose-libraries-like-corbin
+                - docs-like-corbin
+                - git-like-corbin
+                - maintain-like-corbin
+                - perf-like-corbin
+                - scaffold-like-corbin
+                - test-like-corbin
+                - ui-like-corbin
+                - web-stack-like-corbin
+                - write-like-corbin
+    - type: javascript
+      value: JSON.parse(output).skills.includes(context.vars.skill) === context.vars.shouldLoad
+- description: "UI routing: select for making settings usable on mobile"
+  metadata:
+    skill: ui-like-corbin
+    kind: trigger
+    caseId: ui-like-corbin/trigger-positive-2
+  providers:
+    - candidate
+  vars:
+    skill: ui-like-corbin
+    kind: trigger
+    request: Make the settings page work on mobile.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "UI routing: select for adding dark mode"
+  metadata:
+    skill: ui-like-corbin
+    kind: trigger
+    caseId: ui-like-corbin/trigger-positive-3
+  providers:
+    - candidate
+  vars:
+    skill: ui-like-corbin
+    kind: trigger
+    request: Add dark mode.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "UI routing: select for fixing keyboard access to a dropdown"
+  metadata:
+    skill: ui-like-corbin
+    kind: trigger
+    caseId: ui-like-corbin/trigger-positive-4
+  providers:
+    - candidate
+  vars:
+    skill: ui-like-corbin
+    kind: trigger
+    request: The dropdown doesn't work with the keyboard.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "UI routing: select for restyling pricing cards"
+  metadata:
+    skill: ui-like-corbin
+    kind: trigger
+    caseId: ui-like-corbin/trigger-positive-5
+  providers:
+    - candidate
+  vars:
+    skill: ui-like-corbin
+    kind: trigger
+    request: Restyle the pricing cards.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "UI routing: skip implementing an account deletion API endpoint"
+  metadata:
+    skill: ui-like-corbin
+    kind: trigger
+    caseId: ui-like-corbin/trigger-negative-1
+  providers:
+    - candidate
+  vars:
+    skill: ui-like-corbin
+    kind: trigger
+    request: Add an API endpoint for deleting accounts.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "UI routing: skip investigating slow page loading"
+  metadata:
+    skill: ui-like-corbin
+    kind: trigger
+    caseId: ui-like-corbin/trigger-negative-2
+  providers:
+    - candidate
+  vars:
+    skill: ui-like-corbin
+    kind: trigger
+    request: Why is the page slow?
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "UI routing: skip writing release notes"
+  metadata:
+    skill: ui-like-corbin
+    kind: trigger
+    caseId: ui-like-corbin/trigger-negative-3
+  providers:
+    - candidate
+  vars:
+    skill: ui-like-corbin
+    kind: trigger
+    request: Write the release notes.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "UI routing: skip fixing a TypeScript error in a hook"
+  metadata:
+    skill: ui-like-corbin
+    kind: trigger
+    caseId: ui-like-corbin/trigger-negative-4
+  providers:
+    - candidate
+  vars:
+    skill: ui-like-corbin
+    kind: trigger
+    request: Fix the TypeScript error in the hook.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "UI: reuse the existing dialog with keyboard access, focus management, and viewport checks"
+  metadata:
+    skill: ui-like-corbin
+    kind: behavior
+    behaviorId: accessible-dialog
+    caseId: ui-like-corbin/accessible-dialog
+  vars:
+    skill: ui-like-corbin
+    kind: behavior
+    request: Add a confirmation dialog before deleting a project.
+    context: React app with an existing `<Dialog>` component in `src/components/ui` and an icon set in
+      `src/components/icons`.
+    skillSource: file://ui-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Reuses the existing Dialog component and icon set
+        - Manages focus when the dialog opens and closes
+        - Makes the dialog keyboard-operable with visible focus
+        - Runs the app and checks the dialog at mobile and larger viewport sizes
+        - Must NOT: Uses a Unicode character such as × as the close icon
+        - Must NOT: Adds a screenshot regression test
+        - Must NOT: Describes source inspection alone as a completed visual review
+- description: "UI: respect reduced motion when animating the notifications panel"
+  metadata:
+    skill: ui-like-corbin
+    kind: behavior
+    behaviorId: reduced-motion
+    caseId: ui-like-corbin/reduced-motion
+  vars:
+    skill: ui-like-corbin
+    kind: behavior
+    request: Add a slide-in animation when the notifications panel opens.
+    context: ""
+    skillSource: file://ui-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Honors prefers-reduced-motion for the new animation
+        - Keeps the open and closed states understandable without the motion
+        - Must NOT: Audits or changes unrelated animations across the product
+- description: "UI: use CSS custom properties for an accessible dark mode toggle"
+  metadata:
+    skill: ui-like-corbin
+    kind: behavior
+    behaviorId: theme-via-custom-properties
+    caseId: ui-like-corbin/theme-via-custom-properties
+  vars:
+    skill: ui-like-corbin
+    kind: behavior
+    request: Add a dark mode toggle.
+    context: The app currently has a single light theme defined with hard-coded colors in CSS Modules.
+      There is no existing theme preference.
+    skillSource: file://ui-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Expresses theme values as CSS custom properties
+        - Keeps JavaScript responsible for the user's selection and its persistence
+        - Makes the toggle keyboard and screen-reader accessible
+        - Checks contrast and focus visibility in both themes
+        - Must NOT: Synchronizes styles across elements with JavaScript effects
+- description: "UI: associate an email error message with its field instead of relying on color"
+  metadata:
+    skill: ui-like-corbin
+    kind: behavior
+    behaviorId: error-not-color-only
+    caseId: ui-like-corbin/error-not-color-only
+  vars:
+    skill: ui-like-corbin
+    kind: behavior
+    request: Fix the email field's error state.
+    context: The email field's invalid state only changes the border color to red.
+    skillSource: file://ui-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Adds a text error message programmatically associated with the field
+        - Makes the error understandable without relying on color alone
+        - Must NOT: Expands into an audit of every form in the product

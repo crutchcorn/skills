@@ -1,0 +1,234 @@
+- description: "Scaffolding routing: select for starting an SSR app with a REST API"
+  metadata:
+    skill: scaffold-like-corbin
+    kind: trigger
+    caseId: scaffold-like-corbin/trigger-positive-1
+  providers:
+    - candidate
+  vars:
+    skill: scaffold-like-corbin
+    kind: trigger
+    request: "Start a new project: a web app with SSR and a REST API."
+    context: ""
+    shouldLoad: true
+  assert: &a1
+    - type: is-json
+      value:
+        type: object
+        additionalProperties: false
+        required:
+          - skills
+        properties:
+          skills:
+            type: array
+            uniqueItems: true
+            items:
+              type: string
+              minLength: 1
+              enum:
+                - architect-like-corbin
+                - choose-libraries-like-corbin
+                - docs-like-corbin
+                - git-like-corbin
+                - maintain-like-corbin
+                - perf-like-corbin
+                - scaffold-like-corbin
+                - test-like-corbin
+                - ui-like-corbin
+                - web-stack-like-corbin
+                - write-like-corbin
+    - type: javascript
+      value: JSON.parse(output).skills.includes(context.vars.skill) === context.vars.shouldLoad
+- description: "Scaffolding routing: select for adding a shared API contracts package"
+  metadata:
+    skill: scaffold-like-corbin
+    kind: trigger
+    caseId: scaffold-like-corbin/trigger-positive-2
+  providers:
+    - candidate
+  vars:
+    skill: scaffold-like-corbin
+    kind: trigger
+    request: Add a shared api-contracts package to this monorepo.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Scaffolding routing: select for aligning local checks and GitHub Actions"
+  metadata:
+    skill: scaffold-like-corbin
+    kind: trigger
+    caseId: scaffold-like-corbin/trigger-positive-3
+  providers:
+    - candidate
+  vars:
+    skill: scaffold-like-corbin
+    kind: trigger
+    request: Set up CI so local checks and GitHub Actions run the same thing.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Scaffolding routing: select for configuring npm package publishing"
+  metadata:
+    skill: scaffold-like-corbin
+    kind: trigger
+    caseId: scaffold-like-corbin/trigger-positive-4
+  providers:
+    - candidate
+  vars:
+    skill: scaffold-like-corbin
+    kind: trigger
+    request: Configure npm publishing for our packages.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Scaffolding routing: select for consolidating three repositories into a monorepo"
+  metadata:
+    skill: scaffold-like-corbin
+    kind: trigger
+    caseId: scaffold-like-corbin/trigger-positive-5
+  providers:
+    - candidate
+  vars:
+    skill: scaffold-like-corbin
+    kind: trigger
+    request: Combine our three repos into one monorepo.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Scaffolding routing: skip a checkout form bug fix"
+  metadata:
+    skill: scaffold-like-corbin
+    kind: trigger
+    caseId: scaffold-like-corbin/trigger-negative-1
+  providers:
+    - candidate
+  vars:
+    skill: scaffold-like-corbin
+    kind: trigger
+    request: Fix the bug in the checkout form.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Scaffolding routing: skip writing a README introduction"
+  metadata:
+    skill: scaffold-like-corbin
+    kind: trigger
+    caseId: scaffold-like-corbin/trigger-negative-2
+  providers:
+    - candidate
+  vars:
+    skill: scaffold-like-corbin
+    kind: trigger
+    request: Write the README intro paragraph.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Scaffolding routing: skip explaining Nx and Turborepo performance"
+  metadata:
+    skill: scaffold-like-corbin
+    kind: trigger
+    caseId: scaffold-like-corbin/trigger-negative-3
+  providers:
+    - candidate
+  vars:
+    skill: scaffold-like-corbin
+    kind: trigger
+    request: Why is Nx faster than Turborepo?
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Scaffolding routing: skip adding a date parser test"
+  metadata:
+    skill: scaffold-like-corbin
+    kind: trigger
+    caseId: scaffold-like-corbin/trigger-negative-4
+  providers:
+    - candidate
+  vars:
+    skill: scaffold-like-corbin
+    kind: trigger
+    request: Add a test for the date parser.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Scaffolding: create only the needed TanStack Start and Hono apps in a pnpm workspace"
+  metadata:
+    skill: scaffold-like-corbin
+    kind: behavior
+    behaviorId: smallest-useful-monorepo
+    caseId: scaffold-like-corbin/smallest-useful-monorepo
+  vars:
+    skill: scaffold-like-corbin
+    kind: behavior
+    request: "Scaffold a new project: a React app with SSR and a substantial backend API. No marketing
+      site yet."
+    context: ""
+    skillSource: file://scaffold-like-corbin/SKILL.md
+    reference: file://scaffold-like-corbin/references/workspace-ci-and-releases.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Creates a pnpm monorepo with separate TanStack Start and Hono apps
+        - Creates only the apps and packages needed now
+        - Exposes root-level development and verification commands
+        - Keeps Node and pnpm versions in one authoritative declaration
+        - Must NOT: Adds placeholder packages such as an empty UI library with no consumer
+        - Must NOT: Deploys or creates remote infrastructure
+        - Must NOT: Adds Nx or Turborepo without a stated coordination need
+- description: "Scaffolding: run local check commands in CI and make security findings fail"
+  metadata:
+    skill: scaffold-like-corbin
+    kind: behavior
+    behaviorId: ci-matches-local
+    caseId: scaffold-like-corbin/ci-matches-local
+  vars:
+    skill: scaffold-like-corbin
+    kind: behavior
+    request: Add a GitHub Actions workflow that runs our checks.
+    context: "The repo has root scripts: `lint`, `typecheck`, `test`, `build`. Node and pnpm versions
+      are declared in `package.json` `engines` and `packageManager`."
+    skillSource: file://scaffold-like-corbin/SKILL.md
+    reference: file://scaffold-like-corbin/references/workspace-ci-and-releases.md
+  assert:
+    - type: llm-rubric
+      value: >-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+
+        - Calls the same root commands developers run locally
+
+        - Lets failures propagate with a non-zero exit
+
+        - Derives Node and pnpm versions from the existing declarations instead of pinning
+        separately
+
+        - Lints the workflow with Zizmor configured so findings fail the check
+
+        - Must NOT: Uses continue-on-error or similar to make the pipeline pass
+
+        - Must NOT: Uploads Zizmor SARIF alone and treats that as the gate
+- description: "Scaffolding: configure Changesets and npm Trusted Publishing without publishing a package"
+  metadata:
+    skill: scaffold-like-corbin
+    kind: behavior
+    behaviorId: trusted-publishing
+    caseId: scaffold-like-corbin/trusted-publishing
+  vars:
+    skill: scaffold-like-corbin
+    kind: behavior
+    request: Set up npm publishing.
+    context: "`packages/*` contains two public libraries. No release tooling exists."
+    skillSource: file://scaffold-like-corbin/SKILL.md
+    reference: file://scaffold-like-corbin/references/workspace-ci-and-releases.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Uses Changesets for versioning and release notes
+        - Uses npm Trusted Publishing with GitHub OIDC and grants id-token: write to the publish job
+        - Verifies current runner and publisher compatibility rather than copying an old example
+        - Must NOT: Introduces a long-lived NPM_TOKEN as the publish mechanism
+        - Must NOT: Publishes a package to test the setup

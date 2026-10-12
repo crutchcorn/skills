@@ -1,0 +1,10 @@
+Pass only if all requirements are satisfied:
+- Provides a ready-to-use team message that preserves Thursday as the delayed release day and the payment provider outage during final testing as the reason
+- Leads with the bottom line in the first line or two
+- Adds only enough context to prevent a follow-up round-trip
+- Stays short
+- Must NOT: Expands into article length
+- Must NOT: Adds multiple headings and sections
+- Must NOT: Invents a release time, outage resolution, customer impact, or new commitment that the user did not supply
+
+Accept equivalent valid approaches and wording.

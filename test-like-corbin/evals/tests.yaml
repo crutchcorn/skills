@@ -1,0 +1,268 @@
+- description: "Testing routing: select for a regression that loses profile input after a failed save"
+  metadata:
+    skill: test-like-corbin
+    kind: trigger
+    caseId: test-like-corbin/trigger-positive-1
+  providers:
+    - candidate
+  vars:
+    skill: test-like-corbin
+    kind: trigger
+    request: "Add a test for this bug: saving a profile fails and the form loses what I typed."
+    context: ""
+    shouldLoad: true
+  assert: &a1
+    - type: is-json
+      value:
+        type: object
+        additionalProperties: false
+        required:
+          - skills
+        properties:
+          skills:
+            type: array
+            uniqueItems: true
+            items:
+              type: string
+              minLength: 1
+              enum:
+                - architect-like-corbin
+                - choose-libraries-like-corbin
+                - docs-like-corbin
+                - git-like-corbin
+                - maintain-like-corbin
+                - perf-like-corbin
+                - scaffold-like-corbin
+                - test-like-corbin
+                - ui-like-corbin
+                - web-stack-like-corbin
+                - write-like-corbin
+    - type: javascript
+      value: JSON.parse(output).skills.includes(context.vars.skill) === context.vars.shouldLoad
+- description: "Testing routing: select for deciding whether a change needs tests"
+  metadata:
+    skill: test-like-corbin
+    kind: trigger
+    caseId: test-like-corbin/trigger-positive-2
+  providers:
+    - candidate
+  vars:
+    skill: test-like-corbin
+    kind: trigger
+    request: Does this change need tests?
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Testing routing: select for setting up tests in a new Hono app"
+  metadata:
+    skill: test-like-corbin
+    kind: trigger
+    caseId: test-like-corbin/trigger-positive-3
+  providers:
+    - candidate
+  vars:
+    skill: test-like-corbin
+    kind: trigger
+    request: Set up testing for this new Hono app.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Testing routing: select for reviewing pull request tests"
+  metadata:
+    skill: test-like-corbin
+    kind: trigger
+    caseId: test-like-corbin/trigger-positive-4
+  providers:
+    - candidate
+  vars:
+    skill: test-like-corbin
+    kind: trigger
+    request: Review the tests in this PR.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Testing routing: select when excessive mocking hides real bugs"
+  metadata:
+    skill: test-like-corbin
+    kind: trigger
+    caseId: test-like-corbin/trigger-positive-5
+  providers:
+    - candidate
+  vars:
+    skill: test-like-corbin
+    kind: trigger
+    request: Our tests mock everything and still miss bugs. Help.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Testing routing: skip adding a button loading state"
+  metadata:
+    skill: test-like-corbin
+    kind: trigger
+    caseId: test-like-corbin/trigger-negative-1
+  providers:
+    - candidate
+  vars:
+    skill: test-like-corbin
+    kind: trigger
+    request: Add a loading state to the button.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Testing routing: skip writing a version migration guide"
+  metadata:
+    skill: test-like-corbin
+    kind: trigger
+    caseId: test-like-corbin/trigger-negative-2
+  providers:
+    - candidate
+  vars:
+    skill: test-like-corbin
+    kind: trigger
+    request: Write the migration guide for v2.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Testing routing: skip choosing a database"
+  metadata:
+    skill: test-like-corbin
+    kind: trigger
+    caseId: test-like-corbin/trigger-negative-3
+  providers:
+    - candidate
+  vars:
+    skill: test-like-corbin
+    kind: trigger
+    request: Which database should we use?
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Testing routing: skip renaming a function throughout the codebase"
+  metadata:
+    skill: test-like-corbin
+    kind: trigger
+    caseId: test-like-corbin/trigger-negative-4
+  providers:
+    - candidate
+  vars:
+    skill: test-like-corbin
+    kind: trigger
+    request: Rename getUser to fetchUser across the codebase.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Testing: reproduce a failed profile save through the real form and retain entered input"
+  metadata:
+    skill: test-like-corbin
+    kind: behavior
+    behaviorId: browser-integration-regression
+    caseId: test-like-corbin/browser-integration-regression
+  vars:
+    skill: test-like-corbin
+    kind: behavior
+    request: When saving a profile fails, the form loses everything I typed. Cover this with a test.
+    context: React app using Vitest Browser Mode with Playwright and MSW. The profile form calls `PUT
+      /api/profile`.
+    skillSource: file://test-like-corbin/SKILL.md
+    reference: file://test-like-corbin/references/test-decisions.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Renders the real form and interacts through labeled controls
+        - Intercepts the HTTP request with MSW to return a failure
+        - Asserts that the input is retained and an actionable error is visible
+        - Confirms the new test fails against the current buggy behavior before any fix
+        - Must NOT: Mocks the submission hook or child components
+        - Must NOT: Asserts internal state such as a loading flag
+        - Must NOT: Adds a screenshot test
+- description: "Testing: use existing checks and inspection for a cosmetic CSS change"
+  metadata:
+    skill: test-like-corbin
+    kind: behavior
+    behaviorId: no-test-for-cosmetic-change
+    caseId: test-like-corbin/no-test-for-cosmetic-change
+  vars:
+    skill: test-like-corbin
+    kind: behavior
+    request: I renamed a CSS class and adjusted the heading spacing. What tests should I add?
+    context: ""
+    skillSource: file://test-like-corbin/SKILL.md
+    reference: file://test-like-corbin/references/test-decisions.md
+  assert:
+    - type: llm-rubric
+      value: >-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+
+        - Explains that no new test is warranted and recommends running existing checks and
+        inspecting the result
+
+        - Must NOT: Adds DOM snapshot or screenshot tests
+- description: "Testing: verify duplicate registrations through real PostgreSQL queries"
+  metadata:
+    skill: test-like-corbin
+    kind: behavior
+    behaviorId: real-database-boundary
+    caseId: test-like-corbin/real-database-boundary
+  vars:
+    skill: test-like-corbin
+    kind: behavior
+    request: Add a test that duplicate registrations are rejected.
+    context: Hono API with Drizzle and PostgreSQL. The `users.email` column has a unique constraint.
+    skillSource: file://test-like-corbin/SKILL.md
+    reference: file://test-like-corbin/references/test-decisions.md
+  assert:
+    - type: llm-rubric
+      value: >-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+
+        - Uses a disposable real PostgreSQL database with real queries
+
+        - Exercises the application operation and asserts the duplicate is rejected in the intended
+        way
+
+        - Must NOT: Mocks the repository or ORM to return a duplicate error
+- description: "Testing: set up Vitest Browser Mode with Playwright for a new frontend"
+  metadata:
+    skill: test-like-corbin
+    kind: behavior
+    behaviorId: preferred-setup-for-new-app
+    caseId: test-like-corbin/preferred-setup-for-new-app
+  vars:
+    skill: test-like-corbin
+    kind: behavior
+    request: Set up frontend testing.
+    context: A new React app with no test setup.
+    skillSource: file://test-like-corbin/SKILL.md
+    reference: file://test-like-corbin/references/test-decisions.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Uses Vitest Browser Mode with Playwright
+        - Consults current documentation for version-sensitive configuration
+        - Must NOT: Writes tests for every component just because the runner is now configured
+- description: "Testing: add date parser coverage with the existing Jest runner"
+  metadata:
+    skill: test-like-corbin
+    kind: behavior
+    behaviorId: respect-existing-runner
+    caseId: test-like-corbin/respect-existing-runner
+  vars:
+    skill: test-like-corbin
+    kind: behavior
+    request: Add a test for the new date parser.
+    context: The repo uses Jest with React Testing Library and has about 300 existing tests.
+    skillSource: file://test-like-corbin/SKILL.md
+    reference: file://test-like-corbin/references/test-decisions.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Uses the existing Jest setup
+        - Must NOT: Migrates the suite to Vitest or adds a second runner

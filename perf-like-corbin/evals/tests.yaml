@@ -1,0 +1,227 @@
+- description: "Performance routing: select for a dashboard that takes four seconds to load"
+  metadata:
+    skill: perf-like-corbin
+    kind: trigger
+    caseId: perf-like-corbin/trigger-positive-1
+  providers:
+    - candidate
+  vars:
+    skill: perf-like-corbin
+    kind: trigger
+    request: The dashboard takes four seconds to load.
+    context: ""
+    shouldLoad: true
+  assert: &a1
+    - type: is-json
+      value:
+        type: object
+        additionalProperties: false
+        required:
+          - skills
+        properties:
+          skills:
+            type: array
+            uniqueItems: true
+            items:
+              type: string
+              minLength: 1
+              enum:
+                - architect-like-corbin
+                - choose-libraries-like-corbin
+                - docs-like-corbin
+                - git-like-corbin
+                - maintain-like-corbin
+                - perf-like-corbin
+                - scaffold-like-corbin
+                - test-like-corbin
+                - ui-like-corbin
+                - web-stack-like-corbin
+                - write-like-corbin
+    - type: javascript
+      value: JSON.parse(output).skills.includes(context.vars.skill) === context.vars.shouldLoad
+- description: "Performance routing: select for investigating a 200 KB bundle increase"
+  metadata:
+    skill: perf-like-corbin
+    kind: trigger
+    caseId: perf-like-corbin/trigger-positive-2
+  providers:
+    - candidate
+  vars:
+    skill: perf-like-corbin
+    kind: trigger
+    request: Our bundle grew 200 KB after the last release. Find out why.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Performance routing: select when Monaco loads on pages without the editor"
+  metadata:
+    skill: perf-like-corbin
+    kind: trigger
+    caseId: perf-like-corbin/trigger-positive-3
+  providers:
+    - candidate
+  vars:
+    skill: perf-like-corbin
+    kind: trigger
+    request: Only the editor page uses Monaco, but it's in every page's bundle.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Performance routing: select for speeding up the search endpoint"
+  metadata:
+    skill: perf-like-corbin
+    kind: trigger
+    caseId: perf-like-corbin/trigger-positive-4
+  providers:
+    - candidate
+  vars:
+    skill: perf-like-corbin
+    kind: trigger
+    request: Make the search endpoint faster.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Performance routing: select for improving React list rendering"
+  metadata:
+    skill: perf-like-corbin
+    kind: trigger
+    caseId: perf-like-corbin/trigger-positive-5
+  providers:
+    - candidate
+  vars:
+    skill: perf-like-corbin
+    kind: trigger
+    request: Optimize this React list rendering.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Performance routing: skip adding a dark mode toggle"
+  metadata:
+    skill: perf-like-corbin
+    kind: trigger
+    caseId: perf-like-corbin/trigger-negative-1
+  providers:
+    - candidate
+  vars:
+    skill: perf-like-corbin
+    kind: trigger
+    request: Add a dark mode toggle.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Performance routing: skip an explanation of tree shaking"
+  metadata:
+    skill: perf-like-corbin
+    kind: trigger
+    caseId: perf-like-corbin/trigger-negative-2
+  providers:
+    - candidate
+  vars:
+    skill: perf-like-corbin
+    kind: trigger
+    request: Explain what tree shaking is.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Performance routing: skip fixing a failing type check"
+  metadata:
+    skill: perf-like-corbin
+    kind: trigger
+    caseId: perf-like-corbin/trigger-negative-3
+  providers:
+    - candidate
+  vars:
+    skill: perf-like-corbin
+    kind: trigger
+    request: Fix the failing type check.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Performance routing: skip writing a Core Web Vitals blog post"
+  metadata:
+    skill: perf-like-corbin
+    kind: trigger
+    caseId: perf-like-corbin/trigger-negative-4
+  providers:
+    - candidate
+  vars:
+    skill: perf-like-corbin
+    kind: trigger
+    request: Write a blog post about Core Web Vitals.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Performance: measure the reports page before and after changes under representative conditions"
+  metadata:
+    skill: perf-like-corbin
+    kind: behavior
+    behaviorId: measure-before-and-after
+    caseId: perf-like-corbin/measure-before-and-after
+  vars:
+    skill: perf-like-corbin
+    kind: behavior
+    request: Speed up the reports page.
+    context: A TanStack Start app. The `/reports` route feels slow in production. The project already
+      has Lighthouse CI configured.
+    skillSource: file://perf-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: >-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+
+        - Measures a baseline with the existing tooling before changing code
+
+        - Measures production output or representative conditions rather than a dev build
+
+        - Reports before and after results with the tested conditions and any remaining uncertainty
+
+        - Must NOT: Claims a speedup without measurement
+
+        - Must NOT: Removes a visual or feature to improve the metric without explaining the
+        tradeoff
+- description: "Performance: load Monaco only on the editor route and check both loading paths"
+  metadata:
+    skill: perf-like-corbin
+    kind: behavior
+    behaviorId: route-specific-loading
+    caseId: perf-like-corbin/route-specific-loading
+  vars:
+    skill: perf-like-corbin
+    kind: behavior
+    request: Fix the bundle so only the editor page pays for Monaco.
+    context: "`monaco-editor` is imported from a shared layout component, so every route ships it. Only
+      `/editor` uses it."
+    skillSource: file://perf-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Uses the framework's route loading or code-splitting mechanism
+        - Checks both the editor page and an unrelated page afterward
+        - Accounts for the cost of deferred loading on the editor interaction itself
+        - Must NOT: Adds a benchmark framework when existing tooling suffices
+- description: "Performance: remove theme switching jank with CSS custom properties"
+  metadata:
+    skill: perf-like-corbin
+    kind: behavior
+    behaviorId: css-over-js-sync
+    caseId: perf-like-corbin/css-over-js-sync
+  vars:
+    skill: perf-like-corbin
+    kind: behavior
+    request: Fix the jank.
+    context: The theme switcher runs a `useEffect` that loops over about forty elements and sets inline
+      `style.backgroundColor` and `style.color` on each when the theme changes. Users report jank
+      when switching.
+    skillSource: file://perf-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Moves theme values to CSS custom properties and the cascade
+        - Keeps JavaScript responsible only for the user's preference and its persistence
+        - Verifies the switch is still visually correct afterward
+        - Must NOT: Removes the theme switcher or reduces its functionality

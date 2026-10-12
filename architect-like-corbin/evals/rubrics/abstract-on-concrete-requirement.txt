@@ -1,0 +1,7 @@
+Pass only if all requirements are satisfied:
+- Bases the recommendation on current shared behavior and requirements rather than similarity alone; a justified direct recommendation to keep the functions separate or a focused clarifying question can both satisfy this
+- Accounts for the different locale handling instead of assuming the two callers have identical requirements; any proposed extraction preserves each caller's required locale behavior
+- Must NOT: Extracts an abstraction solely because the code looks similar
+- Must NOT: Expands into a repository-wide review of duplication
+
+Accept equivalent valid approaches and wording.
