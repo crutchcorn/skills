@@ -1,13 +1,13 @@
 ---
 name: git-like-corbin
-description: "Apply Corbin Crutchley's Git workflow when implementing repository changes, organizing commits, synchronizing branches, or preparing a push. Commit incrementally using Conventional Commits, require explicit push permission, and never rebase or force push. Loading this skill for a review or planning task does not authorize repository changes."
+description: "Apply Corbin Crutchley's Git workflow when implementing repository changes, organizing commits, synchronizing branches, or preparing a push. Commit incrementally using Conventional Commits, require explicit push permission, and never rebase, force push, rewrite published commits, or discard work. Loading this skill for a review or planning task does not authorize repository changes."
 ---
 
 # Git Like Corbin
 
 Keep progress in coherent incremental commits and preserve existing history. Apply this workflow to authorized repository work; honor a request to leave changes uncommitted.
 
-When asked to establish repository guidance, also record the push, rebase, and force-push constraints in its `AGENTS.md` so they are available outside this skill. Loading the skill alone does not call for changing repository guidance.
+When asked to establish repository guidance, also record the push, history-rewriting, and force-push constraints in its `AGENTS.md` so they are available outside this skill.
 
 ## Commit in useful increments
 
@@ -17,7 +17,7 @@ Keep changes focused enough to review on their own. Separate migrations from unr
 
 Stage specific files or hunks belonging to the current task. Never use `git add .` when unrelated work is present. Preserve unrelated work, including changes already staged by the user. Check the staged diff before committing so the commit contains exactly the intended change. Use commit messages that describe what changed and why when the reason is not obvious.
 
-Continue building on earlier commits as work progresses. A read-only review, a planning request, or simply invoking the skill does not call for creating commits.
+Continue building on earlier commits as work progresses.
 
 ## Use Conventional Commits
 
@@ -27,7 +27,7 @@ Use proper prefixes from [Conventional Commits 1.0.0](https://www.conventionalco
 - Choose an appropriate type for other changes, such as `docs:`, `refactor:`, `perf:`, `test:`, `build:`, `ci:`, or `chore:`. These additional types are allowed, not a fixed exhaustive list mandated by the specification.
 - Mark breaking changes with `!` immediately before the colon, such as `feat(api)!: remove the legacy response format`, or a `BREAKING CHANGE:` footer explaining the change. When using `!` alone, describe the breaking change in the commit description.
 
-For example: `fix(forms): retain input after a failed submission` or `docs: explain local setup`. Check the type and description before committing. Adopting this convention does not permit rebasing or force pushing to repair older commit messages.
+For example: `fix(forms): retain input after a failed submission` or `docs: explain local setup`. Check the type and description before committing. Adopting this convention does not permit rewriting older commits to repair their messages.
 
 ## Require explicit permission to push
 
@@ -37,10 +37,16 @@ Carry forward explicit permission already given in the conversation for the rele
 
 If a requested external workflow requires a push and the user's instructions do not explicitly authorize one, finish its local preparation before asking for push permission.
 
-## Never rebase or force push
+## Never rewrite or discard history
 
 Never run `git rebase`, `git pull --rebase`, or another operation that invokes a rebase. Never force push, including `--force`, `--force-with-lease`, `--force-if-includes`, or a leading `+` refspec. Do not use tools, aliases, or configuration changes to perform these operations indirectly.
 
+Treat other history-rewriting and work-discarding commands with the same care:
+
+- Amend only the most recent commit, only when it was created in the current task and has not been pushed, and only when the result is still one coherent change. Fix any other commit with a follow-up commit.
+- Do not run `git reset --hard`, `git checkout -- <path>`, `git restore`, `git clean`, `git stash drop`, or `git branch -D` on work that is not part of the current task without the user's explicit request. These discard changes, including the user's uncommitted work.
+- Do not delete remote branches or tags unless the user explicitly asks.
+
 When synchronization is part of the authorized task, fetch and inspect the branch relationship, then use a normal fast-forward or merge that preserves existing commits. Account for configuration that makes `git pull` rebase by default; use explicit non-rebasing commands instead. Do not change global Git settings to complete a task.
 
-If a normal push is rejected, inspect the divergence and reconcile with a merge when appropriate. Do not retry with a force option. If repository requirements can only be met through rebase or forced publication, explain the conflict and leave that operation undone.
+If a normal push is rejected, inspect the divergence and reconcile with a merge when appropriate. Do not retry with a force option. If repository requirements can only be met through rebase, forced publication, or discarding work, explain the conflict and leave that operation undone.

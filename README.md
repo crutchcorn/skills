@@ -30,7 +30,7 @@ Now we've given it both the problem and an approach to solving it.
 | --- | --- |
 | [Write Like Corbin](write-like-corbin/SKILL.md) | Explain an idea with clear examples, visible reasoning, and a little personality. |
 | [Docs Like Corbin](docs-like-corbin/SKILL.md) | Help people use your project and find the context behind its decisions. |
-| [Git Like Corbin](git-like-corbin/SKILL.md) | Keep changes easy to review, with explicit rules against rebasing, force pushes, and pushing without permission. |
+| [Git Like Corbin](git-like-corbin/SKILL.md) | Keep changes easy to review, with explicit rules against rewriting history, force pushes, discarding work, and pushing without permission. |
 | [Test Like Corbin](test-like-corbin/SKILL.md) | Protect against meaningful bugs with tests that exercise real behavior. |
 | [Choose Libraries Like Corbin](choose-libraries-like-corbin/SKILL.md) | Decide when built-in tooling, a maintained library, or a little custom code fits best. |
 | [Architect Like Corbin](architect-like-corbin/SKILL.md) | Fit a feature into the project you have and keep reusable code useful to other projects. |
