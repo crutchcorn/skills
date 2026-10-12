@@ -36,8 +36,13 @@ pnpm eval:view
 `pnpm eval` runs all 141 cases. Routing cases see only skill descriptions;
 behavior cases receive skill text and supporting references through native
 `file://` variables. Behavior cases compare the same model with and without the
-skill. Tools are unavailable in this suite: it measures proposed actions and
-actual prose deliverables, not repository execution or reference discovery.
+skill. Compare candidate results with the no-skill control to identify where the
+skill helps; inspect control failures separately. To gate on skill-enabled behavior, use
+`pnpm eval --filter-providers candidate`. A comparison run can exit unsuccessfully
+when only its no-skill controls fail.
+
+Tools are unavailable in this suite: it measures proposed actions and actual
+prose deliverables, not repository execution or reference discovery.
 
 The grader sees the original request, context, response, and one combined rubric
 per case. Criteria preserve task facts and allow different valid approaches. The
