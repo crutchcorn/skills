@@ -98,6 +98,17 @@ grader prompt.
 
 ## GitHub Actions
 
+[The Zizmor workflow](.github/workflows/zizmor.yml) checks GitHub Actions on
+pushes to `main` and PRs targeting `main`, including forks. Findings appear as
+annotations and fail the job. Run the same pinned version locally:
+
+```sh
+uvx zizmor==1.30.1 .
+```
+
+Set `GH_TOKEN` to enable the online audits that CI runs. Without a token, the
+local command performs offline audits only.
+
 [The Promptfoo workflow](.github/workflows/promptfoo.yml) runs on every push to
 `main`, including merges, and on pull requests targeting `main`. It uses the
 [pinned CLI through the package scripts](https://www.promptfoo.dev/docs/integrations/ci-cd/)
