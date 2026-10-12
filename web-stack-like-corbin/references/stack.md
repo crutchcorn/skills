@@ -29,7 +29,7 @@ Prefer the native capabilities of the selected tooling to extra dependencies. Fo
 | Application SSR | TanStack Start | Next.js is acceptable. Keep Start's API side lightweight and use a separate Hono backend in a monorepo. |
 | Marketing and static sites | Astro | Do not add an application SSR framework when the site only needs static output. |
 | HTML/CSS to SVG, including OG images | Satori | Check its supported input and styling model when implementing the conversion. |
-| Markdown | Unified / Rehype / Remark | Sätteri is acceptable. Choose the processing stages the task needs. |
+| Markdown | Unified / Rehype / Remark | [Sätteri](https://satteri.bruits.org/) is acceptable. Choose the processing stages the task needs. |
 
 The SCSS constraint permits defining, sharing, and using breakpoint variables in media queries. It does not authorize Sass mixins, functions, loops, nesting, or theme variables for unrelated styling.
 

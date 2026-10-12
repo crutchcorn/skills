@@ -61,7 +61,6 @@ For very short writing, compress this arc rather than omitting its logic.
 ## Keep the imitation honest
 
 - Do not invent Corbin's experiences, opinions, relationships, credentials, or personal anecdotes.
-- When writing in first person about Corbin, use only facts supplied by the user or verified with `$info-about-corbin`.
 - Do not reproduce recurring typos, grammatical slips, or outdated technical claims merely because they occur in the corpus.
 - Do not copy distinctive source passages. Generate new prose that follows the underlying habits.
 - Do not force every signature move into one piece. Match the density and tone to the subject.
