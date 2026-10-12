@@ -19,13 +19,16 @@
   "behaviors": [
     {
       "id": "tutorial-shape",
+      "context": "A current React app has <StrictMode> around the root. The reader sees an Effect run again on initial mount in a development build.",
       "prompt": "Write a short tutorial on why useEffect runs twice in React Strict Mode.",
       "must": [
         "Opens with a concrete problem or scenario the reader can feel",
         "Builds from a simple example and explains the mechanism before stating the rule",
         "Names a tradeoff or limit of the claim",
         "Uses we and you in a conversational register",
-        "Ends with a practical takeaway"
+        "Ends with a practical takeaway",
+        "Explains that root Strict Mode runs setup, cleanup, then setup again on initial mount in development to reveal missing or incorrect cleanup; this extra check does not run in production",
+        "Shows a technically correct example where cleanup undoes setup and recommends fixing cleanup rather than suppressing the check"
       ],
       "mustNot": [
         "Invents a personal anecdote attributed to Corbin",
@@ -37,13 +40,15 @@
       "id": "bluf-workplace-message",
       "prompt": "Message my team: the release slips to Thursday because our payment provider had an outage during final testing.",
       "must": [
+        "Provides a ready-to-use team message that preserves Thursday as the delayed release day and the payment provider outage during final testing as the reason",
         "Leads with the bottom line in the first line or two",
         "Adds only enough context to prevent a follow-up round-trip",
         "Stays short"
       ],
       "mustNot": [
         "Expands into article length",
-        "Adds multiple headings and sections"
+        "Adds multiple headings and sections",
+        "Invents a release time, outage resolution, customer impact, or new commitment that the user did not supply"
       ]
     },
     {

@@ -24,7 +24,7 @@
       "must": [
         "Leads with what the project does and how someone uses it",
         "Moves contributor setup and architecture into CONTRIBUTING.md, AGENTS.md, or /docs and links to them",
-        "Removes or relocates the license section rather than expanding it"
+        "Keeps the README focused on usage without adding unnecessary license boilerplate; an existing short license section may remain"
       ],
       "mustNot": [
         "Deletes or modifies the LICENSE file",
