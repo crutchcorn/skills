@@ -1,6 +1,6 @@
 ---
 name: web-stack-like-corbin
-description: "Choose and configure Corbin Crutchley's preferred web stack when starting a web app, selecting frontend or backend tooling, or making an explicit stack migration. Covers runtime, frameworks, routing, forms, validation, state, styling, API clients, data, auth, testing, and deployment preferences. Load it for any library choice in a web application, including a single library such as a form or routing library, so the preferred option is considered first. Do not use an unrelated feature or bug fix as a reason to replace an existing stack."
+description: "Choose and configure Corbin Crutchley's preferred web stack when starting a web app, selecting frontend or backend tooling, or making an explicit stack migration. Covers runtime, frameworks, routing, forms, validation, state, styling, API clients, data, auth, testing, and deployment preferences. Load it for any library choice in a web application, including a single library such as a form or routing library, so the preferred option is considered first. Explanatory writing or framework comparisons without a project technology decision do not need this skill. Do not use an unrelated feature or bug fix as a reason to replace an existing stack."
 ---
 
 # Web Stack Like Corbin
@@ -9,7 +9,7 @@ Use Corbin's preferred tools for open technology decisions. Preserve the user's 
 
 ## Load the relevant preferences
 
-Read [references/stack.md](references/stack.md) before selecting tools. It is the source of truth for preferred tools, acceptable alternatives, and conditional choices. Choose only the pieces the project needs.
+Read [references/stack.md](references/stack.md) before selecting tools. It is the source of truth for preferred tools, acceptable alternatives, and conditional choices. For each dependency, identify the current feature or integration that will use it before adding it. Defer tools whose only consumer is a possible future feature, including validation libraries when no current input boundary needs them; the preferred stack is not an installation checklist.
 
 Read [references/compatibility.md](references/compatibility.md) when resolving package versions, configuring TypeScript execution or form logic, preserving the OpenAPI pipeline, or targeting a deployment runtime. Verify current upstream documentation before relying on release status or APIs.
 
