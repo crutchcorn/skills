@@ -1,0 +1,4 @@
+interface:
+  display_name: "Architect Like Corbin"
+  short_description: "Extend existing architecture without speculative work"
+  default_prompt: "Use $architect-like-corbin to choose a focused architecture for this change."
