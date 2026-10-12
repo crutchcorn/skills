@@ -246,8 +246,19 @@
     skill: docs-like-corbin
     kind: behavior
     request: Consolidate the agent instruction files.
-    context: "`AGENTS.md` and `CLAUDE.md` are both regular files. CLAUDE.md contains two rules that
-      AGENTS.md does not."
+    context: |-
+      `AGENTS.md` and `CLAUDE.md` are both regular files with these complete contents.
+
+      AGENTS.md:
+      # Agent guidance
+      - Use pnpm for package management.
+      - Run pnpm test before handing off changes.
+
+      CLAUDE.md:
+      # Agent guidance
+      - Use pnpm for package management.
+      - Do not hand-edit src/generated.
+      - Keep API examples in docs/api.md aligned with API changes.
     skillSource: file://docs-like-corbin/SKILL.md
     reference: file://docs-like-corbin/references/documentation-patterns.md
   assert:
@@ -255,6 +266,6 @@
       value: |-
         Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
 
-        - Inspects both files and merges the unique CLAUDE.md guidance into AGENTS.md
+        - Merges the supplied guidance into AGENTS.md, preserving the test command, generated-file restriction, and API-example rule, with the shared pnpm rule included only once
         - Replaces CLAUDE.md with a symlink to AGENTS.md and verifies the link resolves
         - Must NOT: Discards CLAUDE.md content without merging it
