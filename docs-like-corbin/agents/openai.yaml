@@ -1,0 +1,4 @@
+interface:
+  display_name: "Docs Like Corbin"
+  short_description: "Organize durable docs and temporary agent notes"
+  default_prompt: "Use $docs-like-corbin to organize this project’s documentation."
