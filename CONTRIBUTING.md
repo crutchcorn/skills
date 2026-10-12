@@ -21,8 +21,9 @@ Fill in the gitignored `.env`. All suites share exactly three settings:
 | `OPENAI_BASE_URL` | API base URL; defaults to `https://api.openai.com/v1` |
 
 The endpoint must support Responses and Chat Completions; agent runs additionally
-require Codex-compatible Responses support. Package scripts load `.env` through
-the native CLI. Node 24 and pnpm 12 are declared in `package.json`.
+require Codex-compatible Responses support. Promptfoo automatically loads `.env`
+when present and also accepts environment variables supplied by CI. Node and pnpm
+versions are declared in `package.json`.
 
 Start with a small run:
 

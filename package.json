@@ -11,11 +11,11 @@
     }
   },
   "scripts": {
-    "eval": "PROMPTFOO_CONFIG_DIR=.promptfoo promptfoo eval -c promptfooconfig.js --env-file .env",
-    "eval:calibrate": "PROMPTFOO_CONFIG_DIR=.promptfoo promptfoo eval -c promptfoo.calibration.yaml --env-file .env",
+    "eval": "PROMPTFOO_CONFIG_DIR=.promptfoo promptfoo eval -c promptfooconfig.js",
+    "eval:calibrate": "PROMPTFOO_CONFIG_DIR=.promptfoo promptfoo eval -c promptfoo.calibration.yaml",
     "eval:view": "promptfoo view .promptfoo",
     "test:evals": "promptfoo validate config -c promptfooconfig.js && promptfoo validate config -c promptfoo.calibration.yaml && promptfoo validate config -c evals/agents.yaml",
-    "eval:agents": "mkdir -p evals/results/codex-home && PROMPTFOO_CONFIG_DIR=.promptfoo promptfoo eval -c evals/agents.yaml --env-file .env"
+    "eval:agents": "mkdir -p evals/results/codex-home && PROMPTFOO_CONFIG_DIR=.promptfoo promptfoo eval -c evals/agents.yaml"
   },
   "devDependencies": {
     "@openai/codex-sdk": "0.156.1",
