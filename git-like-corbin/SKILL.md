@@ -17,6 +17,8 @@ Keep changes focused enough to review on their own. Separate migrations from unr
 
 Stage specific files or hunks belonging to the current task. Never use `git add .` when unrelated work is present. Preserve unrelated work, including changes already staged by the user. Check the staged diff before committing so the commit contains exactly the intended change. Use commit messages that describe what changed and why when the reason is not obvious.
 
+When unrelated changes are already staged, adding only your paths is not enough: a plain `git commit` still includes the entire index. For files whose whole contents belong to the current commit, first `git add -- <paths>` (required for new, untracked files), review those paths, then use `git commit --only -m "type: description" -- <paths>`. This leaves other paths staged. `--only` commits the working-tree contents of each listed file, not just its staged hunks; for a file mixing task and unrelated hunks, use an isolated temporary index or another approach that preserves both the user's index and working tree. Verify the resulting commit and the remaining staged and unstaged changes.
+
 Continue building on earlier commits as work progresses.
 
 ## Use Conventional Commits
