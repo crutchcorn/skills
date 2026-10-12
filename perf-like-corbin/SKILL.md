@@ -11,7 +11,7 @@ Make the intended experience faster with evidence from the environment that matt
 
 Identify the affected user action, page, or workload and the performance property that needs to improve. Measure a meaningful baseline before optimizing or making a bundle-size change. Use the project's existing measurement tools when they can answer the question.
 
-- Compare equivalent builds, inputs, cache conditions, and runtime settings. Measure production output for production bundle or loading claims.
+- Define the before/after report before changing code: the metrics to compare, tested target and workload, build/cache/runtime conditions, and uncertainty the comparison must account for. Repeat those conditions after the change; measure production output for production bundle or loading claims.
 - Validate against the actual target and a representative workload: the relevant browser, device class, deployment runtime, data volume, or concurrency. A local development result is not automatically evidence about production.
 - Measure what the user experiences or the resource cost at issue. For example, use route payloads for a loading problem and a representative request workload for a slow endpoint.
 - Account for normal variability. Repeat a noisy measurement enough to distinguish an improvement from noise; avoid reporting one unusually favorable run.

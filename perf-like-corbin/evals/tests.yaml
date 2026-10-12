@@ -170,11 +170,20 @@
         Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
 
 
-        - Measures a baseline with the existing tooling before changing code
+        This is a tools-unavailable planning evaluation. Require a concrete measurement and
+        reporting plan, not measurements the assistant cannot obtain.
 
-        - Measures production output or representative conditions rather than a dev build
 
-        - Reports before and after results with the tested conditions and any remaining uncertainty
+        - Commits to measuring a baseline with the existing tooling before changing code
+
+        - Plans to measure production output or representative conditions rather than a dev build
+
+        - Defines a before/after comparison with the metrics, equivalent tested conditions, and how
+        uncertainty or normal variability will be accounted for. This evidence may appear across
+        the measurement and verification plan; a separate reporting section or literal promise to
+        report is not required
+
+        - Distinguishes planned measurements from results actually available
 
         - Must NOT: Claims a speedup without measurement
 
