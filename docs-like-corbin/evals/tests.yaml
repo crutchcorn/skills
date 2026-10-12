@@ -161,9 +161,14 @@
     skill: docs-like-corbin
     kind: behavior
     request: Fix the README.
-    context: The root README.md has sections titled Architecture, Contributor Setup, and License, plus a
-      diagram of internal services. It never says what the product does. The repo has a LICENSE file
-      and a deployed instance at a URL mentioned in `wrangler.toml`.
+    context: >-
+      This fixture repository is Pantry List, a shopping-list web app. Users open the app, type an
+      item into the Add item field, select Add, and check off items as they buy them. No account is
+      required. A deployed instance is configured in `wrangler.toml`, but its URL is not supplied
+      in this context.
+      The root README.md has sections titled Architecture, Contributor Setup, and License, plus a
+      diagram of internal services. It never says what the product does. The repo has a LICENSE
+      file. No screenshots are supplied.
     skillSource: file://docs-like-corbin/SKILL.md
     reference: file://docs-like-corbin/references/documentation-patterns.md
   assert:
@@ -174,8 +179,10 @@
 
         - Leads with what the project does and how someone uses it
 
-        - Moves contributor setup and architecture into CONTRIBUTING.md, AGENTS.md, or /docs and
-        links to them
+        - Preserves contributor setup and architecture at suitable concrete destinations in
+        CONTRIBUTING.md, AGENTS.md, or /docs, and keeps the relocated material discoverable through
+        useful README links or the relevant documentation catalog; direct links to every technical
+        section from the user-facing README are not required
 
         - Keeps the README focused on usage without adding unnecessary license boilerplate; an
         existing short license section may remain
