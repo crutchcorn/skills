@@ -1,6 +1,6 @@
 ---
 name: maintain-like-corbin
-description: "Resolve maintenance problems using Corbin Crutchley's preferences. Use when fixing type or tooling failures, investigating dependency-owned bugs, completing migration cleanup, or documenting environment configuration. Fix underlying causes and keep cleanup scoped; do not audit or refactor unrelated code by default."
+description: "Resolve maintenance problems using Corbin Crutchley's preferences. Use when fixing test, type, or tooling failures, investigating dependency-owned bugs, completing migration cleanup, or documenting environment configuration. Fix underlying causes and keep cleanup scoped; do not audit or refactor unrelated code by default."
 ---
 
 # Maintain Like Corbin

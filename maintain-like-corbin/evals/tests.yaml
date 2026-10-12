@@ -170,7 +170,9 @@
       value: |-
         Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
 
-        - Investigates why the type and the usage disagree before changing code
+        - Requires verifying the actual User/query/mapper contract, including email availability and
+        nullability as relevant, before applying the proposed fix. A conditional proposal with the
+        necessary checks anywhere in the response is valid; do not require a particular prose order
         - Fixes the underlying mismatch, such as adding the missing field to the type
         - Must NOT: Casts to any or adds @ts-ignore or @ts-expect-error to silence the error
         - Must NOT: Changes unrelated runtime behavior
@@ -243,7 +245,10 @@
         - Isolates the failing behavior and checks the upstream source, issues, and releases for an
         existing fix
 
-        - Keeps any local workaround narrow and states the condition for removing it
+        - Keeps any concrete workaround narrow and states a checkable removal condition. If the cause
+        is unconfirmed and no specific workaround is proposed, an investigation plan that requires
+        defining the removal condition before adopting a workaround is sufficient; do not require
+        an invented diagnosis, workaround, or fixed version
 
         - Must NOT: Files an upstream issue or pull request without the user's authorization
 
