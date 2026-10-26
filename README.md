@@ -31,6 +31,7 @@ Now we've given it both the problem and an approach to solving it.
 | [Write Like Corbin](write-like-corbin/SKILL.md) | Explain an idea with clear examples, visible reasoning, and a little personality. |
 | [Docs Like Corbin](docs-like-corbin/SKILL.md) | Help people use your project and find the context behind its decisions. |
 | [Git Like Corbin](git-like-corbin/SKILL.md) | Keep changes easy to review, with explicit rules against rewriting history, force pushes, discarding work, and pushing without permission. |
+| [Modularize PRs like Corbin](modularize-prs-like-corbin/SKILL.md) | Explicitly split the full body of work into focused local branches, modular commits, and ready-to-use PR titles and descriptions. |
 | [Test Like Corbin](test-like-corbin/SKILL.md) | Protect against meaningful bugs with tests that exercise real behavior. |
 | [Choose Libraries Like Corbin](choose-libraries-like-corbin/SKILL.md) | Decide when built-in tooling, a maintained library, or a little custom code fits best. |
 | [Architect Like Corbin](architect-like-corbin/SKILL.md) | Fit a feature into the project you have and keep reusable code useful to other projects. |
@@ -51,3 +52,9 @@ Or, when it's time to explain what you've built:
 > Use $docs-like-corbin and $write-like-corbin to rewrite this project's README. Help a new user understand what it does and try it for themselves.
 
 These are opinionated defaults, and your project's requirements still matter. An existing Vue app can stay a Vue app. A small fix can stay a small fix. Start with one task you already need to do, choose a skill that fits, and give your agent the context to do it well.
+
+**Modularize PRs like Corbin runs only when you explicitly invoke it.** Install it alongside Git Like Corbin, Write Like Corbin, and Docs Like Corbin, then ask:
+
+> Use $modularize-prs-like-corbin to split all of this work against the default branch into focused PR branches.
+
+It includes changes across commits and the working tree, preserves the original checkout, and creates local branches with PR drafts. Each branch keeps the tests and documentation needed for its change. When separate PRs may conflict later, it explains why the split is still useful and how they depend on each other.

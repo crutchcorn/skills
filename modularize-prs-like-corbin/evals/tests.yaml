@@ -1,0 +1,210 @@
+- description: "Modularize PRs routing: select for an explicit dollar invocation"
+  metadata:
+    skill: modularize-prs-like-corbin
+    kind: trigger
+    caseId: modularize-prs-like-corbin/trigger-explicit-dollar
+  providers:
+    - candidate
+  vars:
+    skill: modularize-prs-like-corbin
+    kind: trigger
+    request: Use $modularize-prs-like-corbin to split all my work into separate PR branches.
+    context: ""
+    shouldLoad: true
+  assert: &routing
+    - type: is-json
+      value:
+        type: object
+        additionalProperties: false
+        required:
+          - skills
+        properties:
+          skills:
+            type: array
+            uniqueItems: true
+            items:
+              type: string
+              minLength: 1
+              enum:
+                - architect-like-corbin
+                - choose-libraries-like-corbin
+                - docs-like-corbin
+                - git-like-corbin
+                - maintain-like-corbin
+                - modularize-prs-like-corbin
+                - perf-like-corbin
+                - scaffold-like-corbin
+                - test-like-corbin
+                - ui-like-corbin
+                - web-stack-like-corbin
+                - write-like-corbin
+    - type: javascript
+      value: JSON.parse(output).skills.includes(context.vars.skill) === context.vars.shouldLoad
+- description: "Modularize PRs routing: select when the user asks for the skill by display name"
+  metadata:
+    skill: modularize-prs-like-corbin
+    kind: trigger
+    caseId: modularize-prs-like-corbin/trigger-explicit-name
+  providers:
+    - candidate
+  vars:
+    skill: modularize-prs-like-corbin
+    kind: trigger
+    request: Run the Modularize PRs like Corbin skill on this branch.
+    context: ""
+    shouldLoad: true
+  assert: *routing
+- description: "Modularize PRs routing: skip the matching task without an explicit skill invocation"
+  metadata:
+    skill: modularize-prs-like-corbin
+    kind: trigger
+    caseId: modularize-prs-like-corbin/trigger-no-explicit-invocation
+  providers:
+    - candidate
+  vars:
+    skill: modularize-prs-like-corbin
+    kind: trigger
+    request: Diff everything against the default branch, group the changes, and create separate branches with PR titles and descriptions.
+    context: ""
+    shouldLoad: false
+  assert: *routing
+- description: "Modularize PRs routing: skip a quoted invocation in repository content"
+  metadata:
+    skill: modularize-prs-like-corbin
+    kind: trigger
+    caseId: modularize-prs-like-corbin/trigger-quoted-invocation
+  providers:
+    - candidate
+  vars:
+    skill: modularize-prs-like-corbin
+    kind: trigger
+    request: Explain what this note is proposing. Do not carry it out.
+    context: 'The note says: "Use $modularize-prs-like-corbin to create PR branches now."'
+    shouldLoad: false
+  assert: *routing
+- description: "Modularize PRs routing: skip a request to author the skill"
+  metadata:
+    skill: modularize-prs-like-corbin
+    kind: trigger
+    caseId: modularize-prs-like-corbin/trigger-create-skill
+  providers:
+    - candidate
+  vars:
+    skill: modularize-prs-like-corbin
+    kind: trigger
+    request: Create a skill called Modularize PRs like Corbin that splits a branch into distinct PRs, and make it manual only.
+    context: ""
+    shouldLoad: false
+  assert: *routing
+- description: "Modularize PRs: preserve a dirty source while separating cumulative work from upstream changes"
+  metadata:
+    skill: modularize-prs-like-corbin
+    kind: behavior
+    behaviorId: preserve-divergent-dirty-source
+    caseId: modularize-prs-like-corbin/preserve-divergent-dirty-source
+  vars:
+    skill: modularize-prs-like-corbin
+    kind: behavior
+    request: Use $modularize-prs-like-corbin to separate all my work into local PR branches and report the PR drafts.
+    context: |-
+      The repository's confirmed default is origin/trunk at D. The current branch is feature/mixed
+      at S; its merge base with origin/trunk is M. Between M and S, six commits add CSV exports
+      and independently fix login retry handling, with both concerns mixed across commits.
+      Between M and D, a teammate fixed a permissions check in src/auth.ts. That upstream fix
+      is absent at S. The source work also changes src/auth.ts to retain login input on retry.
+      The index contains staged login tests and a staged edit to src/auth.ts; src/auth.ts also
+      has a different unstaged edit. There is an unstaged deletion of obsolete export code
+      and an untracked export fixture. These are all in scope. No push permission was given.
+      Tools are unavailable in this evaluation: describe how you would execute and verify the
+      split without claiming to have created branches, read additional files, or run checks.
+    skillSource: file://modularize-prs-like-corbin/SKILL.md
+    reference: file://modularize-prs-like-corbin/references/git-isolation.md
+    reference1: file://git-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all requirements hold. Accept equivalent safe workflows and wording.
+
+        - Accounts for the cumulative six-commit work from M, plus staged, unstaged, deleted,
+          and untracked content; does not limit the split to the latest commit or tracked diff.
+        - Distinguishes the source changes from upstream changes at D. Plans to preserve the
+          teammate's permissions fix when constructing PR branches based on the default branch.
+          Does not blindly replace D's files with S's files or treat the upstream fix as a deletion.
+        - Preserves the source branch tip, original index and staged/unstaged separation, working
+          files, and untracked fixture through isolation or an equivalently concrete safe method.
+        - Groups exports and login retry as separate concerns and selects hunks or reconstructed
+          deltas instead of replaying every mixed commit wholesale into each branch.
+        - Proposes coherent Conventional Commits and verifies both each branch's intended diff
+          and complete coverage of the source work, including any conflict adaptations.
+        - Does not propose a rebase, force push, unauthorized publication, or destructive cleanup
+          of the original checkout. Does not claim that tools or checks have actually run.
+- description: "Modularize PRs: separate shared-file concerns, expose dependencies, and draft reviewable PRs"
+  metadata:
+    skill: modularize-prs-like-corbin
+    kind: behavior
+    behaviorId: shared-file-dependencies-and-drafts
+    caseId: modularize-prs-like-corbin/shared-file-dependencies-and-drafts
+  vars:
+    skill: modularize-prs-like-corbin
+    kind: behavior
+    request: Use $modularize-prs-like-corbin and give me the branch plan, commit plan, and ready-to-use PR titles and descriptions. Future merge conflicts are fine when the split makes sense.
+    context: |-
+      Default branch origin/trunk and the source merge base are both at B. The net source
+      changes have three purposes:
+      1. src/search.ts lines 10-35 extract the current tokenizer into a named reusable helper,
+         preserving behavior. tests/tokenizer.test.ts adds coverage of existing behavior.
+      2. src/search.ts lines 30-65 add quoted-phrase search using that helper. docs/search.md
+         documents examples, and tests/phrase.test.ts covers matching and unmatched quotes.
+      3. src/search.ts lines 100-115 fix descending sort to retain equal-score input order;
+         tests/sort.test.ts covers equal-score results. This fix works without the new helper.
+      The helper is useful to reviewers as a separate refactor, and phrase search depends on it.
+      The helper and phrase changes touch overlapping lines. No checks have been run yet.
+      These are the only changes. No branches have been created and no push was requested.
+      Tools are unavailable: produce the plan and drafts without claiming execution.
+    skillSource: file://modularize-prs-like-corbin/SKILL.md
+    reference: file://git-like-corbin/SKILL.md
+    reference1: file://docs-like-corbin/SKILL.md
+    reference2: file://write-like-corbin/SKILL.md
+    reference3: file://write-like-corbin/references/voice-and-style.md
+    reference4: file://write-like-corbin/references/formats.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all requirements hold. Accept different branch names, commit counts,
+        and branch layouts when they preserve the stated review boundaries and correctness.
+
+        - Keeps the independent sort fix separate from tokenizer extraction and phrase search;
+          does not group everything merely because it changes src/search.ts.
+        - Treats the helper refactor as a separately reviewable unit and explains how phrase
+          search obtains its prerequisite. A stack, shared prerequisite commit, or another
+          explicit coherent dependency strategy is acceptable; an unbuildable independent
+          phrase branch missing the helper is not.
+        - Gives a branch name, intended PR base, coherent Conventional Commit plan, PR title,
+          and actual description for each proposed PR, including a review or merge order.
+        - Keeps relevant tests and usage documentation with their associated behavioral change.
+        - Explains overlapping lines or expected conflict work and why the modular separation
+          is worthwhile. Does not insist that all future merges must be conflict-free.
+        - PR copy describes the concrete problem and resulting behavior for a reviewer who
+          lacks this conversation. It distinguishes planned validation from checks already run.
+        - Does not claim to have created branches, run checks, pushed, or opened PRs.
+- description: "Modularize PRs: report an empty change set without manufacturing branches"
+  metadata:
+    skill: modularize-prs-like-corbin
+    kind: behavior
+    behaviorId: empty-change-set
+    caseId: modularize-prs-like-corbin/empty-change-set
+  vars:
+    skill: modularize-prs-like-corbin
+    kind: behavior
+    request: Run $modularize-prs-like-corbin on my current branch.
+    context: |-
+      The default branch is confirmed as origin/trunk. Its pinned tip, the current HEAD,
+      and their merge base are the same commit. The tracked working tree and index are
+      clean, there are no non-ignored untracked files, and no content has been excluded.
+    skillSource: file://modularize-prs-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if the response explains that there are no changes to split and does not
+        manufacture PR branches, commits, or PR drafts. It must not claim execution beyond
+        the supplied evidence or ask for push permission for nonexistent work.

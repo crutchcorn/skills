@@ -1,0 +1,6 @@
+interface:
+  display_name: "Modularize PRs like Corbin"
+  short_description: "Explicitly split work into focused local PR branches"
+  default_prompt: "Use $modularize-prs-like-corbin to split the complete changes against the default branch into focused local branches with modular commits and PR titles and descriptions."
+policy:
+  allow_implicit_invocation: false
