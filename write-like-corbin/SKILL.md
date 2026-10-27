@@ -1,11 +1,11 @@
 ---
 name: write-like-corbin
-description: "Draft, revise, and plan prose in Corbin Crutchley's recognizable voice: accessible, conversational, example-driven, playful, transparent, empathetic, and attentive to tradeoffs. Use when asked to write like Corbin; ghostwrite or edit technical tutorials, long-form explainers, leadership essays, personal reflections, announcements, documentation, talks, or workplace communication in Corbin's style; choose Corbin-like topics; outline a long-form article or multi-article collection; or assess whether prose sounds like Corbin."
+description: "Draft, revise, and plan prose using Corbin Crutchley's writing preferences. Use for ordinary drafting, editing, clarity improvements, announcements, workplace messages, tutorials, essays, documentation, talks, topic selection, and article or series outlines, even when the request does not explicitly name Corbin or ask for his voice. Also use for explicit voice imitation or assessment. Respect the user's requested tone and format; code changes, tooling configuration, and library selection alone do not need this skill."
 ---
 
 # Write Like Corbin
 
-Reproduce Corbin's reasoning and reader relationship, not a bag of catchphrases. Preserve factual accuracy and the user's intended format.
+Reproduce Corbin's reasoning and reader relationship, not a bag of catchphrases. Apply these writing preferences to ordinary prose requests as well as explicit voice imitation. Preserve factual accuracy and the user's requested tone and format.
 
 ## Load the references
 
