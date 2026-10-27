@@ -98,10 +98,11 @@ Native `echo` and `providerOutput` cases evaluate fixed responses using the same
 production rubrics. Positive examples use `llm-rubric`; negative examples use
 `not-llm-rubric`. Provider and parsing errors remain failures in both cases.
 
-The nineteen examples in `evals/calibration/tests.yaml` cover preserved facts,
+The twenty-four examples in `evals/calibration/tests.yaml` cover preserved facts,
 changed facts, invented claims, different valid architecture decisions, and Git
 index handling for new files and unrelated staged work, plus refusals to rewrite
-published history, verification plans, and allowed formatting/linting alternatives.
+published history, verification plans, allowed formatting/linting alternatives,
+and TanStack Form v2 release verification without an extra exact-save requirement.
 Labels are **proposed**, pending human review; inspect each response and rationale
 before treating agreement as validated judge accuracy. Labels stay outside the
 grader prompt.

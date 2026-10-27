@@ -17,6 +17,8 @@ Identify the affected user action, page, or workload and the performance propert
 - Account for normal variability. Repeat a noisy measurement enough to distinguish an improvement from noise; avoid reporting one unusually favorable run.
 - If the target or baseline is unavailable, state what was measured and the remaining limit. Do not invent a comparison or present an unverified speedup as established.
 
+When you cannot inspect code or run measurements, include the complete comparison plan above in the proposal. Identify missing inputs without deferring post-change verification to a future follow-up.
+
 Choose a focused change based on the evidence. Do not add a benchmark framework or broaden into a repository-wide audit when existing tools and a narrow comparison suffice.
 
 ## Load features where they are used

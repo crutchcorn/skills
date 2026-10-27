@@ -1,0 +1,7 @@
+Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+- Chooses TanStack Form v2, including a prerelease when needed, with its matching React adapter.
+- Plans to resolve and verify a concrete available v2 release and check its React peer compatibility before installation. In this tools-unavailable planning check, leaving the version unresolved as `<verified-v2-version>` pending those checks is acceptable; do not require an invented version number.
+- Uses documentation matching the selected v2 release rather than assuming v1 examples apply.
+- A version-qualified install such as `pnpm add @tanstack/react-form@<verified-v2-version>` is sufficient when paired with the prerequisite verification above. Exact manifest saving with `--save-exact`, `-E`, or an exact package.json value is also valid but is not required by the skill. Do not fail an otherwise valid plan solely because the package manager may save a version range.
+- Must NOT: Installs an unverified version or relies on a bare package name or mutable tag such as `latest` or `alpha` without first resolving and checking a concrete v2 release. Substitutes v1 because it is stable.

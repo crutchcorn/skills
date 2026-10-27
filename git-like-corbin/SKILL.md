@@ -1,6 +1,6 @@
 ---
 name: git-like-corbin
-description: "Apply Corbin Crutchley's Git workflow when implementing repository changes, organizing commits, synchronizing branches, or preparing a push. Commit incrementally using Conventional Commits, require explicit push permission, and never rebase, force push, rewrite published commits, or discard work. Loading this skill for a review or planning task does not authorize repository changes, and explaining Git concepts without touching a repository does not need it."
+description: "Apply Corbin Crutchley's Git workflow when implementing repository changes, drafting or reviewing commit messages, organizing commits, synchronizing branches, or preparing a push. Commit incrementally using Conventional Commits, require explicit push permission, and never rebase, force push, rewrite published commits, or discard work. Loading this skill to draft a message, review, or plan does not authorize repository changes, and explaining Git concepts without touching a repository does not need it."
 ---
 
 # Git Like Corbin

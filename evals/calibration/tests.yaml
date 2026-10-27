@@ -369,3 +369,92 @@
   assert:
     - type: not-llm-rubric
       value: file://web-stack-like-corbin/evals/rubrics/formatting-and-linting.txt
+- description: Accept a verified v2 installation plan without requiring exact manifest saving
+  metadata:
+    skill: web-stack-like-corbin
+    behaviorId: form-library-v2
+    expectedPass: true
+    reviewStatus: proposed
+    rationale: This exact full-suite response was rejected for omitting exact-save syntax, which the skill does not require; it leaves the concrete v2 release pending verification and checks React compatibility before installation.
+  vars: &form_library_v2
+    request: Add a form library.
+    context: An existing React app with TanStack Query. No form library yet.
+  providerOutput: |-
+    Use **TanStack Form v2** with its React adapter, `@tanstack/react-form`, including a v2 alpha if necessary. Keep TanStack Query for server state; use Form for field state, validation timing, and submission handling.
+
+    Before installing, check the app’s React version against the chosen v2 release’s peer dependencies and use that release’s documentation. I can’t verify package versions here, so the exact version remains unresolved:
+
+    ```sh
+    pnpm add @tanstack/react-form@<verified-v2-version>
+    ```
+
+    No additional validation library is needed just to introduce forms. Add Valibot only when a concrete input boundary needs runtime validation.
+
+    Share `package.json` and the first form to implement for a version-specific integration.
+  assert:
+    - type: llm-rubric
+      value: file://web-stack-like-corbin/evals/rubrics/form-library-v2.txt
+- description: Accept exact-saving an available v2 release after React compatibility checks
+  metadata:
+    skill: web-stack-like-corbin
+    behaviorId: form-library-v2
+    expectedPass: true
+    reviewStatus: proposed
+    rationale: Exact manifest saving is a valid choice when the release and adapter compatibility are verified first, even though it is not mandatory.
+  vars: *form_library_v2
+  providerOutput: >-
+    Choose TanStack Form v2 with @tanstack/react-form. Before installing, resolve
+    an available concrete v2 release, check its peer dependency range against
+    this app's React version, and confirm the form features we need. Consult
+    documentation for that release. Once those checks pass, install it with
+    pnpm add --save-exact @tanstack/react-form@<verified-v2-version>. Keep the
+    version unresolved until it has been verified; a v2 prerelease is acceptable.
+  assert:
+    - type: llm-rubric
+      value: file://web-stack-like-corbin/evals/rubrics/form-library-v2.txt
+- description: Reject installing a guessed v2 version without checking React support
+  metadata:
+    skill: web-stack-like-corbin
+    behaviorId: form-library-v2
+    expectedPass: false
+    reviewStatus: proposed
+    rationale: Exact-save syntax does not compensate for an unverified release or missing React compatibility checks.
+  vars: *form_library_v2
+  providerOutput: >-
+    Use TanStack Form v2 with @tanstack/react-form and its v2 documentation.
+    Install pnpm add --save-exact @tanstack/react-form@2.0.0 now; assume that
+    release is available and supports this React app. Investigate compatibility
+    only if installation or the build fails.
+  assert:
+    - type: not-llm-rubric
+      value: file://web-stack-like-corbin/evals/rubrics/form-library-v2.txt
+- description: Reject treating latest as a verified concrete v2 release
+  metadata:
+    skill: web-stack-like-corbin
+    behaviorId: form-library-v2
+    expectedPass: false
+    reviewStatus: proposed
+    rationale: A mutable tag alone does not establish the selected release line or React support before installation.
+  vars: *form_library_v2
+  providerOutput: >-
+    Choose TanStack Form v2 with the React adapter. Run pnpm add
+    @tanstack/react-form@latest and follow the v2 docs; latest will select the
+    appropriate release, so no version or React peer-dependency checks are needed.
+  assert:
+    - type: not-llm-rubric
+      value: file://web-stack-like-corbin/evals/rubrics/form-library-v2.txt
+- description: Reject substituting stable v1 for the requested v2 line
+  metadata:
+    skill: web-stack-like-corbin
+    behaviorId: form-library-v2
+    expectedPass: false
+    reviewStatus: proposed
+    rationale: Verifying and exact-saving a compatible release still fails when the response replaces the preferred v2 line with v1 solely for stability.
+  vars: *form_library_v2
+  providerOutput: >-
+    Use stable TanStack Form v1 instead of v2 while v2 is in alpha. Resolve an
+    available concrete v1 release of @tanstack/react-form, verify its React peer
+    dependencies, then install that exact version and use its matching v1 docs.
+  assert:
+    - type: not-llm-rubric
+      value: file://web-stack-like-corbin/evals/rubrics/form-library-v2.txt

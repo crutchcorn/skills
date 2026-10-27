@@ -193,12 +193,7 @@
     reference1: file://web-stack-like-corbin/references/stack.md
   assert:
     - type: llm-rubric
-      value: |-
-        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
-
-        - Chooses TanStack Form v2 and explicitly plans to verify and pin an available v2 release with compatible React support before installation; this tools-unavailable planning check does not require inventing an unverified version number
-        - Uses the matching React adapter and v2 documentation
-        - Must NOT: Substitutes v1 because it is stable
+      value: file://web-stack-like-corbin/evals/rubrics/form-library-v2.txt
 - description: "Web stack: add a Vue-compatible date picker without migrating the application"
   metadata:
     skill: web-stack-like-corbin
