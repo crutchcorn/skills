@@ -28,6 +28,8 @@ Investigating upstream is not permission to publish an issue, comment, pull requ
 
 ## Finish migrations within their scope
 
+For vanilla JavaScript-to-framework UI migrations, check whether the old controller, event bus, or subscription layer still exists only to trigger framework renders. Move that application-owned state into framework primitives and expose values/actions directly; a hook around the unchanged controller is not a completed ownership migration. Preserve shared lifetime and actual persistence, retry, ordering, and conflict behavior. Keep adapters for genuinely external owners. If `architect-like-corbin` is available, its framework-state migration reference provides a worked example.
+
 After the replacement works, remove code, dependencies, configuration, scripts, and documentation made obsolete by that migration. Check actual references and consumers before removal; a name that looks old is not proof that it is unused.
 
 For JavaScript/TypeScript projects, use Knip to identify unused code and dependencies. Check its configured entrypoints and dynamic consumers before acting on a finding; static analysis is evidence to investigate, not automatic permission to delete every reported item.

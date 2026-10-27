@@ -97,6 +97,20 @@
     context: ""
     shouldLoad: true
   assert: *a1
+- description: "Architecture routing: select for migrating a vanilla JavaScript report editor to React"
+  metadata:
+    skill: architect-like-corbin
+    kind: trigger
+    caseId: architect-like-corbin/trigger-positive-6
+  providers:
+    - candidate
+  vars:
+    skill: architect-like-corbin
+    kind: trigger
+    request: Migrate this vanilla JavaScript report editor and its draft state management to React.
+    context: ""
+    shouldLoad: true
+  assert: *a1
 - description: "Architecture routing: skip a login error message typo"
   metadata:
     skill: architect-like-corbin
@@ -222,3 +236,85 @@
   assert:
     - type: llm-rubric
       value: file://architect-like-corbin/evals/rubrics/abstract-on-concrete-requirement.txt
+- description: "Architecture: migrate report editing state while preserving persistence behavior"
+  metadata:
+    skill: architect-like-corbin
+    kind: behavior
+    behaviorId: framework-owned-draft-state
+    caseId: architect-like-corbin/framework-owned-draft-state
+  vars:
+    skill: architect-like-corbin
+    kind: behavior
+    request: |-
+      Finish moving our report editor from vanilla JavaScript to React. Show the intended
+      state ownership and hook/component interface, and explain what changes inside the draft
+      controller. Keep autosave, conflict recovery, and switching between reports working.
+    context: |-
+      The old application-owned createDraftController keeps draft text and save status in mutable
+      variables, with a Set of listeners, getState(), subscribe(), and notify() after each change.
+      Its setText() starts a debounced save; the transport uses optimistic versions, exposes a
+      retryable conflict state, and flush() drains queued changes before Publish. The current React
+      adapter creates the controller in an effect and returns { controller, state }, where state
+      comes from useSyncExternalStore(controller.subscribe, controller.getState).
+
+      All production consumers are now React components. The old DOM renderer has been deleted;
+      no worker, editor SDK, or other non-React consumer owns or changes this state. A report editor
+      and a separate save-status toolbar read the same draft content and status simultaneously.
+      Drafts and pending saves currently survive either view unmounting during navigation, and
+      each report is isolated by account/report identity.
+    skillSource: file://architect-like-corbin/SKILL.md
+    reference: file://architect-like-corbin/references/framework-state-migrations.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Places application-owned draft and render status in React state/reducers at an owner whose
+          lifetime supports both views and navigation, exposing current values and domain actions
+          through a hook rather than requiring consumers to operate the old controller.
+        - Retires the custom listener/snapshot notification layer for that state. Merely wrapping the
+          unchanged controller, renaming its API, or replacing the adapter with an effect subscription
+          does not satisfy this requirement.
+        - Preserves one shared draft and save process per account/report identity, rather
+          than making each hook invocation create an independent state instance or autosave loop.
+        - Keeps debouncing, optimistic-version conflict recovery, and waiting for queued changes
+          before publishing as explicit persistence behavior; React rendering is not presented as a
+          replacement for that protocol.
+        - Identifies meaningful verification for consistent editor/toolbar state, report isolation/navigation,
+          and saving or conflict recovery without claiming those checks have already run.
+- description: "Architecture: retain a real external editor store at the React boundary"
+  metadata:
+    skill: architect-like-corbin
+    kind: behavior
+    behaviorId: preserve-external-store-boundary
+    caseId: architect-like-corbin/preserve-external-store-boundary
+  vars:
+    skill: architect-like-corbin
+    kind: behavior
+    request: |-
+      Move this vanilla JavaScript document toolbar to React. The document editor itself stays as
+      it is. Show how the toolbar should read the current selection and issue formatting commands.
+    context: |-
+      A third-party non-React editor owns the document and selection. Its canvas keyboard handlers,
+      collaboration worker messages, and undo/redo commands update that state even when no toolbar
+      is mounted. Existing non-React consumers still use the editor. The supported public API is
+      editor.onChange(callback), which returns an unsubscribe function, editor.getSnapshot(), and
+      editor.toggleBold(). getSnapshot() returns the same immutable selection object until the
+      selection or formatting changes. The React app is client-rendered. Replacing the editor or
+      migrating its ownership is outside this task.
+    skillSource: file://architect-like-corbin/SKILL.md
+    reference: file://architect-like-corbin/references/framework-state-migrations.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Keeps the editor as the authoritative owner and sends formatting commands through its
+          existing API, preserving worker, keyboard, undo/redo, and non-React consumers.
+        - Uses React's external-store subscription mechanism at the adapter boundary so toolbar
+          rendering follows snapshots, with a stable subscription for the current editor instance,
+          unchanged snapshot identity between updates, and unsubscribe cleanup on unmount or replacement.
+        - Does not create a second writable React copy of the document/selection or a custom event
+          system to keep two owners synchronized.
+        - Recognizes the actual external ownership as the reason for retaining this boundary; does
+          not forbid external-store subscriptions just because the consumer is now a React component.
