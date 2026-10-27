@@ -1,0 +1,265 @@
+- description: "Rethink routing: select for repeated architectural review failures"
+  metadata:
+    skill: rethink-code-like-corbin
+    kind: trigger
+    caseId: rethink-code-like-corbin/trigger-review-churn
+  providers:
+    - candidate
+  vars:
+    skill: rethink-code-like-corbin
+    kind: trigger
+    request: This implementation has failed three rounds of architectural review. Each fix creates another problem. Reconsider it from its purpose and build a fresh version.
+    context: ""
+    shouldLoad: true
+  assert: &routing
+    - type: is-json
+      value:
+        type: object
+        additionalProperties: false
+        required:
+          - skills
+        properties:
+          skills:
+            type: array
+            uniqueItems: true
+            items:
+              type: string
+              minLength: 1
+              enum:
+                - architect-like-corbin
+                - choose-libraries-like-corbin
+                - docs-like-corbin
+                - git-like-corbin
+                - maintain-like-corbin
+                - modularize-prs-like-corbin
+                - perf-like-corbin
+                - rethink-code-like-corbin
+                - scaffold-like-corbin
+                - test-like-corbin
+                - ui-like-corbin
+                - web-stack-like-corbin
+                - write-like-corbin
+    - type: javascript
+      value: JSON.parse(output).skills.includes(context.vars.skill) === context.vars.shouldLoad
+- description: "Rethink routing: select for repeated rewrites caused by the current design"
+  metadata:
+    skill: rethink-code-like-corbin
+    kind: trigger
+    caseId: rethink-code-like-corbin/trigger-rewrite-churn
+  providers:
+    - candidate
+  vars:
+    skill: rethink-code-like-corbin
+    kind: trigger
+    request: Every small feature forces us to rewrite this parser again. Step back from its current API and redesign it around what it needs to accomplish.
+    context: ""
+    shouldLoad: true
+  assert: *routing
+- description: "Rethink routing: select for an explicit skill invocation"
+  metadata:
+    skill: rethink-code-like-corbin
+    kind: trigger
+    caseId: rethink-code-like-corbin/trigger-explicit
+  providers:
+    - candidate
+  vars:
+    skill: rethink-code-like-corbin
+    kind: trigger
+    request: Use $rethink-code-like-corbin on our report scheduler.
+    context: ""
+    shouldLoad: true
+  assert: *routing
+- description: "Rethink routing: skip a routine correction with a known cause"
+  metadata:
+    skill: rethink-code-like-corbin
+    kind: trigger
+    caseId: rethink-code-like-corbin/trigger-small-fix
+  providers:
+    - candidate
+  vars:
+    skill: rethink-code-like-corbin
+    kind: trigger
+    request: Fix the off-by-one in this pagination helper. The final page is being omitted because the loop uses less-than instead of less-than-or-equal.
+    context: ""
+    shouldLoad: false
+  assert: *routing
+- description: "Rethink routing: skip ordinary feature placement"
+  metadata:
+    skill: rethink-code-like-corbin
+    kind: trigger
+    caseId: rethink-code-like-corbin/trigger-normal-architecture
+  providers:
+    - candidate
+  vars:
+    skill: rethink-code-like-corbin
+    kind: trigger
+    request: Add CSV downloads to our existing reports module using its current extension point.
+    context: ""
+    shouldLoad: false
+  assert: *routing
+- description: "Rethink routing: skip authoring the skill itself"
+  metadata:
+    skill: rethink-code-like-corbin
+    kind: trigger
+    caseId: rethink-code-like-corbin/trigger-author-skill
+  providers:
+    - candidate
+  vars:
+    skill: rethink-code-like-corbin
+    kind: trigger
+    request: Add a skill called Rethink Code Like Corbin that teaches a cleanroom redesign workflow.
+    context: ""
+    shouldLoad: false
+  assert: *routing
+- description: "Rethink: delegate a purpose-only cleanroom implementation without inheriting the old design"
+  metadata:
+    skill: rethink-code-like-corbin
+    kind: behavior
+    behaviorId: cleanroom-delegation
+    caseId: rethink-code-like-corbin/cleanroom-delegation
+  vars:
+    skill: rethink-code-like-corbin
+    kind: behavior
+    request: |-
+      Use $rethink-code-like-corbin. Give me the brief you would send the new subagent,
+      and describe how you would isolate its work and decide whether it can be integrated.
+    context: |-
+      Our file transfer coordinator has failed several reviews. Its purpose is to transfer a
+      selected set of files, report progress, allow cancellation, and retry a failed file without
+      retransferring completed files. At most three transfers may run concurrently. Cancelled
+      transfers must not later report success. The repository uses TypeScript and has test,
+      typecheck, lint, and build commands.
+
+      The old coordinator is a singleton with mutable arrays, a global event bus, and startBatch,
+      getSnapshot, subscribe, and retryByIndex methods. Owned callers expect that interface.
+      You have already inspected that code in this conversation. A subagent can be launched
+      either with this conversation or with an empty context. No code has been changed yet.
+      Tools are unavailable here; provide the concrete brief and plan without claiming execution.
+    skillSource: file://rethink-code-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all requirements hold. Accept equivalent wording, isolation methods,
+        and reasonable API designs; no particular replacement API is required.
+
+        - Supplies an actionable brief containing transfer, progress, cancellation, retry,
+          concurrency, and cancelled-success requirements, plus relevant TypeScript and quality
+          constraints. It leaves the implementation and API to be designed around that purpose.
+        - Launches a new subagent without inherited conversation or implementation context.
+          The brief does not hand it the singleton, event bus, old method signatures, callers,
+          or existing implementation as design constraints or reference material.
+        - Gives the subagent an isolated testing-only workspace or equivalent boundary, with
+          instructions to avoid reading the old implementation and consumers or editing production
+          wiring. Simply asking an agent that already saw the old code to forget it is insufficient.
+        - Requires runnable implementation and meaningful behavior tests, repository quality
+          checks, and review against the purpose before any production integration.
+        - Does not claim to have created an agent, changed code, or run checks in this evaluation.
+- description: "Rethink: keep a flawed prototype isolated until quality and behavior checks pass"
+  metadata:
+    skill: rethink-code-like-corbin
+    kind: behavior
+    behaviorId: enforce-validation-gate
+    caseId: rethink-code-like-corbin/enforce-validation-gate
+  vars:
+    skill: rethink-code-like-corbin
+    kind: behavior
+    request: |-
+      The testing-only rewrite is ready for your next step under $rethink-code-like-corbin.
+      What should happen now, and what would make it ready to replace the production version?
+    context: |-
+      The new upload coordinator passes its happy-path unit tests and typecheck. Lint fails
+      because an error is ignored; build has not run. Its tests do not cover cancellation while
+      an upload is in flight or retries after partial success. The purpose requires cancelled
+      uploads never to report success and completed files not to be uploaded again on retry.
+      A reviewer also found a speculative plugin registry with only one implementation.
+      Production still uses the old coordinator and has not been changed. The repository's
+      standard checks are test, typecheck, lint, and build. Tools are unavailable here.
+    skillSource: file://rethink-code-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all requirements hold. Accept equivalent valid verification approaches.
+
+        - Keeps the replacement testing-only and defers production wiring and downstream
+          migration until the validation gate is satisfied.
+        - Repairs or investigates the ignored error instead of suppressing lint, and requires
+          the applicable test, typecheck, lint, and build checks to pass.
+        - Adds meaningful verification for cancellation during an in-flight upload and retries
+          after partial success, preserving both stated requirements.
+        - Reviews the plugin registry against concrete requirements and removes or simplifies
+          unjustified abstraction instead of treating passing automated checks as sufficient.
+        - Distinguishes planned work from completed checks and does not describe this prototype
+          as ready merely because happy-path tests and typecheck passed.
+- description: "Rethink: migrate controlled consumers to the validated new API without a compatibility wrapper"
+  metadata:
+    skill: rethink-code-like-corbin
+    kind: behavior
+    behaviorId: migrate-owned-consumers
+    caseId: rethink-code-like-corbin/migrate-owned-consumers
+  vars:
+    skill: rethink-code-like-corbin
+    kind: behavior
+    request: |-
+      Continue $rethink-code-like-corbin from the validated prototype. Explain the concrete
+      integration changes and how you would verify the finished migration.
+    context: |-
+      The cleanroom transfer implementation has passed test, typecheck, lint, build, and review
+      of cancellation, concurrency, retries, error handling, and API clarity. It exposes stable
+      transfer IDs, current progress, cancel(id), and retry(id). The old implementation used
+      array positions, subscribe(), and retryByIndex(index).
+
+      All consumers are owned by us and can be changed in this task: an upload dialog, a
+      progress toolbar, a background retry job, and a package in another repository we also
+      maintain and can edit. There are no public or independently maintained consumers.
+      Existing usage docs and tests demonstrate retryByIndex. Updating callers is more work
+      than adding a wrapper with the old interface. Tools are unavailable here.
+    skillSource: file://rethink-code-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all requirements hold. Accept equivalent integration sequences and checks.
+
+        - Integrates the validated replacement and migrates the upload dialog, progress toolbar,
+          retry job, and controlled package to its ID-based API, including the package in the
+          other repository. Repository location is not treated as proof of external ownership.
+        - Does not preserve the old API through a compatibility wrapper or adapter merely to
+          reduce migration work, and does not reshape the new implementation around old callers.
+        - Updates affected usage documentation and meaningful tests for the new API while
+          preserving the intended transfer, progress, cancellation, and retry behavior.
+        - Removes obsolete implementation and references after confirming the controlled
+          consumers have migrated, and verifies the integrated behavior and relevant checks.
+        - Does not claim to have edited repositories or run checks in this evaluation.
+- description: "Rethink: isolate compatibility at a verified external consumer boundary"
+  metadata:
+    skill: rethink-code-like-corbin
+    kind: behavior
+    behaviorId: external-adapter-boundary
+    caseId: rethink-code-like-corbin/external-adapter-boundary
+  vars:
+    skill: rethink-code-like-corbin
+    kind: behavior
+    request: |-
+      Continue $rethink-code-like-corbin and describe the integration design now that the
+      replacement has passed its checks. Explain which consumers use which API and why.
+    context: |-
+      The validated new task queue exposes enqueue({ id, payload }) and a result with explicit
+      status and error fields. Our web app and worker are controlled consumers. A customer-owned
+      plugin cannot be edited or coordinated in this task and relies on the supported public
+      submit(payload, callback) API, including exactly one callback per submission.
+      That external contract must keep working. The cleanroom version has passed the repository
+      checks and purpose-based review. No production integration has happened yet, and tools are
+      unavailable in this evaluation.
+    skillSource: file://rethink-code-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all requirements hold. Accept equivalent boundary designs and terminology.
+
+        - Migrates the controlled web app and worker directly to the new queue API.
+        - Allows a narrow adapter for the customer-owned plugin because that consumer is outside
+          our control, preserving its supported callback contract at the external boundary.
+        - Keeps the new core API independent of the legacy callback shape rather than routing all
+          consumers through the adapter or redesigning the core to fit the old contract.
+        - Proposes verification for external success and failure behavior, including exactly one
+          callback, alongside the migrated internal behavior and relevant repository checks.
+        - Does not claim to have changed code or run checks in this evaluation.

@@ -35,6 +35,7 @@ Now we've given it both the problem and an approach to solving it.
 | [Test Like Corbin](test-like-corbin/SKILL.md) | Protect against meaningful bugs with tests that exercise real behavior. |
 | [Choose Libraries Like Corbin](choose-libraries-like-corbin/SKILL.md) | Decide when built-in tooling, a maintained library, or a little custom code fits best. |
 | [Architect Like Corbin](architect-like-corbin/SKILL.md) | Fit a feature into the project you have and keep reusable code useful to other projects. |
+| [Rethink Code Like Corbin](rethink-code-like-corbin/SKILL.md) | Break repeated review and rewrite cycles with a validated cleanroom implementation, then migrate consumers to its new API. |
 | [UI Like Corbin](ui-like-corbin/SKILL.md) | Build interfaces people can use across keyboards, screen readers, themes, and screen sizes. |
 | [Perf Like Corbin](perf-like-corbin/SKILL.md) | Make the experience faster, measure the difference, and preserve the design. |
 | [Maintain Like Corbin](maintain-like-corbin/SKILL.md) | Fix the underlying problem and finish migrations without leaving obsolete pieces behind. |

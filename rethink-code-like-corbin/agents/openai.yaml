@@ -1,0 +1,4 @@
+interface:
+  display_name: "Rethink Code Like Corbin"
+  short_description: "Rebuild troubled code from purpose, then migrate callers"
+  default_prompt: "Use $rethink-code-like-corbin to rethink this implementation from its purpose, validate a cleanroom version, and migrate controlled consumers to its new API."
