@@ -30,6 +30,14 @@ Prefer integration tests over end-to-end tests, including integration tests that
 
 A browser test is not automatically an end-to-end test: a page using the real UI and application code with HTTP intercepted at its boundary can be an integration test.
 
+## Do not test UI in headless or logic tests
+
+Keep headless and logic tests focused on user-facing behavior. Use the accessibility tree and user-facing text as finders: roles, accessible names, labels, and visible text. Use attributes only in rare cases when those finders cannot reliably identify the relevant element; this exception never permits class or style checks.
+
+Never assert the presence, absence, or value of CSS classes, inline styles, or computed styles as a source of truth for UI correctness. These assertions couple tests to implementation details without validating the rendered appearance. Assert the observable behavior instead, such as an accessible error message appearing after an invalid submission.
+
+Validate styling through screenshot testing when automated visual coverage is warranted. Reserve it primarily for stabilized design-system components whose appearance is an established contract. Avoid screenshot coverage for fast-evolving product UI by default; use visual inspection and tests of stable user outcomes there.
+
 ## Make cases readable
 
 Prefer explicit, named test cases over loops that hide the scenarios being exercised. A little duplication is useful when it lets readers understand a case and its failure without tracing shared control flow. Use parameterized cases when a concise table makes equivalent inputs and expected outcomes clearer; do not abstract tests merely to remove repeated lines.
