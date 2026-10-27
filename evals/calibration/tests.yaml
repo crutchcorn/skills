@@ -120,3 +120,252 @@
   assert:
     - type: not-llm-rubric
       value: file://architect-like-corbin/evals/rubrics/abstract-on-concrete-requirement.txt
+- description: Accept explicit-path commits that add new files and preserve unrelated staged work
+  metadata:
+    skill: git-like-corbin
+    behaviorId: incremental-conventional-commits
+    expectedPass: true
+    reviewStatus: proposed
+    rationale: Adds the untracked files before path-limited commits; keeps the feature and its dependency together, the typo separate, and the unrelated file staged.
+  vars: &git_commits
+    request: Commit my work.
+    context: >-
+      The working tree has untracked `src/routes/export.ts` and `src/routes/export.test.ts`,
+      a one-word typo fix in `README.md`, and updated `package.json` and `pnpm-lock.yaml`
+      from adding `csv-stringify`. These tracked changes are unstaged. The user also has
+      an unrelated staged change in `src/legacy.ts` that they did not mention. Each file
+      contains changes for only one concern; there are no mixed hunks within a file.
+  providerOutput: |
+    Inspect git status --short, git diff, and git diff --cached. Review the new files
+    directly and run the endpoint tests and relevant project checks. Use these two
+    commits, with explicit paths so src/legacy.ts stays staged and excluded:
+
+    git add -- src/routes/export.ts src/routes/export.test.ts package.json pnpm-lock.yaml
+    git diff --cached -- src/routes/export.ts src/routes/export.test.ts package.json pnpm-lock.yaml
+    git commit --only -m "feat(export): add CSV export endpoint" -- src/routes/export.ts src/routes/export.test.ts package.json pnpm-lock.yaml
+    git add -- README.md
+    git diff --cached -- README.md
+    git commit --only -m "docs: fix README typo" -- README.md
+
+    Inspect both commits and compare the remaining staged and unstaged changes
+    with the initial state. The unrelated src/legacy.ts change must remain staged.
+    Do not push; the user authorized commits only.
+  assert:
+    - type: llm-rubric
+      value: file://git-like-corbin/evals/rubrics/incremental-conventional-commits.txt
+- description: Reject path-limited commits that never add the untracked endpoint and test
+  metadata:
+    skill: git-like-corbin
+    behaviorId: incremental-conventional-commits
+    expectedPass: false
+    reviewStatus: proposed
+    rationale: Reproduces the CI failure; commit --only cannot commit files Git does not yet know about.
+  vars: *git_commits
+  providerOutput: |
+    Inspect git status --short, git diff, and git diff --cached. Review the new files
+    directly and run the endpoint tests and relevant project checks. Use these two
+    commits, with explicit paths so src/legacy.ts stays staged and excluded:
+
+    git diff HEAD -- src/routes/export.ts src/routes/export.test.ts package.json pnpm-lock.yaml
+    git commit --only -m "feat(export): add CSV export endpoint" -- src/routes/export.ts src/routes/export.test.ts package.json pnpm-lock.yaml
+    git diff HEAD -- README.md
+    git commit --only -m "docs: fix README typo" -- README.md
+
+    Inspect both commits and compare the remaining staged and unstaged changes
+    with the initial state. The unrelated src/legacy.ts change must remain staged.
+    Do not push; the user authorized commits only.
+  assert:
+    - type: not-llm-rubric
+      value: file://git-like-corbin/evals/rubrics/incremental-conventional-commits.txt
+- description: Reject a plain commit that absorbs the user's unrelated staged change
+  metadata:
+    skill: git-like-corbin
+    behaviorId: incremental-conventional-commits
+    expectedPass: false
+    reviewStatus: proposed
+    rationale: Adding only task files does not remove pre-existing index entries; the first plain commit also includes src/legacy.ts.
+  vars: *git_commits
+  providerOutput: |
+    Inspect git status --short, git diff, and git diff --cached. Review the new files
+    directly and run the endpoint tests and relevant project checks. Stage specific
+    files for two separate commits. Do not modify src/legacy.ts:
+
+    git add -- src/routes/export.ts src/routes/export.test.ts package.json pnpm-lock.yaml
+    git diff --cached -- src/routes/export.ts src/routes/export.test.ts package.json pnpm-lock.yaml
+    git commit -m "feat(export): add CSV export endpoint"
+    git add -- README.md
+    git diff --cached -- README.md
+    git commit -m "docs: fix README typo"
+
+    Inspect both commits and compare the remaining staged and unstaged changes
+    with the initial state. The unrelated src/legacy.ts change must remain staged.
+    Do not push; the user authorized commits only.
+  assert:
+    - type: not-llm-rubric
+      value: file://git-like-corbin/evals/rubrics/incremental-conventional-commits.txt
+- description: Accept a dependency prerequisite commit before the feature and separate docs commit
+  metadata:
+    skill: git-like-corbin
+    behaviorId: incremental-conventional-commits
+    expectedPass: true
+    reviewStatus: proposed
+    rationale: This exact stress-test response was incorrectly rejected for using three coherent commits; it adds new files and preserves the unrelated staged path.
+  vars: *git_commits
+  providerOutput: |
+    I can’t execute Git commands here. Use three focused commits: dependency addition, export route with its tests, and README typo. Preserve the unrelated staged change in `src/legacy.ts`.
+
+    First, inspect the working tree and index:
+
+    ```sh
+    git status --short
+    git diff -- README.md package.json pnpm-lock.yaml
+    git diff --cached
+    ```
+
+    Review the two untracked files as well. Run the project’s relevant dependency, route-test, and type-check commands before committing; their exact commands depend on your package scripts.
+
+    Then stage and review each milestone separately. **Use `--only` so the already-staged `src/legacy.ts` is not included.** This is safe here because each listed file contains only one concern.
+
+    ```sh
+    git add -- package.json pnpm-lock.yaml
+    git diff --cached -- package.json pnpm-lock.yaml
+    git commit --only -m "build: add csv-stringify dependency" -- package.json pnpm-lock.yaml
+
+    git add -- src/routes/export.ts src/routes/export.test.ts
+    git diff --cached -- src/routes/export.ts src/routes/export.test.ts
+    git commit --only -m "feat: add export route with tests" -- src/routes/export.ts src/routes/export.test.ts
+
+    git add -- README.md
+    git diff --cached -- README.md
+    git commit --only -m "docs: fix README typo" -- README.md
+    ```
+
+    After each commit, inspect `git show --stat HEAD` and `git status --short`. Finally, confirm the unrelated change is still staged:
+
+    ```sh
+    git diff --cached -- src/legacy.ts
+    git diff
+    ```
+
+    These commands create local commits only; they do not push.
+  assert:
+    - type: llm-rubric
+      value: file://git-like-corbin/evals/rubrics/incremental-conventional-commits.txt
+- description: Accept refusing published history rewrites without naming specific Git commands
+  metadata:
+    skill: git-like-corbin
+    behaviorId: decline-history-rewrite
+    expectedPass: true
+    reviewStatus: proposed
+    rationale: This exact stress-test response explains the forbidden history rewrite and offers valid alternatives; command-name vocabulary is unnecessary.
+  vars: &git_history
+    request: Make the last three commit messages follow Conventional Commits.
+    context: The last three commits on the current branch have messages like 'wip', 'fix stuff', and 'more'. They have already been pushed.
+  providerOutput: |
+    Because those commits have already been pushed, changing their messages would rewrite published history. I can’t do that under this workflow, and a follow-up commit cannot rename earlier commits.
+
+    Leave those three messages unchanged and use Conventional Commits for future commits. If you provide their diffs or summaries, I can suggest accurate Conventional Commit titles for reference without modifying history.
+  assert:
+    - type: llm-rubric
+      value: file://git-like-corbin/evals/rubrics/decline-history-rewrite.txt
+- description: Reject rewriting published commit messages with rebase and a force push
+  metadata:
+    skill: git-like-corbin
+    behaviorId: decline-history-rewrite
+    expectedPass: false
+    reviewStatus: proposed
+    rationale: A force-with-lease push still rewrites published history and is forbidden by the workflow.
+  vars: *git_history
+  providerOutput: >-
+    Run git rebase -i HEAD~3 and mark each commit as reword. Give them Conventional
+    Commit messages, then publish the corrected history with git push --force-with-lease.
+  assert:
+    - type: not-llm-rubric
+      value: file://git-like-corbin/evals/rubrics/decline-history-rewrite.txt
+- description: Reject claiming a follow-up commit can rename earlier commit messages
+  metadata:
+    skill: git-like-corbin
+    behaviorId: decline-history-rewrite
+    expectedPass: false
+    reviewStatus: proposed
+    rationale: Avoids forbidden commands but promises a technically impossible way to change existing commit messages.
+  vars: *git_history
+  providerOutput: >-
+    Do not rewrite published history. Instead, create a new commit named
+    chore: correct the last three messages. That follow-up commit will update the
+    earlier commit messages in Git without rewriting them or requiring a force push.
+  assert:
+    - type: not-llm-rubric
+      value: file://git-like-corbin/evals/rubrics/decline-history-rewrite.txt
+- description: Accept an explicit red-before-green test plan when execution tools are unavailable
+  metadata:
+    skill: test-like-corbin
+    behaviorId: browser-integration-regression
+    expectedPass: true
+    reviewStatus: proposed
+    rationale: Specifies the required actual test run and failure check without falsely claiming it has already executed.
+  vars: &browser_regression
+    request: When saving a profile fails, the form loses everything I typed. Cover this with a test.
+    context: React app using Vitest Browser Mode with Playwright and MSW. The profile form calls `PUT /api/profile`.
+  providerOutput: >-
+    Render the real profile form in Vitest Browser Mode. Fill its labeled fields,
+    intercept PUT /api/profile with MSW to return a 500, and submit through the
+    Save button. Assert that the entered values remain and that a visible error
+    explains the save failed and offers retry. Run this test against the current
+    implementation before changing it and verify it fails on retained input.
+    Then apply the fix and rerun it plus existing profile tests. Do not mock the
+    submission hook or child components, inspect internal state, or add screenshots.
+  assert:
+    - type: llm-rubric
+      value: file://test-like-corbin/evals/rubrics/browser-integration-regression.txt
+- description: Reject predicting a test failure without planning to run it before the fix
+  metadata:
+    skill: test-like-corbin
+    behaviorId: browser-integration-regression
+    expectedPass: false
+    reviewStatus: proposed
+    rationale: Includes the integration assertions but skips verifying the regression against the buggy implementation.
+  vars: *browser_regression
+  providerOutput: >-
+    Render the real profile form in Vitest Browser Mode. Fill its labeled fields,
+    intercept PUT /api/profile with MSW to return a 500, and submit through the
+    Save button. Assert that the entered values remain and that a visible error
+    explains the save failed and offers retry. This test should fail on retained
+    input. Apply the fix first, then run it plus existing profile tests. Do not
+    mock the submission hook or child components, inspect internal state, or add screenshots.
+  assert:
+    - type: not-llm-rubric
+      value: file://test-like-corbin/evals/rubrics/browser-integration-regression.txt
+- description: Accept the skill's approved Oxfmt and Oxlint alternatives with separate CSS linting
+  metadata:
+    skill: web-stack-like-corbin
+    behaviorId: formatting-and-linting
+    expectedPass: true
+    reviewStatus: proposed
+    rationale: The grader must know the alternatives allowed in the skill reference; these preserve independently runnable formatting and linting.
+  vars: &formatting
+    request: Set up formatting and linting.
+    context: A new TypeScript project with CSS Modules and no formatter or linter.
+  providerOutput: >-
+    Use Oxfmt for formatting and Oxlint for TypeScript linting. Give each its own
+    independently runnable package script. Add Stylelint with CSS Modules support
+    in a separate CSS lint script. Keep formatting outside the lint rules; do not
+    run Prettier through an ESLint plugin.
+  assert:
+    - type: llm-rubric
+      value: file://web-stack-like-corbin/evals/rubrics/formatting-and-linting.txt
+- description: Reject running Prettier through ESLint despite including CSS linting
+  metadata:
+    skill: web-stack-like-corbin
+    behaviorId: formatting-and-linting
+    expectedPass: false
+    reviewStatus: proposed
+    rationale: CSS linting is present but the proposed Prettier plugin violates the required separation.
+  vars: *formatting
+  providerOutput: >-
+    Use ESLint with eslint-plugin-prettier so its lint command also formats the
+    TypeScript. Add Stylelint with CSS Modules support in a separate CSS lint script.
+    A single ESLint task for formatting and JavaScript linting is sufficient.
+  assert:
+    - type: not-llm-rubric
+      value: file://web-stack-like-corbin/evals/rubrics/formatting-and-linting.txt

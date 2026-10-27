@@ -37,9 +37,8 @@ pnpm eval:view
 `pnpm eval` runs every skill's cases. Routing cases see only skill descriptions and
 classify the request using native JSON mode; schema and skill-selection assertions
 still check the result. Behavior cases keep text output and receive skill text
-and supporting references through native
-`file://` variables. Behavior cases compare the same model with and without the
-skill. Compare candidate results with the no-skill control to identify where the
+and supporting references through native `file://` variables. Behavior cases
+compare the same model with and without the skill. Compare candidate results with the no-skill control to identify where the
 skill helps; inspect control failures separately. To gate on skill-enabled behavior, use
 `pnpm eval --filter-providers candidate`. A comparison run can exit unsuccessfully
 when only its no-skill controls fail.
@@ -99,8 +98,10 @@ Native `echo` and `providerOutput` cases evaluate fixed responses using the same
 production rubrics. Positive examples use `llm-rubric`; negative examples use
 `not-llm-rubric`. Provider and parsing errors remain failures in both cases.
 
-The eight examples in `evals/calibration/tests.yaml` cover preserved facts,
-changed facts, invented claims, and different valid architecture decisions.
+The nineteen examples in `evals/calibration/tests.yaml` cover preserved facts,
+changed facts, invented claims, different valid architecture decisions, and Git
+index handling for new files and unrelated staged work, plus refusals to rewrite
+published history, verification plans, and allowed formatting/linting alternatives.
 Labels are **proposed**, pending human review; inspect each response and rationale
 before treating agreement as validated judge accuracy. Labels stay outside the
 grader prompt.
@@ -162,6 +163,20 @@ JSON exports go under gitignored `evals/results/` and overwrite the previous
 export for that suite. Use `--output evals/results/my-run.json` to keep a named
 export. Three repetitions are a small sample; inspect individual failures and
 increase repeats before drawing strong conclusions.
+
+When investigating a CI failure, compare the exact failed response and grader
+reason with earlier reports. Separate invalid model output, an incorrect proposed
+action, a mistaken grade, and a provider/setup error before editing anything.
+For command failures, verify the semantics in a disposable repository. Add fixed
+positive and negative calibration examples when the judge's decision needs
+regression coverage, using the same rubric as the behavior case.
+
+A focused passing run validates the repair, not the whole CI gate. Before pushing
+a reliability fix, run the full candidate suite with additional uncached
+repetitions, plus calibration and agent checks. Choose the repetition count
+before the run and investigate every failure; do not rerun until green or relax
+assertions to hide variability. Save the reports. Passing samples increase
+confidence but cannot guarantee future model responses.
 
 Add cases directly to each skill's `evals/tests.yaml` using native
 [test cases](https://www.promptfoo.dev/docs/configuration/test-cases/) and

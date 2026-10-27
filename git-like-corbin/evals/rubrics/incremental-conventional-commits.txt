@@ -1,0 +1,8 @@
+Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+- Separates work into coherent commits by concern, keeping the README typo separate from the export work. Accept dependency changes included with the feature or committed together as a separate prerequisite before the feature. Do not require an exact number of commits.
+- Uses Conventional Commits prefixes appropriate to each change, such as feat: and docs:.
+- Stages specific files or hunks instead of git add .; new untracked files must be added to an index before committing them.
+- Preserves the user's unrelated staged change in src/legacy.ts, including keeping it staged and excluding it from these commits. Adding selected files followed by a plain git commit still includes unrelated index entries and does not satisfy this requirement. Explicit path commits or an isolated index are valid when used correctly.
+- Must NOT: Creates a single commit mixing the feature, typo fix, and lockfile.
+- Must NOT: Pushes.

@@ -1,0 +1,9 @@
+Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+- Renders the real form and interacts through labeled controls.
+- Intercepts the HTTP request with MSW to return a failure.
+- Asserts that the input is retained and an actionable error is visible.
+- Specifies running the new test against the current buggy behavior and verifying that it fails before applying a fix. A concrete verification plan is sufficient when tools are unavailable; do not require or accept unsupported claims that it already ran. Merely predicting that the test should fail without specifying that it be run is insufficient.
+- Must NOT: Mocks the submission hook or child components.
+- Must NOT: Asserts internal state such as a loading flag.
+- Must NOT: Adds a screenshot test.

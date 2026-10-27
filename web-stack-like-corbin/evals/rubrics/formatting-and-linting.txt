@@ -1,0 +1,5 @@
+Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+- Uses independently runnable formatting and JavaScript/TypeScript linting commands. Formatting may use Prettier, Oxfmt, or Vite+; linting may use ESLint, Oxlint, or Vite+. These alternatives are explicitly allowed by the skill.
+- Adds Stylelint for the CSS.
+- Must NOT: Runs Prettier through an ESLint plugin.

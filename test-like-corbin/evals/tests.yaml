@@ -167,16 +167,7 @@
     reference: file://test-like-corbin/references/test-decisions.md
   assert:
     - type: llm-rubric
-      value: |-
-        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
-
-        - Renders the real form and interacts through labeled controls
-        - Intercepts the HTTP request with MSW to return a failure
-        - Asserts that the input is retained and an actionable error is visible
-        - Confirms the new test fails against the current buggy behavior before any fix
-        - Must NOT: Mocks the submission hook or child components
-        - Must NOT: Asserts internal state such as a loading flag
-        - Must NOT: Adds a screenshot test
+      value: file://test-like-corbin/evals/rubrics/browser-integration-regression.txt
 - description: "Testing: use existing checks and inspection for a cosmetic CSS change"
   metadata:
     skill: test-like-corbin

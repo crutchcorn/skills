@@ -237,13 +237,4 @@
     reference1: file://web-stack-like-corbin/references/stack.md
   assert:
     - type: llm-rubric
-      value: >-
-        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
-
-
-        - Uses Prettier and ESLint, or the acceptable alternatives, as independently runnable
-        commands
-
-        - Adds Stylelint for the CSS
-
-        - Must NOT: Runs Prettier through an ESLint plugin
+      value: file://web-stack-like-corbin/evals/rubrics/formatting-and-linting.txt
