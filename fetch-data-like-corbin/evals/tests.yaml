@@ -1,0 +1,362 @@
+- description: "Fetch data routing: select for adding a detail page that loads from an API"
+  metadata:
+    skill: fetch-data-like-corbin
+    kind: trigger
+    caseId: fetch-data-like-corbin/trigger-positive-1
+  providers:
+    - candidate
+  vars:
+    skill: fetch-data-like-corbin
+    kind: trigger
+    request: Add a project details page that loads the project from `/api/projects/:id` in our React app.
+    context: ""
+    shouldLoad: true
+  assert: &a1
+    - type: is-json
+      value:
+        type: object
+        additionalProperties: false
+        required:
+          - skills
+        properties:
+          skills:
+            type: array
+            uniqueItems: true
+            items:
+              type: string
+              minLength: 1
+              enum:
+                - architect-like-corbin
+                - choose-libraries-like-corbin
+                - docs-like-corbin
+                - fetch-data-like-corbin
+                - git-like-corbin
+                - maintain-like-corbin
+                - perf-like-corbin
+                - rethink-code-like-corbin
+                - scaffold-like-corbin
+                - test-like-corbin
+                - ui-like-corbin
+                - web-stack-like-corbin
+                - write-like-corbin
+    - type: javascript
+      value: JSON.parse(output).skills.includes(context.vars.skill) === context.vars.shouldLoad
+- description: "Fetch data routing: select when a list flashes a spinner on every refetch"
+  metadata:
+    skill: fetch-data-like-corbin
+    kind: trigger
+    caseId: fetch-data-like-corbin/trigger-positive-2
+  providers:
+    - candidate
+  vars:
+    skill: fetch-data-like-corbin
+    kind: trigger
+    request: The orders table disappears and shows a spinner every time I switch back to the tab. Fix it.
+    context: The table uses `useQuery` from TanStack Query.
+    shouldLoad: true
+  assert: *a1
+- description: "Fetch data routing: select when user edits are lost after a background refresh"
+  metadata:
+    skill: fetch-data-like-corbin
+    kind: trigger
+    caseId: fetch-data-like-corbin/trigger-positive-3
+  providers:
+    - candidate
+  vars:
+    skill: fetch-data-like-corbin
+    kind: trigger
+    request: Users lose their unsaved changes to the settings form whenever the data refreshes in the background.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Fetch data routing: select for adding optimistic updates to a mutation"
+  metadata:
+    skill: fetch-data-like-corbin
+    kind: trigger
+    caseId: fetch-data-like-corbin/trigger-positive-4
+  providers:
+    - candidate
+  vars:
+    skill: fetch-data-like-corbin
+    kind: trigger
+    request: Make the like button update instantly instead of waiting for the server.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Fetch data routing: select for reviewing a dependent query that uses a non-null assertion"
+  metadata:
+    skill: fetch-data-like-corbin
+    kind: trigger
+    caseId: fetch-data-like-corbin/trigger-positive-5
+  providers:
+    - candidate
+  vars:
+    skill: fetch-data-like-corbin
+    kind: trigger
+    request: "Review this query. It uses `enabled: !!userId` and then calls `fetchUser(userId!)`."
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Fetch data routing: skip implementing a backend endpoint"
+  metadata:
+    skill: fetch-data-like-corbin
+    kind: trigger
+    caseId: fetch-data-like-corbin/trigger-negative-1
+  providers:
+    - candidate
+  vars:
+    skill: fetch-data-like-corbin
+    kind: trigger
+    request: Add a `GET /api/projects/:id` route to the Hono server that reads from Postgres.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Fetch data routing: skip an explanation of HTTP caching headers"
+  metadata:
+    skill: fetch-data-like-corbin
+    kind: trigger
+    caseId: fetch-data-like-corbin/trigger-negative-2
+  providers:
+    - candidate
+  vars:
+    skill: fetch-data-like-corbin
+    kind: trigger
+    request: "Explain the difference between `Cache-Control: no-cache` and `no-store`."
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Fetch data routing: skip a CSS alignment fix"
+  metadata:
+    skill: fetch-data-like-corbin
+    kind: trigger
+    caseId: fetch-data-like-corbin/trigger-negative-3
+  providers:
+    - candidate
+  vars:
+    skill: fetch-data-like-corbin
+    kind: trigger
+    request: The project card's title and badge are misaligned on narrow screens.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Fetch data routing: skip writing a blog post about TanStack Query"
+  metadata:
+    skill: fetch-data-like-corbin
+    kind: trigger
+    caseId: fetch-data-like-corbin/trigger-negative-4
+  providers:
+    - candidate
+  vars:
+    skill: fetch-data-like-corbin
+    kind: trigger
+    request: Write a blog post introducing TanStack Query to beginners.
+    context: ""
+    shouldLoad: false
+  assert: *a1
+- description: "Fetch data: keep the orders table visible during refetches and failed refreshes"
+  metadata:
+    skill: fetch-data-like-corbin
+    kind: behavior
+    behaviorId: loading-versus-refetching
+    caseId: fetch-data-like-corbin/loading-versus-refetching
+  vars:
+    skill: fetch-data-like-corbin
+    kind: behavior
+    request: Fix the orders table so it stops flashing and stops blanking out.
+    context: |-
+      A React app using TanStack Query. The orders table component does:
+
+      ```tsx
+      const { data, isPending, isError, error } = useQuery({
+        queryKey: ["orders", status],
+        queryFn: () => fetchOrders(status),
+      });
+      if (isPending) return <Spinner />;
+      if (isError) return <ErrorPage error={error} />;
+      return <OrdersTable rows={data} />;
+      ```
+
+      Users report the table is replaced by a spinner whenever they return to the tab, and that a
+      brief network error replaces the whole table with the error page even though the orders were
+      already loaded. Changing the status filter also drops to the spinner.
+    skillSource: file://fetch-data-like-corbin/SKILL.md
+    reference: file://fetch-data-like-corbin/references/query-and-mutation-patterns.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Uses `isLoading` (or an equivalent first-load check) for the full-content placeholder so
+          that background refetches no longer replace the table
+        - Keeps the loaded rows visible during a background refetch and shows a smaller refreshing
+          indicator, using `isRefetching` or an equivalent flag
+        - Keeps the loaded rows visible when a refetch fails and shows the error alongside them,
+          reserving the full error view for a failed initial load
+        - Keeps the previous filter's rows visible while the new `status` loads, via
+          `placeholderData: keepPreviousData` or an equivalent
+        - Must NOT: Disables window-focus refetching as the primary fix for the flashing
+        - Must NOT: Drops the error feedback entirely to avoid the blanking
+- description: "Fetch data: replace an effect-driven refetch with a reactive key and skipToken"
+  metadata:
+    skill: fetch-data-like-corbin
+    kind: behavior
+    behaviorId: declarative-dependent-query
+    caseId: fetch-data-like-corbin/declarative-dependent-query
+  vars:
+    skill: fetch-data-like-corbin
+    kind: behavior
+    request: Clean this up and fix the type error without using a non-null assertion.
+    context: |-
+      ```tsx
+      function MemberPanel({ teamId }: { teamId: string | undefined }) {
+        const { data, refetch } = useQuery({
+          queryKey: ["members"],
+          queryFn: () => fetchMembers(teamId), // TS error: string | undefined
+          enabled: teamId !== undefined,
+        });
+
+        useEffect(() => {
+          if (teamId) refetch();
+        }, [teamId, refetch]);
+
+        // ...
+      }
+      ```
+
+      The previous author "fixed" the type error with `teamId!` in a branch that was reverted.
+    skillSource: file://fetch-data-like-corbin/SKILL.md
+    reference: file://fetch-data-like-corbin/references/query-and-mutation-patterns.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Adds `teamId` to the query key so changing teams fetches the right members and caches them
+          separately
+        - Uses `skipToken` as the `queryFn` when `teamId` is undefined so TypeScript narrows the
+          parameter without a cast or non-null assertion
+        - Removes the `useEffect` that calls `refetch()` and explains that the key change now drives
+          the fetch
+        - Must NOT: Keeps `enabled` with a non-null assertion or type cast as the solution
+        - Must NOT: Keeps an effect that imperatively refetches when `teamId` changes
+- description: "Fetch data: stop a refetch from overwriting the user's unsaved edits"
+  metadata:
+    skill: fetch-data-like-corbin
+    kind: behavior
+    behaviorId: writable-derived-state
+    caseId: fetch-data-like-corbin/writable-derived-state
+  vars:
+    skill: fetch-data-like-corbin
+    kind: behavior
+    request: Users lose their edits when they come back to the tab. Fix it and explain why it happened.
+    context: |-
+      A React app using TanStack Query. The notification preferences page does:
+
+      ```tsx
+      const { data: serverPrefs } = useQuery({
+        queryKey: ["prefs"],
+        queryFn: fetchPrefs,
+      });
+      const [prefs, setPrefs] = useState<Prefs | null>(null);
+
+      useEffect(() => {
+        if (serverPrefs) setPrefs(serverPrefs);
+      }, [serverPrefs]);
+
+      const save = useMutation({
+        mutationFn: savePrefs,
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["prefs"] }),
+      });
+      ```
+
+      Toggling a checkbox calls `setPrefs`. Save sends `prefs`.
+    skillSource: file://fetch-data-like-corbin/SKILL.md
+    reference: file://fetch-data-like-corbin/references/writable-derived-state.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Explains that the window-focus refetch changes `serverPrefs` and the effect copies it over
+          the user's local edits
+        - Removes the syncing effect and derives the displayed value from local edits when present
+          and the server value otherwise (for example `localPrefs ?? serverPrefs`), keeping only the
+          user's edits in local state
+        - Clears the local edits after a successful save only once the server value reflects them
+          and the user has not made newer edits, or otherwise ensures edits made during the save
+          are not discarded
+        - Links or names Corbin's "Writable Derived State" article at
+          https://playfulprogramming.com/posts/writable-derived-state
+        - Must NOT: Fixes the symptom by disabling `refetchOnWindowFocus` or setting
+          `staleTime: Infinity` as the primary solution
+        - Must NOT: Keeps an effect or `key` remount that pushes server data into local state
+- description: "Fetch data: add an optimistic star toggle that survives races and rolls back"
+  metadata:
+    skill: fetch-data-like-corbin
+    kind: behavior
+    behaviorId: optimistic-mutation-races
+    caseId: fetch-data-like-corbin/optimistic-mutation-races
+  vars:
+    skill: fetch-data-like-corbin
+    kind: behavior
+    request: Make starring a project feel instant. Users click it rapidly, and the list polls every 10 seconds.
+    context: |-
+      A React app using TanStack Query. The project list is `useQuery({ queryKey: ["projects"],
+      refetchInterval: 10_000 })`. Starring currently calls `useMutation({ mutationFn: setStarred,
+      onSuccess: () => queryClient.invalidateQueries({ queryKey: ["projects"] }) })` and the star
+      only changes after the round trip. The star appears in both the list and a sidebar
+      "Starred" panel that reads the same query.
+    skillSource: file://fetch-data-like-corbin/SKILL.md
+    reference: file://fetch-data-like-corbin/references/query-and-mutation-patterns.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Applies the optimistic update through the query cache (because two components read it)
+          in `onMutate`, after awaiting `cancelQueries` for the projects key so the interval refetch
+          cannot overwrite the optimistic value
+        - Snapshots the previous data in `onMutate` and restores it in `onError`
+        - Invalidates or refetches in `onSettled` and addresses overlapping rapid clicks, for example
+          by refetching only when no other star mutations are still in flight
+          (`queryClient.isMutating`) or an equivalent guard against an earlier response clobbering a
+          later update
+        - Must NOT: Relies on `refetchInterval` being disabled as the way to avoid the race
+        - Must NOT: Uses `setQueryData` optimistically without any rollback or cancel step
+- description: "Fetch data: make the query function cancellable and throw on HTTP errors"
+  metadata:
+    skill: fetch-data-like-corbin
+    kind: behavior
+    behaviorId: cancellable-throwing-query-fn
+    caseId: fetch-data-like-corbin/cancellable-throwing-query-fn
+  vars:
+    skill: fetch-data-like-corbin
+    kind: behavior
+    request: Our error state never shows even when the API returns 500, and requests keep running after navigating away. Fix the query function.
+    context: |-
+      ```ts
+      export function fetchReport(id: string) {
+        return fetch(`/api/reports/${id}`).then((r) => r.json());
+      }
+
+      useQuery({ queryKey: ["report", id], queryFn: () => fetchReport(id) });
+      ```
+
+      The 500 response body is `{ "message": "Report generation failed" }`, which the component
+      then renders as if it were a report.
+    skillSource: file://fetch-data-like-corbin/SKILL.md
+    reference: file://fetch-data-like-corbin/references/query-and-mutation-patterns.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Accepts the `signal` from the query function context and passes it to `fetch` so TanStack
+          Query can abort the request on unmount or key change
+        - Checks `response.ok` (or the status) and throws an error for unsuccessful responses,
+          explaining that `fetch` resolves on 4xx/5xx and that TanStack Query needs a thrown error
+          to enter its error state
+        - Includes useful information in the thrown error, such as the status and the server message
+        - Must NOT: Returns an error-shaped object or `undefined` as the query's data instead of
+          throwing
+        - Must NOT: Catches the error inside the query function and swallows it

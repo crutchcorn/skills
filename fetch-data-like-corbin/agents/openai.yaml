@@ -1,0 +1,4 @@
+interface:
+  display_name: "Fetch Data Like Corbin"
+  short_description: "Fetch and mutate server data without losing what the user sees or typed"
+  default_prompt: "Use $fetch-data-like-corbin to implement this data fetching with TanStack Query, preserving visible data and user edits across refetches, errors, and saves."

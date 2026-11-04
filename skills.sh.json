@@ -15,9 +15,10 @@
     },
     {
       "title": "UI & Performance",
-      "description": "Build accessible, consistent interfaces and improve application performance while preserving the intended experience.",
+      "description": "Build accessible, consistent interfaces, fetch data reliably, and improve application performance while preserving the intended experience.",
       "skills": [
         "ui-like-corbin",
+        "fetch-data-like-corbin",
         "perf-like-corbin"
       ]
     },
