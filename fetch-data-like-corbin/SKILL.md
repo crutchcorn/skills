@@ -19,6 +19,7 @@ Distinguish a first load from a refresh of data the user can already see. Read [
 
 - Use `isLoading` for the initial load when there is no data to show: render a spinner, skeleton, or placeholder in place of the content.
 - Use `isRefetching` when cached data exists and a background fetch is in flight: keep the data visible and add a small indicator that it is updating. Do not swap visible content for a spinner.
+- Show at most one updating indicator per screen. When several queries on the same screen can refetch behind cached data, combine their `isRefetching` flags (or use `useIsFetching` scoped to the screen's query keys) and render a single indicator at the screen's owner, such as the page header or toolbar. Do not attach a separate refreshing spinner to each list, panel, or card.
 - Do not use `isPending` alone to drive a spinner for a disabled or dependent query; it is also true while the query is waiting to be enabled.
 
 ## Preserve existing data during refetches and errors

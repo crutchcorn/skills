@@ -28,6 +28,33 @@ return (
 - After a failed refetch, `data` still holds the last successful result and `error` is set. Rendering `data` first and the error inline keeps the content visible.
 - `placeholderData: keepPreviousData` keeps the previous filter's results visible while the new key loads instead of dropping back to the skeleton. Disable actions that depend on the new result while `isPlaceholderData` is `true`.
 
+### One updating indicator per screen
+
+When a screen is composed of several queries, each component showing its own `isRefetching` spinner makes the page flicker in several places at once. Lift the indicator to the screen's owner and render it once:
+
+```tsx
+function ProjectPage({ projectId }: { projectId: string }) {
+  const project = useQuery(projectQuery(projectId));
+  const members = useQuery(membersQuery(projectId));
+  const activity = useQuery(activityQuery(projectId));
+
+  const isRefreshing = project.isRefetching || members.isRefetching || activity.isRefetching;
+
+  return (
+    <>
+      <PageHeader title={project.data?.name}>
+        {isRefreshing && <Spinner size="small" aria-label="Refreshing" />}
+      </PageHeader>
+      <ProjectSummary query={project} />
+      <MemberList query={members} />
+      <ActivityFeed query={activity} />
+    </>
+  );
+}
+```
+
+When the queries live in child components the page does not call directly, `useIsFetching({ queryKey: ["project", projectId] })` at the page level counts in-flight fetches under that key prefix without threading flags upward. Each child still owns its own `isLoading` placeholder for the first load; only the "cached data is updating" indicator is shared.
+
 ## Dependent queries with `skipToken`
 
 ```tsx

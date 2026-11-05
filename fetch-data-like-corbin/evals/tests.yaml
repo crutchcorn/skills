@@ -196,6 +196,39 @@
           `placeholderData: keepPreviousData` or an equivalent
         - Must NOT: Disables window-focus refetching as the primary fix for the flashing
         - Must NOT: Drops the error feedback entirely to avoid the blanking
+- description: "Fetch data: consolidate several refreshing spinners into one per screen"
+  metadata:
+    skill: fetch-data-like-corbin
+    kind: behavior
+    behaviorId: one-refetch-indicator-per-screen
+    caseId: fetch-data-like-corbin/one-refetch-indicator-per-screen
+  vars:
+    skill: fetch-data-like-corbin
+    kind: behavior
+    request: The dashboard shows four little spinners at once whenever it refreshes. Clean that up.
+    context: |-
+      A React app using TanStack Query. The dashboard page renders `<RevenueCard />`,
+      `<SignupsCard />`, `<ErrorsCard />`, and `<RecentEventsList />`. Each component has its own
+      `useQuery` with keys under `["dashboard", ...]`, and each renders
+      `{isRefetching && <Spinner size="small" />}` in its corner. All four refetch together on
+      window focus and on a shared 30-second interval. Initial loads already use per-card skeletons
+      via `isLoading`, which the team wants to keep.
+    skillSource: file://fetch-data-like-corbin/SKILL.md
+    reference: file://fetch-data-like-corbin/references/query-and-mutation-patterns.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Replaces the four per-card refreshing spinners with a single indicator rendered once at the
+          page or dashboard level
+        - Derives that single indicator from the combined refetch state of the dashboard's queries,
+          for example `useIsFetching({ queryKey: ["dashboard"] })` or combining the cards'
+          `isRefetching` flags at the page owner
+        - Keeps each card's `isLoading` skeleton for its first load
+        - Keeps cached card data visible during the refresh
+        - Must NOT: Removes refresh feedback entirely
+        - Must NOT: Disables the interval or window-focus refetching as the fix
 - description: "Fetch data: replace an effect-driven refetch with a reactive key and skipToken"
   metadata:
     skill: fetch-data-like-corbin
