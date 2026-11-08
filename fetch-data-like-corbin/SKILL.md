@@ -22,11 +22,16 @@ Distinguish a first load from a refresh of data the user can already see. Read [
 - Show at most one updating indicator per screen. When several queries on the same screen can refetch behind cached data, combine their `isRefetching` flags (or use `useIsFetching` scoped to the screen's query keys) and render a single indicator at the screen's owner, such as the page header or toolbar. Do not attach a separate refreshing spinner to each list, panel, or card.
 - Do not use `isPending` alone to drive a spinner for a disabled or dependent query; it is also true while the query is waiting to be enabled.
 
-## Preserve existing data during refetches and errors
+## Show stale data, never wrong data
 
-A failed refetch keeps the last successful `data` alongside `error`. Render the data and show the error near it; do not replace a populated view with an error screen or an empty state. Use `isLoadingError` when the initial load failed and there is nothing to show, and `isRefetchError` when a refresh failed behind existing data.
+The query key decides what the screen shows; the cache does the rest.
 
-When a query key changes (filters, pagination, selected item), use `placeholderData: keepPreviousData` so the previous result stays on screen until the new one arrives, and use `isPlaceholderData` to disable actions that depend on the new result.
+- Stale is fine. Data cached under the same key shows straight away and refreshes in the background. A failed refetch keeps the last successful `data` alongside `error`: render the data and show the error near it, and do not replace a populated view with an error screen or an empty state. Use `isLoadingError` when the initial load failed and there is nothing to show, and `isRefetchError` when a refresh failed behind existing data.
+- Wrong is not. Never show one key's data under another: not the previous page when the user moves to the next, not the previous filter's or record's rows. A key with no cached data is a first load, and the screen shows its first-load state. Moving back to a key the user already visited shows that key's cached data and refreshes it in the background.
+- Do not reach for `placeholderData: keepPreviousData` by default. If a design genuinely wants the previous rows to stay as a placeholder during a page or filter change, treat them as one: check `isPlaceholderData`, dim or mark them as outdated, and disable actions on them. Rows that look current but belong to another key are wrong data.
+- Reserve `initialData` for data that really is the answer for that key, such as the same record lifted from an already-loaded list with `initialDataUpdatedAt`. Do not seed a key with another key's data to skip its first load.
+- A failed read shows its error and a retry. Do not copy another key's data into a failed key to fill the screen, and never write to the cache from inside a query function.
+- Do not resolve a query to a sentinel like `null` and then refetch behind it; the query reads as successful and the screen loses its first-load state. Prefer `removeQueries` or `resetQueries` so the next read is a real first load.
 
 ## Write declarative, type-safe queries
 
@@ -60,4 +65,4 @@ A mutation takes time, and the user may keep editing or trigger a refetch while 
 
 ## Check the result
 
-Walk the changed screen through its states before calling the work done: empty cache on first load, cached data with a background refetch, a failed refetch behind existing data, a changed query key, and a mutation that fails or overlaps with user edits. Confirm user edits survive a refetch and a failed save, and that leaving the screen aborts in-flight requests.
+Walk the changed screen through its states before calling the work done: empty cache on first load, cached data with a background refetch, a failed refetch behind existing data, a key change to an uncached key and back to a cached one, and a mutation that fails or overlaps with user edits. Confirm no screen shows another key's data as if it were current, that user edits survive a refetch and a failed save, and that leaving the screen aborts in-flight requests.

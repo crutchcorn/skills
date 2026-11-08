@@ -178,7 +178,8 @@
 
       Users report the table is replaced by a spinner whenever they return to the tab, and that a
       brief network error replaces the whole table with the error page even though the orders were
-      already loaded. Changing the status filter also drops to the spinner.
+      already loaded. Switching back to a status filter they already viewed also drops to the
+      spinner before showing the same rows again.
     skillSource: file://fetch-data-like-corbin/SKILL.md
     reference: file://fetch-data-like-corbin/references/query-and-mutation-patterns.md
   assert:
@@ -192,10 +193,13 @@
           indicator, using `isRefetching` or an equivalent flag
         - Keeps the loaded rows visible when a refetch fails and shows the error alongside them,
           reserving the full error view for a failed initial load
-        - Keeps the previous filter's rows visible while the new `status` loads, via
-          `placeholderData: keepPreviousData` or an equivalent
+        - Explains that returning to a previously viewed `status` shows that key's cached rows
+          immediately and refreshes them in the background, while a never-viewed `status` is a
+          first load that shows the placeholder
         - Must NOT: Disables window-focus refetching as the primary fix for the flashing
         - Must NOT: Drops the error feedback entirely to avoid the blanking
+        - Must NOT: Uses `placeholderData: keepPreviousData` to show the previous filter's rows as
+          if they were the new filter's results, without marking them as a placeholder
 - description: "Fetch data: consolidate several refreshing spinners into one per screen"
   metadata:
     skill: fetch-data-like-corbin
@@ -229,6 +233,49 @@
         - Keeps cached card data visible during the refresh
         - Must NOT: Removes refresh feedback entirely
         - Must NOT: Disables the interval or window-focus refetching as the fix
+- description: "Fetch data: refuse to show the previous patient's data while the next one loads"
+  metadata:
+    skill: fetch-data-like-corbin
+    kind: behavior
+    behaviorId: stale-not-wrong-data
+    caseId: fetch-data-like-corbin/stale-not-wrong-data
+  vars:
+    skill: fetch-data-like-corbin
+    kind: behavior
+    request: Reviewers hate the skeleton flash when switching patients. Can we keep the previous patient's chart on screen until the next one arrives?
+    context: |-
+      A React app using TanStack Query. The chart panel does:
+
+      ```tsx
+      const { data, isLoading } = useQuery({
+        queryKey: ["patient", patientId, "chart"],
+        queryFn: ({ signal }) => getChart(patientId, { signal }),
+      });
+      ```
+
+      A teammate proposed `placeholderData: keepPreviousData`, and another proposed
+      `initialData: () => queryClient.getQueryData(["patient", previousId, "chart"])`. Patients
+      the user already opened in this session switch instantly today; only never-opened patients
+      show the skeleton.
+    skillSource: file://fetch-data-like-corbin/SKILL.md
+    reference: file://fetch-data-like-corbin/references/query-and-mutation-patterns.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Declines to render one patient's chart under another patient's key as if it were current,
+          naming the risk of showing wrong data
+        - Rejects the `initialData` proposal because it seeds the new key with another key's data
+          and marks it successful
+        - Either rejects `keepPreviousData` or allows it only when the placeholder is visibly marked
+          as outdated via `isPlaceholderData` with actions disabled
+        - Explains that already-opened patients switch instantly because their keys are cached,
+          and that a never-opened patient is a genuine first load
+        - Offers a legitimate way to reduce the flash, such as prefetching likely patients or
+          keeping the page frame while only the chart area shows its skeleton
+        - Must NOT: Recommends copying another key's data into the cache, or writing to the cache
+          from inside the query function
 - description: "Fetch data: replace an effect-driven refetch with a reactive key and skipToken"
   metadata:
     skill: fetch-data-like-corbin

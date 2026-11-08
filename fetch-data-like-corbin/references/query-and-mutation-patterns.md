@@ -5,14 +5,13 @@ Use this reference when writing or reviewing TanStack Query code for loading sta
 ## Initial load versus refetch
 
 ```tsx
-const { data, isLoading, isRefetching, isLoadingError, isRefetchError, error } = useQuery({
+const { data, isLoading, isRefetching, isLoadingError, isRefetchError, error, refetch } = useQuery({
   queryKey: ["projects", filter],
   queryFn: ({ signal }) => getProjects(filter, { signal }),
-  placeholderData: keepPreviousData,
 });
 
 if (isLoading) return <ProjectListSkeleton />;
-if (isLoadingError) return <ErrorPanel error={error} />;
+if (isLoadingError) return <ErrorPanel error={error} onRetry={refetch} />;
 
 return (
   <>
@@ -23,10 +22,31 @@ return (
 );
 ```
 
-- `isLoading` is `isPending && isFetching`: the first fetch with nothing cached. It stays `false` for a disabled or skipped query, so it is safe for the spinner.
+- `isLoading` is `isPending && isFetching`: the first fetch with nothing cached. It stays `false` for a disabled or skipped query, so it is safe for the skeleton.
 - `isRefetching` is `isFetching && !isPending`: a background fetch while data is already on screen.
 - After a failed refetch, `data` still holds the last successful result and `error` is set. Rendering `data` first and the error inline keeps the content visible.
-- `placeholderData: keepPreviousData` keeps the previous filter's results visible while the new key loads instead of dropping back to the skeleton. Disable actions that depend on the new result while `isPlaceholderData` is `true`.
+- Changing `filter` changes the key. If the new key has cached data, it shows at once and refreshes in the background. If it has none, `isLoading` is `true` and the skeleton shows; the previous filter's rows do not stay on screen as if they matched the new filter.
+
+### Stale is fine, wrong is not
+
+The example above omits `placeholderData` on purpose. `keepPreviousData` would keep filter A's rows visible while filter B loads, and nothing in the rows says they belong to A. If a design calls for that, make the placeholder visibly a placeholder:
+
+```tsx
+const { data, isPlaceholderData } = useQuery({
+  queryKey: ["projects", page],
+  queryFn: ({ signal }) => getProjects(page, { signal }),
+  placeholderData: keepPreviousData,
+});
+
+<ProjectList
+  projects={data ?? []}
+  aria-busy={isPlaceholderData}
+  className={isPlaceholderData ? styles.outdated : undefined}
+/>
+<button disabled={isPlaceholderData} onClick={() => setPage((p) => p + 1)}>Next page</button>
+```
+
+The same rule covers `initialData`. Seeding a detail query from the same record in an already-loaded list is that key's answer, so it is fine (set `initialDataUpdatedAt` from the list's `dataUpdatedAt` so `staleTime` counts from the real fetch). Seeding a key with a different record, an empty array, or `null` to skip its skeleton marks the key as successful with data that is not its answer; the screen then needs an extra "Updating…" notice to make up for it. When a query's data must be cleared, use `removeQueries` or `resetQueries` rather than writing a sentinel, so the next read is a first load again.
 
 ### One updating indicator per screen
 
