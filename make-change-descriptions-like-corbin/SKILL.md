@@ -1,13 +1,11 @@
 ---
 name: make-change-descriptions-like-corbin
-description: "Draft, revise, or review pull request bodies and reviewer-facing engineering change descriptions using Corbin Crutchley's public PR patterns. Use when explaining a change's behavior, motivation, issue context, validation, or review needs. General articles, announcements, and code implementation without a description request do not need this skill."
+description: "Draft, revise, or review pull request bodies and reviewer-facing engineering change descriptions using Corbin Crutchley's preferences. Use when explaining a change's behavior, motivation, issue context, validation, or review needs. General articles, announcements, and code implementation without a description request do not need this skill."
 ---
 
 # Make Change Descriptions like Corbin
 
-Give a reviewer enough context to understand the change without reconstructing its purpose from the diff or a conversation. Corbin's strongest examples make the behavior concrete, explain the reasoning, and sound like a capable teammate asking another capable teammate to take a look.
-
-This guidance combines patterns from 1,041 public PRs opened before 2025 with Corbin's explicit preferences. Direct praise for a description is stronger evidence than enthusiasm for a feature. For the measurements, source examples, explicit preferences, and limits of that inference, read [references/corpus-findings.md](references/corpus-findings.md) when discussing the evidence or calibrating the style. The downloaded corpus is not required to use this skill.
+Give a reviewer enough context to understand the change without reconstructing its purpose from the diff or a conversation. Make the behavior concrete, explain the reasoning, and write as a capable teammate asking another capable teammate to take a look.
 
 ## Write from the actual change
 
