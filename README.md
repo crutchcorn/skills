@@ -29,6 +29,7 @@ Now we've given it both the problem and an approach to solving it.
 | Skill | What it helps you do |
 | --- | --- |
 | [Write Like Corbin](write-like-corbin/SKILL.md) | Explain an idea with clear examples, visible reasoning, and a little personality. |
+| [Make Change Descriptions like Corbin](make-change-descriptions-like-corbin/SKILL.md) | Write PR descriptions that explain the behavior, reasoning, issue context, and evidence a reviewer needs. |
 | [Docs Like Corbin](docs-like-corbin/SKILL.md) | Help people use your project and find the context behind its decisions. |
 | [Git Like Corbin](git-like-corbin/SKILL.md) | Keep changes easy to review, with explicit rules against rewriting history, force pushes, discarding work, and pushing without permission. |
 | [Modularize PRs like Corbin](modularize-prs-like-corbin/SKILL.md) | Explicitly split the full body of work into focused local branches, modular commits, and ready-to-use PR titles and descriptions. |

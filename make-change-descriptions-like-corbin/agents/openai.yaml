@@ -1,0 +1,4 @@
+interface:
+  display_name: "Make Change Descriptions like Corbin"
+  short_description: "Write reviewer-focused PR and change descriptions"
+  default_prompt: "Use $make-change-descriptions-like-corbin to draft a PR description from this change."

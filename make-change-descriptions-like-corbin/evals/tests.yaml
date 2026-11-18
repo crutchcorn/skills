@@ -1,0 +1,159 @@
+- description: "Change description routing: select for drafting a PR body from a diff"
+  metadata:
+    skill: make-change-descriptions-like-corbin
+    kind: trigger
+    caseId: make-change-descriptions-like-corbin/trigger-pr-body
+  providers: [candidate]
+  vars:
+    skill: make-change-descriptions-like-corbin
+    kind: trigger
+    request: Write the pull request description for this diff in Corbin's style.
+    context: ""
+    shouldLoad: true
+  assert: &routing
+    - type: is-json
+      value:
+        type: object
+        additionalProperties: false
+        required: [skills]
+        properties:
+          skills:
+            type: array
+            uniqueItems: true
+            items:
+              type: string
+              enum:
+                - architect-like-corbin
+                - choose-libraries-like-corbin
+                - docs-like-corbin
+                - fetch-data-like-corbin
+                - git-like-corbin
+                - maintain-like-corbin
+                - make-change-descriptions-like-corbin
+                - modularize-prs-like-corbin
+                - perf-like-corbin
+                - rethink-code-like-corbin
+                - scaffold-like-corbin
+                - test-like-corbin
+                - ui-like-corbin
+                - web-stack-like-corbin
+                - write-like-corbin
+    - type: javascript
+      value: JSON.parse(output).skills.includes(context.vars.skill) === context.vars.shouldLoad
+- description: "Change description routing: select for clarifying a reviewer-facing change summary"
+  metadata:
+    skill: make-change-descriptions-like-corbin
+    kind: trigger
+    caseId: make-change-descriptions-like-corbin/trigger-reviewer-summary
+  providers: [candidate]
+  vars:
+    skill: make-change-descriptions-like-corbin
+    kind: trigger
+    request: Rewrite this engineering change summary so the reviewer understands why the API changed.
+    context: ""
+    shouldLoad: true
+  assert: *routing
+- description: "Change description routing: skip a tutorial"
+  metadata:
+    skill: make-change-descriptions-like-corbin
+    kind: trigger
+    caseId: make-change-descriptions-like-corbin/trigger-not-tutorial
+  providers: [candidate]
+  vars:
+    skill: make-change-descriptions-like-corbin
+    kind: trigger
+    request: Write a beginner tutorial about JavaScript closures.
+    context: ""
+    shouldLoad: false
+  assert: *routing
+- description: "Change description routing: skip implementing a bug fix without a writing request"
+  metadata:
+    skill: make-change-descriptions-like-corbin
+    kind: trigger
+    caseId: make-change-descriptions-like-corbin/trigger-not-implementation
+  providers: [candidate]
+  vars:
+    skill: make-change-descriptions-like-corbin
+    kind: trigger
+    request: Fix the crash when deleting the last row in this table.
+    context: ""
+    shouldLoad: false
+  assert: *routing
+- description: "Change descriptions: explain a small fix without padding or invented validation"
+  metadata:
+    skill: make-change-descriptions-like-corbin
+    kind: behavior
+    behaviorId: small-fix
+    caseId: make-change-descriptions-like-corbin/small-fix
+  vars:
+    skill: make-change-descriptions-like-corbin
+    kind: behavior
+    request: Draft just the PR body. Keep it short.
+    context: >-
+      Saving a profile after a network error currently clears the name and bio inputs.
+      The final diff preserves their entered values on a failed save so the user can retry.
+      A regression test was added. It has not been run. There is no linked issue and no PR template.
+    skillSource: file://make-change-descriptions-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: >-
+        Pass if the response supplies a brief ready-to-use PR body explaining the failed-save
+        trigger, lost input, and preservation for retry. It must distinguish the added test from
+        execution that has not happened. Accept a short paragraph or a few concise lines with
+        validation. Fail if it invents an issue, a successful check, performance gains, screenshots,
+        or implementation details; pads the small fix with a long report; or only gives writing advice.
+- description: "Change descriptions: preserve a template, partial scope, dependency, and unverified cause"
+  metadata:
+    skill: make-change-descriptions-like-corbin
+    kind: behavior
+    behaviorId: partial-scope
+    caseId: make-change-descriptions-like-corbin/partial-scope
+  vars:
+    skill: make-change-descriptions-like-corbin
+    kind: behavior
+    request: Rewrite the PR body using the supplied template. Return the body only.
+    context: |-
+      Template headings: ## Summary, ## Validation, ## Remaining work.
+      Issue #482 covers dropdown label clipping and keyboard navigation.
+      This PR fixes only clipping of letters such as g and y when zoomed to 200%.
+      Keyboard navigation remains unresolved. It depends on PR #477 and must merge after it.
+      The author manually verified the label at 100% and 200% zoom in Firefox.
+      A before/after screenshot pair is attached to the PR; no screenshot URL was supplied here.
+      CI has not run. Font metrics are a suspected cause, not a verified root cause.
+    skillSource: file://make-change-descriptions-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: >-
+        Pass if it uses the three supplied template headings, explains the clipping behavior,
+        describes partial coverage of #482 without a closing keyword that promises full resolution,
+        states that #477 must merge first, and accurately reports manual Firefox checks and CI not
+        run. It may refer to attached before/after screenshots without inventing a URL. It must
+        either omit the suspected cause or preserve its uncertainty. Fail for invented checks,
+        full issue closure, a fabricated image link, or claiming keyboard navigation is fixed.
+- description: "Change descriptions: rewrite stale scope and keep baseline test failures uncertain"
+  metadata:
+    skill: make-change-descriptions-like-corbin
+    kind: behavior
+    behaviorId: final-scope
+    caseId: make-change-descriptions-like-corbin/final-scope
+  vars:
+    skill: make-change-descriptions-like-corbin
+    kind: behavior
+    request: Rewrite this stale PR description from the final facts. Return just the description.
+    context: |-
+      Stale description: 'This massive performance rewrite replaces the validator engine. All tests pass!'
+      Final diff: only the type declaration is corrected to let RootCatchBoundary accept class
+      components as well as function components. There is no runtime or validator-engine change.
+      The author found this while writing docs. The relevant consumer can now type-check without
+      a cast. No issue number is available. The build passes. Three tests fail; the author suspects
+      those failures also exist on the base branch but has not run a baseline comparison.
+    skillSource: file://make-change-descriptions-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: >-
+        Pass if it supplies a reviewer-facing description focused on accepting class components
+        in RootCatchBoundary types and avoiding the cast, accurately reports the passing build
+        and three test failures, and either qualifies the unverified baseline suspicion or says
+        a baseline comparison has not been done. Fail if it claims a runtime fix, validator rewrite,
+        performance improvement, all-green tests, verified unrelated failures, or a fabricated issue.
+        It should describe the final result without narrating the abandoned rewrite as delivered work.
