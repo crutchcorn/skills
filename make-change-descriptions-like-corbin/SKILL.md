@@ -7,7 +7,7 @@ description: "Draft, revise, or review pull request bodies and reviewer-facing e
 
 Give a reviewer enough context to understand the change without reconstructing its purpose from the diff or a conversation. Corbin's strongest examples make the behavior concrete, explain the reasoning, and sound like a capable teammate asking another capable teammate to take a look.
 
-This guidance comes from 1,041 public PRs opened before 2025. Direct praise for a description is stronger evidence than enthusiasm for a feature. For the measurements, source examples, and limits of that inference, read [references/corpus-findings.md](references/corpus-findings.md) when discussing the evidence or calibrating the style. The downloaded corpus is not required to use this skill.
+This guidance combines patterns from 1,041 public PRs opened before 2025 with Corbin's explicit preferences. Direct praise for a description is stronger evidence than enthusiasm for a feature. For the measurements, source examples, explicit preferences, and limits of that inference, read [references/corpus-findings.md](references/corpus-findings.md) when discussing the evidence or calibrating the style. The downloaded corpus is not required to use this skill.
 
 ## Write from the actual change
 
@@ -19,7 +19,9 @@ Do not invent issue numbers, test runs, screenshots, performance gains, root cau
 
 ## Lead with behavior and purpose
 
-Usually start with the concrete problem or capability, then what this PR does about it:
+Generally lead with the user's experience: who encounters the problem, what they can now do, or how their experience improves. When a change has no direct user impact, lead with its practical outcome for maintainers, contributors, or operations, such as a more reliable build or simpler maintenance. Keep the description outcomes-focused; implementation details should explain how the change achieves that outcome.
+
+Start with the concrete problem or capability, then what this PR does about it:
 
 - Bug fix: name the trigger, the old failure, and the resulting behavior.
 - Feature: say what someone can now do. A small usage example often communicates an API better than several paragraphs.
@@ -35,10 +37,12 @@ Start with a short paragraph for a routine change. Roughly 30–100 prose words 
 Expand when the reviewer needs one of these:
 
 - **Cause and solution:** connect the failure mechanism to the fix, then explain why the approach fits. Include alternatives only when they clarify a real tradeoff.
-- **Before and after:** use a small code example, reproduction, screenshot pair, or recording for behavior that is easier to demonstrate. Label what the reviewer should notice. Include only real artifacts; visual evidence does not replace validation.
+- **Before and after:** use a small code example or reproduction for behavior that is easier to demonstrate. Label what the reviewer should notice.
 - **Several related changes:** use a short list organized by purpose. Keep the reason they belong together visible.
 - **Compatibility and scope:** name affected APIs, runtimes, migrations, partial coverage, or remaining limitations when material.
 - **Review needs:** ask a specific question, such as whether an API name fits or an example covers the intended audience. Explain what is uncertain instead of adding a generic request for feedback.
+
+For visible or interactive changes, include live screenshots and short videos wherever possible: capture the actual running application or use supplied captures of it. Show before/after screenshots for appearance changes and use video to demonstrate interactions, transitions, or a sequence of steps. Embed or link the real artifacts and explain the user-visible result they demonstrate. Do not substitute generated mockups or invent captures or URLs. When captures are unavailable, describe the behavior accurately using the available evidence. Visual evidence complements validation; it does not replace it.
 
 Use headings for substantial sections or required templates. Do not add empty sections, an executive summary, or a long checklist to a tiny fix. Use a checklist when it communicates actual readiness or meaningful remaining work; keep it current as the PR evolves.
 
@@ -66,4 +70,4 @@ Include the checks that help someone assess this change: what was exercised and 
 
 Scale this to the change and repository requirements. A small documentation correction may need only a concise note about what was checked. A risky UI or API change benefits from the relevant scenario and remaining limits. Avoid narrating every command or repeating the entire CI log.
 
-Before delivering, check that the description answers the questions that matter for this particular change: what happens now, why it needed changing, why this approach, what evidence supports it, and what the reviewer still needs to decide. Return the requested text itself. Drafting does not authorize publishing or modifying a remote PR.
+Before delivering, check that the description answers the questions that matter for this particular change: who benefits and what outcome changes, why it needed changing, why this approach, what evidence supports it, and what the reviewer still needs to decide. Return the requested text itself. Drafting does not authorize publishing or modifying a remote PR.

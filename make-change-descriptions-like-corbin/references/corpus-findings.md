@@ -83,3 +83,10 @@ Two counterexamples prevent overfitting:
 - [TypeScript Handbook #852](https://github.com/microsoft/TypeScript-Handbook/pull/852) received five hoorays but was closed because of documentation placement and scope. [rehype-img-size #5](https://github.com/ksoichiro/rehype-img-size/pull/5) received two thumbs-up, while its maintainer still raised CommonJS compatibility concerns and handled the work separately. Enthusiasm, compatibility acceptance, and merge decisions are different outcomes.
 
 The skill therefore combines observed habits with bounded editorial judgment: lead with meaningful behavior, make reasoning inspectable, scale detail to the review, connect relevant issues, and preserve honesty about validation and remaining scope. It does not claim that any template or tone guarantees approval.
+
+## Corbin's explicit follow-up preferences
+
+After reviewing the initial skill, Corbin requested two additions. These are stated preferences, rather than further statistical conclusions from the corpus:
+
+- Include live screenshots and videos wherever possible. For visible or interactive changes, use captures of the running application to demonstrate the result.
+- Generally focus on users where relevant, and remain outcomes-focused otherwise. Internal changes should still explain their practical benefit to maintainers, contributors, or operations.
