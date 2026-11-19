@@ -16,6 +16,18 @@ Adapt these patterns to the repository. The filenames are illustrative; create o
 
 Separate mixed-purpose material by audience. Keep the explanation of a durable decision in `/docs`; put commands and rules contributors or agents must follow in their respective entrypoints. Link instead of duplicating a long explanation.
 
+## Recurring concepts
+
+When the same project concept governs multiple consumers, give it a maintained explanation. For example, several background workers might use a common job lifecycle. A useful `/docs/job-lifecycle.md` would explain the states and allowed transitions, who owns each transition, what cancellation guarantees, and a representative usage example. Verify those rules against the implementation before documenting them. Link the page from `/docs/README.md` and put any instructions agents must follow in the applicable `AGENTS.md`.
+
+Capture the shared meaning and constraints without transcribing every caller or implementation line. When behavior changes, update the explanation in the same work. If the concept is retired or changes so substantially that the old page stops being useful, replace or remove it and update its incoming links and catalog entry.
+
+If a user proposes skipping the page because it could go stale, make a clear recommendation, for example:
+
+> I recommend documenting this recurring pattern now. A short page captures the rules each caller currently has to rediscover. When the design changes, we can update the page or replace or remove it and fix its links.
+
+Explain that maintenance path without promising the document will never become stale or turning the recommendation into a blocker after the user explicitly decides the scope.
+
 ## Root AGENTS.md guidance
 
 Merge guidance like the following into the existing instructions, preserving other repository rules:
@@ -36,6 +48,8 @@ Merge guidance like the following into the existing instructions, preserving oth
   AGENTS.md, CONTRIBUTING.md, or substantive docs linked from their catalog.
 - Keep usage docs and runnable examples current with API changes. Document
   breaking changes with a migration guide.
+- Add or update evergreen documentation for recurring project patterns and
+  concepts, and link it from the relevant catalog.
 - Record reusable project rules verified during implementation in AGENTS.md;
   keep provisional findings and task progress in notes.
 ```

@@ -276,3 +276,105 @@
         - Merges the supplied guidance into AGENTS.md, preserving the test command, generated-file restriction, and API-example rule, with the shared pnpm rule included only once
         - Replaces CLAUDE.md with a symlink to AGENTS.md and verifies the link resolves
         - Must NOT: Discards CLAUDE.md content without merging it
+- description: "Docs routing: select for documenting a concept repeated across the application"
+  metadata:
+    skill: docs-like-corbin
+    kind: trigger
+    caseId: docs-like-corbin/trigger-recurring-concept
+  providers:
+    - candidate
+  vars:
+    skill: docs-like-corbin
+    kind: trigger
+    request: The same job lifecycle now appears across six features. Add evergreen documentation explaining it.
+    context: ""
+    shouldLoad: true
+  assert: *a1
+- description: "Docs: add a durable explanation for a recurring lifecycle before handoff"
+  metadata:
+    skill: docs-like-corbin
+    kind: behavior
+    behaviorId: document-recurring-concepts
+    caseId: docs-like-corbin/document-recurring-concepts
+  vars:
+    skill: docs-like-corbin
+    kind: behavior
+    request: What remains before this implementation is ready for handoff?
+    context: |-
+      A sixth background worker now uses the application's established job lifecycle.
+      Tests and type checks pass. There is no documentation of the lifecycle.
+      Verified rules: jobs move from queued to running, then to completed, failed,
+      or cancelled. Terminal states cannot transition again. The worker owns state
+      transitions; callers request cancellation, and the worker acknowledges it
+      before entering cancelled. A completed result is never reported for a cancelled job.
+      The repository already has /docs/README.md, /docs/, and AGENTS.md.
+    skillSource: file://docs-like-corbin/SKILL.md
+    reference: file://docs-like-corbin/references/documentation-patterns.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Identifies the recurring lifecycle as needing evergreen documentation even though
+          implementation checks pass and the user has not separately requested a documentation page.
+        - Proposes a concrete durable page under /docs and a link from its existing catalog,
+          describing the lifecycle, transition ownership, terminal-state and cancellation constraints.
+        - Preserves the supplied lifecycle rules and does not invent an API, extra transition,
+          timeout, or cancellation guarantee.
+        - Does not substitute a temporary investigation note or a bare instruction in AGENTS.md
+          for the explanation, or propose an unrelated repository-wide documentation overhaul.
+- description: "Docs: push back on possible staleness with a concrete maintenance path"
+  metadata:
+    skill: docs-like-corbin
+    kind: behavior
+    behaviorId: challenge-staleness-objection
+    caseId: docs-like-corbin/challenge-staleness-objection
+  vars:
+    skill: docs-like-corbin
+    kind: behavior
+    request: Let's skip documenting this pattern. The docs might become outdated anyway.
+    context: |-
+      A shared job lifecycle is used by six features. Its behavior is verified but
+      undocumented. This is the first discussion of whether to document it.
+      /docs/README.md and the /docs directory already exist.
+    skillSource: file://docs-like-corbin/SKILL.md
+    reference: file://docs-like-corbin/references/documentation-patterns.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Respectfully pushes back and recommends a concise evergreen explanation because
+          multiple features rely on this pattern, rather than agreeing to omit it due to possible staleness.
+        - Explains that the document can be updated with implementation changes or replaced
+          or removed, with its links maintained, if the concept changes too substantially or is retired.
+        - Offers a concrete scoped document under /docs and keeps its focus on the concept
+          and important rules rather than copying every implementation detail.
+        - Does not guarantee docs will never become stale, claim to have written files,
+          or refuse to continue unless the user accepts the recommendation.
+- description: "Docs: respect a confirmed scope decision after explaining the documentation tradeoff"
+  metadata:
+    skill: docs-like-corbin
+    kind: behavior
+    behaviorId: respect-confirmed-documentation-scope
+    caseId: docs-like-corbin/respect-confirmed-documentation-scope
+  vars:
+    skill: docs-like-corbin
+    kind: behavior
+    request: We've discussed the documentation tradeoff. Do not add or change docs in this task; finish the implementation handoff.
+    context: |-
+      A recurring job lifecycle still has no evergreen documentation. The assistant
+      already recommended a short page and explained how it could be maintained or removed.
+      The user understands that gap and has explicitly excluded documentation from this task.
+      The implementation is complete, with its relevant tests and type checks passing.
+    skillSource: file://docs-like-corbin/SKILL.md
+    reference: file://docs-like-corbin/references/documentation-patterns.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent valid approaches and wording.
+
+        - Respects the confirmed exclusion of documentation and gives a concise implementation
+          handoff without promising or claiming documentation changes.
+        - Does not restart the argument, repeatedly ask for permission to document the concept,
+          or block handoff on documentation. Briefly noting the remaining gap is acceptable.

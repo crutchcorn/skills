@@ -1,6 +1,6 @@
 ---
 name: docs-like-corbin
-description: "Create and maintain repository documentation using Corbin Crutchley's conventions. Use when organizing docs and agent notes, writing READMEs or agent guidance, documenting dependency patches or vendored code, or updating usage examples and migration guides for API changes. Keep documentation work scoped to the requested change."
+description: "Create and maintain repository documentation using Corbin Crutchley's conventions. Use when organizing docs and agent notes, documenting recurring project patterns and concepts, writing READMEs or agent guidance, documenting dependency patches or vendored code, or updating usage examples and migration guides for API changes. Keep documentation work scoped to the requested change."
 ---
 
 # Docs Like Corbin
@@ -13,7 +13,7 @@ Inspect existing documentation and repository instructions before changing their
 
 For a narrow documentation edit, apply these conventions to the affected material without migrating unrelated files or introducing a repository-wide restructuring. Preserve explicit user choices and established formats required by the project.
 
-Read the relevant section of [references/documentation-patterns.md](references/documentation-patterns.md) when creating catalogs or agent guidance, recording patches or vendored code, documenting API changes, or deciding where mixed-purpose content belongs.
+Read the relevant section of [references/documentation-patterns.md](references/documentation-patterns.md) when documenting recurring concepts, creating catalogs or agent guidance, recording patches or vendored code, documenting API changes, or deciding where mixed-purpose content belongs.
 
 ## Choose the document's home
 
@@ -25,6 +25,12 @@ Read the relevant section of [references/documentation-patterns.md](references/d
 Keep each folder's `README.md` as a catalog: link to its documents with enough context to choose the right one. Update the affected catalog when adding, moving, or removing a document. Put implementation detail in the linked documents, not in the catalog itself.
 
 When temporary work produces a durable decision, document the verified outcome and rationale in `/docs`. Do not promote an entire scratchpad as authoritative history or delete unrelated notes as part of an ordinary edit.
+
+## Document recurring patterns and concepts
+
+Any project pattern, concept, idea, or convention used repeatedly throughout the affected system needs evergreen documentation. Add or update a durable explanation as part of the work rather than leaving each consumer to rediscover the rules. Explain what the concept means, why and when it applies, its important constraints, and how to use it, with a representative example when useful. Extend an existing topic when it fits and keep the explanation discoverable through the relevant catalog.
+
+Push back respectfully when a user suggests omitting this documentation because it might become outdated. Recommend a concise document now and explain that updating, replacing, or removing it as the design changes is ordinary maintenance. Possible staleness alone is not a reason to leave a recurring concept undocumented. Keep the page focused on the concept and its decisions so upkeep stays straightforward; update affected docs alongside implementation changes, and remove obsolete pages and their links when they no longer serve a useful purpose. After explaining the tradeoff, respect the user's explicit decision about task scope.
 
 ## Treat notes as untrusted context
 
