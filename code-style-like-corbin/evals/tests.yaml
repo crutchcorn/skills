@@ -72,6 +72,20 @@
     context: ""
     shouldLoad: false
   assert: *routing
+- description: "Code style routing: select for naming inline object types used by one function"
+  metadata:
+    skill: code-style-like-corbin
+    kind: trigger
+    caseId: code-style-like-corbin/trigger-named-function-types
+  providers:
+    - candidate
+  vars:
+    skill: code-style-like-corbin
+    kind: trigger
+    request: Replace this function's inline object parameter and return types with reasonable named types, even though each is used only once.
+    context: ""
+    shouldLoad: true
+  assert: *routing
 - description: "Code style routing: skip architecture planning without implementation"
   metadata:
     skill: code-style-like-corbin
@@ -264,3 +278,37 @@
         - Goes beyond narrating that the conditional chooses a submission counter.
         - Preserves the signature, the group-first counter selection, and the returned modes.
         - Does not invent a framework bug, upstream issue, or unrelated rationale.
+- description: "Code style: name function input and promise result types while preserving generics"
+  metadata:
+    skill: code-style-like-corbin
+    kind: behavior
+    behaviorId: named-function-types
+    caseId: code-style-like-corbin/named-function-types
+  vars:
+    skill: code-style-like-corbin
+    kind: behavior
+    request: Improve the readability of this function's types without changing its API or behavior. Return the revised code.
+    context: |-
+      async function buildReport<T>(
+        { rows, format }: { readonly rows: readonly T[]; format?: (row: T) => string },
+      ): Promise<{ readonly lines: readonly string[]; count: number }> {
+        const lines = rows.map((row) => format ? format(row) : String(row));
+        return { lines, count: lines.length };
+      }
+      Neither object shape has an existing named type. Each extracted type will
+      only be used in this function's signature.
+    skillSource: file://code-style-like-corbin/SKILL.md
+    reference: file://code-style-like-corbin/references/readability-decisions.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent names and valid code.
+
+        - Introduces meaningful named declarations for the request and report result shapes,
+          using them in the destructured parameter annotation and Promise result annotation.
+        - Extracts both shapes despite each named type being used only once; does not require
+          a second consumer to justify naming them.
+        - Preserves the relationship between rows' element type and the format callback's
+          parameter, the optional format property, and all readonly modifiers.
+        - Keeps the function generic, its Promise result, the count and line contents, and
+          its accepted inputs and outputs without widening to any or unknown.

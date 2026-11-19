@@ -2,6 +2,38 @@
 
 These fictional examples show how to apply the readability preferences within the requested change. Use them as defaults, not instructions to rewrite every matching expression.
 
+## Named types in function signatures
+
+Give the shapes of a function's inputs and outputs names even when each type is used only in that signature. For example, replace:
+
+```ts
+function summarizeReport(
+  { title, entries }: { readonly title: string; entries: readonly string[] },
+): { title: string; entryCount: number } {
+  return { title, entryCount: entries.length };
+}
+```
+
+with:
+
+```ts
+type ReportRequest = {
+  readonly title: string;
+  entries: readonly string[];
+};
+
+type ReportSummary = {
+  title: string;
+  entryCount: number;
+};
+
+function summarizeReport({ title, entries }: ReportRequest): ReportSummary {
+  return { title, entryCount: entries.length };
+}
+```
+
+The names explain what the shapes represent without requiring another consumer to justify them. Apply the same approach to `Promise<ReportSummary>`, `ReportSummary[]`, and callback parameters that carry a structured payload.
+
 ## Early exits and local accumulation
 
 For a function that gathers eligible IDs with a finite integer limit, express the empty case, irrelevant items, and completion condition directly:

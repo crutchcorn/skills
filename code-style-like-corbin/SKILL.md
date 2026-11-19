@@ -1,6 +1,6 @@
 ---
 name: code-style-like-corbin
-description: "Write and review code using Corbin Crutchley's readability preferences. Use when implementing or editing code, reviewing readability of expressions and control flow, or simplifying nested function and constructor calls. Prefer named intermediate values and straightforward control flow while preserving behavior. Prose-only requests, stack selection, and architecture planning without implementation do not need this skill."
+description: "Write and review code using Corbin Crutchley's readability preferences. Use when implementing or editing code, naming structured function types, reviewing readability of expressions and control flow, or simplifying nested function and constructor calls. Prefer meaningful names and straightforward control flow while preserving behavior. Prose-only requests, stack selection, and architecture planning without implementation do not need this skill."
 ---
 
 # Code Style Like Corbin
@@ -30,6 +30,12 @@ consume(result);
 
 Choose names that describe the value's role in the actual domain. Literals, existing identifiers, and simple property reads can remain inline. Passing a callback does not itself require extracting another variable or helper.
 
+## Name structured types in function signatures
+
+Prefer a named type over an inline object or other structured type in a function's parameters or return annotation, even when the type is used only once. This includes destructured parameters, callback payloads, object elements in arrays, and object results wrapped in `Promise`.
+
+Reuse a suitable existing named type; otherwise create one with a name that describes the value's domain or role, such as `ReportRequest` or `ReportSummary`. Keep primitive annotations and references to named types inline, such as `string`, `ReportSummary[]`, or `Promise<ReportSummary>`. Preserve optional properties, readonly modifiers, generic relationships, and the accepted inputs and outputs when extracting a type.
+
 ## Keep the main path clear with early exits
 
 Handle invalid, unsupported, empty, or unchanged cases with an early `return` when that keeps the remaining work easier to follow. In loops, use `continue` for irrelevant items and `break` when the work is complete. Preserve return values, errors, and required cleanup when rearranging branches; use nesting when it better expresses genuinely dependent decisions.
@@ -44,7 +50,7 @@ Choose loops, `map`, `filter`, or `reduce` for how clearly they express the work
 
 Add a concise comment beside logic whose intent is easy to lose: a type relationship, compatibility constraint, subtle side effect, or algorithmic tradeoff. Explain what must remain true and why the apparent simplification would change it. Avoid comments that merely narrate obvious operations or repeat a function's name.
 
-For worked examples of early exits, local accumulation, and explanatory comments, read [references/readability-decisions.md](references/readability-decisions.md).
+For worked examples of named function types, early exits, local accumulation, and explanatory comments, read [references/readability-decisions.md](references/readability-decisions.md).
 
 ## Preserve behavior while separating steps
 
