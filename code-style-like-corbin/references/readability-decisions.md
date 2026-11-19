@@ -34,6 +34,32 @@ function summarizeReport({ title, entries }: ReportRequest): ReportSummary {
 
 The names explain what the shapes represent without requiring another consumer to justify them. Apply the same approach to `Promise<ReportSummary>`, `ReportSummary[]`, and callback parameters that carry a structured payload.
 
+## Reuse follows the caller's meaning
+
+These types can intentionally have identical fields:
+
+```ts
+type InviteMemberInput = {
+  name: string;
+  email: string;
+};
+
+type BillingContactInput = {
+  name: string;
+  email: string;
+};
+```
+
+An invitation and a billing contact can have different validation, permissions, and reasons to change. Keep their types independent when those caller contracts are independent. Deriving both from a common type solely because their fields match would encode a relationship the application does not have. Reuse a type when callers actually mean the same contract, rather than treating structural compatibility as enough.
+
+## Composition without forced unification
+
+A `ButtonGroup` should compose the existing `Button` when it arranges actions that use the same button behavior. Its purpose is the relationship between those buttons; it does not need to duplicate their implementation.
+
+A `Combobox` with editable search and a `Select` that chooses from a fixed list may have similar markup while owning different interaction logic and state transitions. If combining them requires a growing collection of mode flags and exceptions, keep the controls separate. Share a sound primitive only where the actual capability and contract align. Repeated markup can be the preferable cost of letting each control evolve safely.
+
+The same reasoning applies outside components. Two workflows can currently calculate the same result while following independent business policies. Keep the calculations separate when that independence matters. A shared helper needs a real shared responsibility and a maintenance benefit; removing a copied block does not supply either by itself.
+
 ## Early exits and local accumulation
 
 For a function that gathers eligible IDs with a finite integer limit, express the empty case, irrelevant items, and completion condition directly:

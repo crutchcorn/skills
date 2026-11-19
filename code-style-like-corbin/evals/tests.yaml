@@ -312,3 +312,127 @@
           parameter, the optional format property, and all readonly modifiers.
         - Keeps the function generic, its Promise result, the count and line contents, and
           its accepted inputs and outputs without widening to any or unknown.
+- description: "Code style: keep identical input shapes separate when callers mean different contracts"
+  metadata:
+    skill: code-style-like-corbin
+    kind: behavior
+    behaviorId: caller-aligned-type-reuse
+    caseId: code-style-like-corbin/caller-aligned-type-reuse
+  vars:
+    skill: code-style-like-corbin
+    kind: behavior
+    request: Choose named parameter types for the new inviteMember and updateBillingContact functions. Should they reuse Contact because the fields match? Show the type declarations you recommend.
+    context: |-
+      The existing address-book display type is `type Contact = { name: string; email: string }`.
+      Both new functions currently accept the same name and email fields.
+      Invitations and billing contacts have independent validation, permissions, and
+      product ownership; changes to either request should not change the other request
+      or the address-book display contract. Each new type will be used by one function.
+    skillSource: file://code-style-like-corbin/SKILL.md
+    reference: file://code-style-like-corbin/references/readability-decisions.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent names and valid declarations.
+
+        - Provides separate meaningfully named input types with name and email string fields
+          for the invitation and billing-contact requests, despite the shapes matching.
+        - Explains that reuse depends on the caller's concept and contract, and that the stated
+          independent policies make separate declarations appropriate even for one consumer each.
+        - Does not alias, extend, or derive the two inputs from Contact or a common base solely
+          to avoid repeating their fields.
+        - Does not impose a universal ban on reusing types whose callers actually share a contract.
+- description: "Code style: compose buttons while keeping distinct selection controls independent"
+  metadata:
+    skill: code-style-like-corbin
+    kind: behavior
+    behaviorId: composition-without-forced-unification
+    caseId: code-style-like-corbin/composition-without-forced-unification
+  vars:
+    skill: code-style-like-corbin
+    kind: behavior
+    request: Review the proposed component reuse and recommend an implementation boundary.
+    context: |-
+      A new ButtonGroup arranges ordinary actions with exactly the same behavior and
+      presentation contract as the existing Button component.
+      Separately, Select chooses from a fixed list while Combobox supports editable search,
+      async suggestions, and independently managed interaction state. Their implementations
+      share some trigger and popup markup. A proposed SelectionControl merges both behind
+      mode flags solely to remove copied markup; changes now need exceptions to keep each
+      control's behavior intact. Existing low-level popup primitives are available if useful.
+    skillSource: file://code-style-like-corbin/SKILL.md
+    reference: file://code-style-like-corbin/references/readability-decisions.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent reasoning and wording.
+
+        - Recommends composing ButtonGroup from the existing Button because their actual
+          behavior and presentation contracts align.
+        - Keeps Select and Combobox independent instead of endorsing the proposed unification
+          merely to remove copied markup or adding more mode exceptions to preserve it.
+        - Explicitly accepts duplication as preferable where it preserves independent maintenance;
+          bases the decision on caller contracts and change costs rather than repeated line counts.
+        - Allows suitable shared primitives when their contracts align; does not turn the
+          anti-DRY preference into a ban on composition or all shared code.
+- description: "Code style: retain duplicated calculations for independently owned business policies"
+  metadata:
+    skill: code-style-like-corbin
+    kind: behavior
+    behaviorId: duplication-with-independent-policies
+    caseId: code-style-like-corbin/duplication-with-independent-policies
+  vars:
+    skill: code-style-like-corbin
+    kind: behavior
+    request: Should we extract the copied condition into one helper to make this DRY?
+    context: |-
+      function canShipItems(quantity: number): boolean {
+        return quantity > 0 && quantity <= 10;
+      }
+      function canInviteMembers(count: number): boolean {
+        return count > 0 && count <= 10;
+      }
+      Shipping capacity and invitation quotas are independently owned policies. Their
+      limits happen to match today and are expected to change separately. No common
+      business rule connects the two. The only proposed benefit is removing copied code.
+    skillSource: file://code-style-like-corbin/SKILL.md
+    reference: file://code-style-like-corbin/references/readability-decisions.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent reasoning and wording.
+
+        - Recommends retaining the separate conditions because they express independently
+          changing policies, recognizing the duplication as useful rather than unfinished cleanup.
+        - Identifies DRY solely for copied-code removal as an anti-pattern; explains that
+          matching expressions do not establish a shared architectural responsibility.
+        - Does not require a common helper, shared limit constant, or generic policy engine
+          just to remove the duplicated condition.
+- description: "Code style: reuse a named payload when both callers share its actual contract"
+  metadata:
+    skill: code-style-like-corbin
+    kind: behavior
+    behaviorId: reuse-type-with-shared-contract
+    caseId: code-style-like-corbin/reuse-type-with-shared-contract
+  vars:
+    skill: code-style-like-corbin
+    kind: behavior
+    request: Choose parameter types for previewNotification and deliverNotification. Should each have its own copy of the fields?
+    context: |-
+      The notification pipeline already defines
+      `type NotificationPayload = { recipient: string; subject: string; body: string }`.
+      Both functions consume the exact same validated notification payload: preview renders
+      what delivery sends. Changes to that payload contract intentionally apply to both
+      consumers. Neither function accepts or adds separate workflow-specific fields.
+    skillSource: file://code-style-like-corbin/SKILL.md
+    reference: file://code-style-like-corbin/references/readability-decisions.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent reasoning and wording.
+
+        - Uses the existing NotificationPayload for both functions because they consume the
+          same concept and intentionally share its behavioral and change contract.
+        - Bases reuse on the stated caller relationship rather than merely on matching fields,
+          copied-code removal, or a blanket rule to always reuse existing named types.
+        - Does not require duplicate declarations solely because DRY is not a goal.
