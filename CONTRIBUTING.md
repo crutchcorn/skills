@@ -1,5 +1,15 @@
 # Contributing
 
+## Never blindly invent recommendations
+
+Recommendations written into a skill must either come directly from a human
+or be explicitly confirmed by a human for inclusion. Skills should capture
+human guidance, so get that confirmation before adding an agent's suggestion.
+
+If the guidance is unclear or you're unsure how to write a recommendation,
+ask questions using the harness's available question or user-input
+capabilities. Wait for the human's answer before adding the unclear guidance.
+
 ## Write self-contained skills
 
 Put the guidance an agent needs in `SKILL.md` or the skill's bundled
