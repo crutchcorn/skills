@@ -44,7 +44,7 @@ Choose loops, `map`, `filter`, or `reduce` for how clearly they express the work
 
 Add a concise comment beside logic whose intent is easy to lose: a type relationship, compatibility constraint, subtle side effect, or algorithmic tradeoff. Explain what must remain true and why the apparent simplification would change it. Avoid comments that merely narrate obvious operations or repeat a function's name.
 
-For worked examples and the project evidence behind these preferences, read [references/readability-decisions.md](references/readability-decisions.md).
+For worked examples of early exits, local accumulation, and explanatory comments, read [references/readability-decisions.md](references/readability-decisions.md).
 
 ## Preserve behavior while separating steps
 

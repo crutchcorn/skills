@@ -1,5 +1,20 @@
 # Contributing
 
+## Write self-contained skills
+
+Put the guidance an agent needs in `SKILL.md` or the skill's bundled
+`references/` files. When research identifies a useful preference, include the
+actual rule, its limits, and any examples needed to apply it. A reader should
+not need to inspect another repository, article, or commit to reconstruct the
+guidance.
+
+Remove material that only records how a preference was discovered, such as
+dated repository surveys, authorship checks, commit tables, or historical
+evidence sections. Bring any useful explanation or example into the skill's
+own references instead. Keep external links when they serve required
+attribution or current upstream documentation; they should not substitute for
+the skill's own guidance.
+
 ## Run evals
 
 [Promptfoo](https://www.promptfoo.dev/docs/intro/) runs the evals directly. The
