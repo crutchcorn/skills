@@ -1,4 +1,4 @@
 interface:
   display_name: "Code Style Like Corbin"
-  short_description: "Write readable code with explicit intermediate values"
+  short_description: "Keep expressions and control flow readable"
   default_prompt: "Use $code-style-like-corbin to write or review this code for readability while preserving its behavior."

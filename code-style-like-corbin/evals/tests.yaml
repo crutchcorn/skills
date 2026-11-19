@@ -164,3 +164,103 @@
         - Calls load and save only when enabled is truthy; preserves the false branch's undefined result.
         - Calls log first with the same literal and enabled value, leaving these simple arguments inline.
         - Preserves the save result as the function result when enabled and does not swallow errors.
+- description: "Code style: use early exits and a local result without mutating inputs"
+  metadata:
+    skill: code-style-like-corbin
+    kind: behavior
+    behaviorId: early-exits-and-local-accumulation
+    caseId: code-style-like-corbin/early-exits-and-local-accumulation
+  vars:
+    skill: code-style-like-corbin
+    kind: behavior
+    request: Simplify the control flow of this function while preserving its behavior. Return the revised code.
+    context: |-
+      type Entry = { id: string; enabled: boolean };
+      function collectIds(entries: readonly Entry[] | undefined, limit: number): string[] {
+        const ids: string[] = [];
+        if (entries && entries.length > 0 && limit > 0) {
+          for (const entry of entries) {
+            if (entry.enabled) {
+              if (ids.length < limit) {
+                ids.push(entry.id);
+              } else {
+                break;
+              }
+            }
+          }
+        }
+        return ids;
+      }
+      Callers pass a finite integer limit. Entries are plain data and their order matters.
+    skillSource: file://code-style-like-corbin/SKILL.md
+    reference: file://code-style-like-corbin/references/readability-decisions.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent names and valid code.
+
+        - Handles missing or empty entries and a nonpositive limit with an early return.
+        - Uses a straightforward loop with a fresh local result and skips disabled entries
+          without wrapping the main work in a deeply nested branch.
+        - Collects at most limit enabled IDs in their original order and stops when enough exist.
+        - Preserves the signature and does not mutate caller-owned entries or shared state.
+- description: "Code style: retain a readable reducer that mutates only its fresh accumulator"
+  metadata:
+    skill: code-style-like-corbin
+    kind: behavior
+    behaviorId: accept-readable-local-reducer
+    caseId: code-style-like-corbin/accept-readable-local-reducer
+  vars:
+    skill: code-style-like-corbin
+    kind: behavior
+    request: Does this need a readability refactor? Explain any change you recommend.
+    context: |-
+      type Entry = { id: string; name: string };
+      function indexNames(entries: readonly Entry[]): Record<string, string> {
+        return entries.reduce<Record<string, string>>((names, entry) => {
+          names[entry.id] = entry.name;
+          return names;
+        }, {});
+      }
+      IDs are trusted identifiers. Last entry wins when IDs repeat. No bug is reported.
+    skillSource: file://code-style-like-corbin/SKILL.md
+    reference: file://code-style-like-corbin/references/readability-decisions.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent reasoning and wording.
+
+        - Recognizes that the reducer is readable and local accumulator mutation is acceptable.
+        - Recommends keeping this implementation rather than requiring a loop, repeated object
+          spreads, or an elaborate pipeline solely to enforce a preferred style.
+        - Distinguishes the fresh result object from caller-owned input and retains last-entry-wins behavior.
+- description: "Code style: explain the invariant behind a conditional without narrating syntax"
+  metadata:
+    skill: code-style-like-corbin
+    kind: behavior
+    behaviorId: comment-protects-invariant
+    caseId: code-style-like-corbin/comment-protects-invariant
+  vars:
+    skill: code-style-like-corbin
+    kind: behavior
+    request: Add a useful comment to this less obvious logic. Return the code with the comment.
+    context: |-
+      type SubmissionState = { submissionAttempts: number };
+      function getValidationMode(form: SubmissionState, group?: SubmissionState) {
+        const attempts = group ? group.submissionAttempts : form.submissionAttempts;
+        return attempts === 0 ? "submit" : "change";
+      }
+      A group's validation must stay in submit mode until that group is submitted,
+      even if its parent form has been submitted. The two counters are independent.
+    skillSource: file://code-style-like-corbin/SKILL.md
+    reference: file://code-style-like-corbin/references/readability-decisions.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent comments and valid code.
+
+        - Adds a concise comment beside the counter selection explaining that a parent's
+          submissions must not switch an untouched group's validation mode.
+        - Goes beyond narrating that the conditional chooses a submission counter.
+        - Preserves the signature, the group-first counter selection, and the returned modes.
+        - Does not invent a framework bug, upstream issue, or unrelated rationale.
