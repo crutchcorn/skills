@@ -1,0 +1,264 @@
+- description: "SQL routing: select for ORM query implementation"
+  metadata:
+    skill: sql-like-corbin
+    kind: trigger
+    caseId: sql-like-corbin/trigger-orm-query
+  providers:
+    - candidate
+  vars:
+    skill: sql-like-corbin
+    kind: trigger
+    request: Implement the order history query with our existing ORM, including line items.
+    context: ""
+    shouldLoad: true
+  assert: &routing
+    - type: is-json
+      value:
+        type: object
+        additionalProperties: false
+        required:
+          - skills
+        properties:
+          skills:
+            type: array
+            uniqueItems: true
+            items:
+              type: string
+              minLength: 1
+              enum:
+                - architect-like-corbin
+                - choose-libraries-like-corbin
+                - code-style-like-corbin
+                - docs-like-corbin
+                - fetch-data-like-corbin
+                - git-like-corbin
+                - maintain-like-corbin
+                - make-change-descriptions-like-corbin
+                - modularize-prs-like-corbin
+                - perf-like-corbin
+                - rethink-code-like-corbin
+                - scaffold-like-corbin
+                - sql-like-corbin
+                - test-like-corbin
+                - ui-like-corbin
+                - web-stack-like-corbin
+                - write-like-corbin
+    - type: javascript
+      value: JSON.parse(output).skills.includes(context.vars.skill) === context.vars.shouldLoad
+- description: "SQL routing: select for composing query variants"
+  metadata:
+    skill: sql-like-corbin
+    kind: trigger
+    caseId: sql-like-corbin/trigger-query-composition
+  providers:
+    - candidate
+  vars:
+    skill: sql-like-corbin
+    kind: trigger
+    request: Refactor the SQL builder that makes a count query by replacing text in the list query.
+    context: ""
+    shouldLoad: true
+  assert: *routing
+- description: "SQL routing: select for a partial database save"
+  metadata:
+    skill: sql-like-corbin
+    kind: trigger
+    caseId: sql-like-corbin/trigger-transaction
+  providers:
+    - candidate
+  vars:
+    skill: sql-like-corbin
+    kind: trigger
+    request: Saving a checkout leaves an order behind when inserting its items fails. Make the database changes roll back together.
+    context: ""
+    shouldLoad: true
+  assert: *routing
+- description: "SQL routing: skip frontend HTTP fetching"
+  metadata:
+    skill: sql-like-corbin
+    kind: trigger
+    caseId: sql-like-corbin/trigger-skip-frontend
+  providers:
+    - candidate
+  vars:
+    skill: sql-like-corbin
+    kind: trigger
+    request: Add a loading skeleton while TanStack Query fetches the existing orders HTTP endpoint.
+    context: ""
+    shouldLoad: false
+  assert: *routing
+- description: "SQL routing: skip unrelated database administration"
+  metadata:
+    skill: sql-like-corbin
+    kind: trigger
+    caseId: sql-like-corbin/trigger-skip-administration
+  providers:
+    - candidate
+  vars:
+    skill: sql-like-corbin
+    kind: trigger
+    request: Explain how to restore yesterday's PostgreSQL backup to a new staging server. Do not change application queries.
+    context: ""
+    shouldLoad: false
+  assert: *routing
+- description: "SQL: use the existing ORM rather than raw escape hatches"
+  metadata:
+    skill: sql-like-corbin
+    kind: behavior
+    behaviorId: orm-first
+    caseId: sql-like-corbin/orm-first
+  vars:
+    skill: sql-like-corbin
+    kind: behavior
+    request: Recommend how to implement the new customer order history endpoint and explain the database access approach.
+    context: |-
+      The application already uses an ORM. Its supported relation query API can fetch
+      a customer's orders and line items with typed filters and results. A teammate
+      suggested using the raw SQL escape hatch for this endpoint and every future
+      endpoint because agents can write SQL faster. No unsupported database feature
+      is required. This is a focused endpoint addition, not a database-layer migration.
+    skillSource: file://sql-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Recommend the existing ORM's supported relation/query APIs for this endpoint.
+        Explain the benefit of keeping the ORM's typing and support instead of
+        routinely bypassing it. Do not migrate the database layer or recommend raw SQL
+        as the default here. Accept different valid query shapes and concise prose;
+        exact ORM syntax is not required because no specific ORM was supplied.
+- description: "SQL: keep the non-ORM fallback typed and shared"
+  metadata:
+    skill: sql-like-corbin
+    kind: behavior
+    behaviorId: typed-sql-fallback
+    caseId: sql-like-corbin/typed-sql-fallback
+  vars:
+    skill: sql-like-corbin
+    kind: behavior
+    request: Propose the database access approach for these endpoints. No implementation is needed yet.
+    context: |-
+      This service's language and database combination has no suitable ORM. It has
+      maintained tooling that checks SQL parameters and result types against the
+      schema, and its driver supports bound parameters and safe identifier composition.
+      Several endpoints share filters. The current proposal interpolates values in
+      each endpoint and manually casts the results to application types. The service
+      is not written in TypeScript and cannot adopt Reylo.
+    skillSource: file://sql-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Use the available type-safe SQL tooling and shared functions for safe query
+        construction/execution rather than per-endpoint interpolation and casts.
+        Bind values using supported library/driver facilities. Do not invent custom
+        quote-replacement escaping or require Reylo, TypeScript, or a new ORM despite
+        the stated constraints. Accept any small, concrete helper organization.
+- description: "SQL: compose list and count queries without text replacement"
+  metadata:
+    skill: sql-like-corbin
+    kind: behavior
+    behaviorId: compose-query-variants
+    caseId: sql-like-corbin/compose-query-variants
+  vars:
+    skill: sql-like-corbin
+    kind: behavior
+    request: Review this design and propose a safer way to share the query filters.
+    context: |-
+      The list query is a SQL string containing a tenant filter, search text, a nested
+      SELECT, sorting, and pagination. The count query is derived with host-language
+      string.replace to change SELECT fields and strip ORDER BY and LIMIT. Search
+      text and the requested sort column come from the HTTP request. The existing
+      SQL builder supports bound values, composable predicates, and identifiers.
+      The list and count must describe the same tenant-filtered matching records;
+      only the list is sorted and paginated.
+    skillSource: file://sql-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Replace query-string rewriting with functions using the existing builder and
+        shared filter/predicate composition. Preserve tenant and search filters in
+        both queries, and keep pagination/sorting out of the count. Bind search values
+        safely and handle the sort column through known allowed choices or supported
+        identifier composition rather than a value placeholder or raw interpolation.
+        Do not substitute regex, split/join, or manual quote replacement for replace.
+        Accept pseudocode or a concrete design without a named builder's exact API.
+- description: "SQL: batch mutations instead of parallel per-record calls"
+  metadata:
+    skill: sql-like-corbin
+    kind: behavior
+    behaviorId: bulk-mutations
+    caseId: sql-like-corbin/bulk-mutations
+  vars:
+    skill: sql-like-corbin
+    kind: behavior
+    request: Review the two implementations and recommend how to save this change efficiently.
+    context: |-
+      Mark selected messages as read for one account. The ORM supports a bulk update
+      with both an accountId filter and a message ID IN filter. All selected messages
+      get the same read=true value. Version A awaits an update for each ID in a for
+      loop. Version B uses Promise.all(ids.map(id => db.message.update(...))). Both
+      currently filter by accountId and message ID. No per-record side effects exist.
+    skillSource: file://sql-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Recommend a single supported bulk update preserving both account ownership
+        and selected-ID filtering. Explain that Promise.all still issues per-record
+        database operations, so it is not the preferred batching solution. Do not
+        remove either filter, update all messages, or keep a per-ID loop as the main
+        recommendation. Exact ORM syntax is not required.
+- description: "SQL: combine related reads without changing parent cardinality"
+  metadata:
+    skill: sql-like-corbin
+    kind: behavior
+    behaviorId: batched-related-reads
+    caseId: sql-like-corbin/batched-related-reads
+  vars:
+    skill: sql-like-corbin
+    kind: behavior
+    request: Recommend a query shape that removes the per-order fetches while preserving the response.
+    context: |-
+      An endpoint loads this customer's orders, then loads line items once for each
+      order with Promise.all. It returns one object per order, each with an items
+      array; orders with no items are included with an empty array. The ORM supports
+      relation loading, and SQL joins and aggregation are also available. This task
+      does not include an unrelated analytics query in another database.
+    skillSource: file://sql-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Use ORM relation loading, a correctly shaped join/aggregation, or a batched
+        items query and grouping, eliminating the per-order fetch pattern. Preserve
+        one response object per order and include orders with no items with empty
+        arrays. Retain the customer filter. Do not call Promise.all alone batching
+        or require combining unrelated queries/databases. Accept different valid
+        approaches; one literal SQL statement is not required.
+- description: "SQL: put all chained writes on the same rollback boundary"
+  metadata:
+    skill: sql-like-corbin
+    kind: behavior
+    behaviorId: atomic-user-action
+    caseId: sql-like-corbin/atomic-user-action
+  vars:
+    skill: sql-like-corbin
+    kind: behavior
+    request: Explain the fix so a failed checkout cannot leave a partial order saved.
+    context: |-
+      Checkout creates an order, inserts its items, and records a local payment-intent
+      row in the same database. All three changes must succeed or fail together.
+      createOrder opens its own transaction and commits before addItems runs.
+      addItems uses the global database client. savePaymentIntent catches errors and
+      returns null. The ORM supports transaction callbacks with a scoped client and
+      bulk item inserts. The helpers can accept that client. A confirmation email
+      is sent through an external service after a successful checkout.
+    skillSource: file://sql-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Place order creation, item insertion, and the local payment-intent write in
+        one outer transaction using the same scoped client through all participating
+        helpers. Remove the premature independent commit and make payment-intent
+        failure abort the transaction instead of silently returning null and committing.
+        Prefer the supported bulk insert for items. Distinguish the external email
+        from database changes: do not promise the database transaction rolls it back.
+        Accept different valid code or explanations without requiring a new messaging
+        system or a particular transaction API spelling.

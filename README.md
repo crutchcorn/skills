@@ -43,6 +43,7 @@ Now we've given it both the problem and an approach to solving it.
 | [Maintain Like Corbin](maintain-like-corbin/SKILL.md) | Fix the underlying problem and finish migrations without leaving obsolete pieces behind. |
 | [Web Stack Like Corbin](web-stack-like-corbin/SKILL.md) | Choose frontend, backend, and deployment tools using Corbin's preferred stack. |
 | [Fetch Data Like Corbin](fetch-data-like-corbin/SKILL.md) | Load and save server data with TanStack Query without losing what the user already sees or typed. |
+| [SQL Like Corbin](sql-like-corbin/SKILL.md) | Use typed database access, compose safe queries, batch work, and roll back related changes together. |
 | [Scaffold Like Corbin](scaffold-like-corbin/SKILL.md) | Start with the apps you actually need and make development, checks, and releases straightforward. |
 
 ## Put a few together

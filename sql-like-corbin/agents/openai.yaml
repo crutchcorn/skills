@@ -1,0 +1,4 @@
+interface:
+  display_name: "SQL Like Corbin"
+  short_description: "Compose typed queries and atomic database changes"
+  default_prompt: "Use $sql-like-corbin to implement safe, typed database access for this change."

@@ -24,9 +24,10 @@
     },
     {
       "title": "Quality & Workflow",
-      "description": "Protect real behavior, fix underlying problems, and keep repository changes easy to review.",
+      "description": "Protect real behavior, write safe database operations, fix underlying problems, and keep repository changes easy to review.",
       "skills": [
         "code-style-like-corbin",
+        "sql-like-corbin",
         "test-like-corbin",
         "maintain-like-corbin",
         "git-like-corbin",
