@@ -18,6 +18,14 @@ Understand what the failing check or broken behavior is demonstrating before cha
 
 When adding tests, prefer explicit, readable cases over loops that hide distinct scenarios, setup, or assertions. Preserve useful existing data-driven coverage unless changing it serves the requested work; do not rewrite tests solely to impose a preferred style.
 
+## Fix flaky failures at their source
+
+Treat an intermittent test or check failure as an unresolved defect, including when it appears during verification of another change. Prioritize finding and fixing the underlying cause over obtaining a passing rerun. A later pass does not explain or resolve the earlier failure.
+
+Use reruns to test a specific hypothesis or verify a repair. Preserve the failing output and relevant conditions, investigate the cause, and fix the responsible application code, test, or environment. Do not rerun until green, add retries, or increase sleeps or timeouts merely to hide variability.
+
+After a repair, exercise the conditions that exposed the failure and use a bounded verification run chosen before execution. Report any remaining failures. If the cause cannot be resolved within the task's constraints, explain the evidence and what remains unresolved rather than claiming a passing rerun fixed it.
+
 ## Investigate dependency-owned bugs
 
 When the evidence points to a dependency, isolate the failing behavior and inspect the relevant upstream source, issue history, and releases. Check current primary sources for an existing fix or supported workaround before adding a local patch.

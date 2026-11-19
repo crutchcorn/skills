@@ -60,4 +60,6 @@ Avoid mocks wherever practical. If isolation requires a substitute, put it at a 
 
 ## Verify the coverage
 
+When a test fails intermittently, prioritize fixing its underlying cause. A passing rerun alone is not a fix; use reruns for diagnosis and verification, not to dismiss the failure. Apply `maintain-like-corbin` when available for the investigation workflow.
+
 For a regression, confirm that the new test exposes the original failure when practical, then passes with the fix. Run the relevant existing tests and required checks. In the handoff, state the protected behavior, what ran, and any material boundary the test does not cover. If no new test is warranted, briefly explain why when that decision is relevant to the request.
