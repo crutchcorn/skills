@@ -25,6 +25,7 @@
               enum:
                 - architect-like-corbin
                 - choose-libraries-like-corbin
+                - code-style-like-corbin
                 - docs-like-corbin
                 - fetch-data-like-corbin
                 - git-like-corbin

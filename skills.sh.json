@@ -26,6 +26,7 @@
       "title": "Quality & Workflow",
       "description": "Protect real behavior, fix underlying problems, and keep repository changes easy to review.",
       "skills": [
+        "code-style-like-corbin",
         "test-like-corbin",
         "maintain-like-corbin",
         "git-like-corbin",

@@ -34,6 +34,7 @@ Now we've given it both the problem and an approach to solving it.
 | [Git Like Corbin](git-like-corbin/SKILL.md) | Keep changes easy to review, with explicit rules against rewriting history, force pushes, discarding work, and pushing without permission. |
 | [Modularize PRs like Corbin](modularize-prs-like-corbin/SKILL.md) | Explicitly split the full body of work into focused local branches, modular commits, and ready-to-use PR titles and descriptions. |
 | [Test Like Corbin](test-like-corbin/SKILL.md) | Protect against meaningful bugs with tests that exercise real behavior. |
+| [Code Style Like Corbin](code-style-like-corbin/SKILL.md) | Keep computations readable with named intermediate values while preserving behavior. |
 | [Choose Libraries Like Corbin](choose-libraries-like-corbin/SKILL.md) | Decide when built-in tooling, a maintained library, or a little custom code fits best. |
 | [Architect Like Corbin](architect-like-corbin/SKILL.md) | Fit a feature into the project you have and keep reusable code useful to other projects. |
 | [Rethink Code Like Corbin](rethink-code-like-corbin/SKILL.md) | Break repeated review and rewrite cycles with a validated cleanroom implementation, then migrate consumers to its new API. |

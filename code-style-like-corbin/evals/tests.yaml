@@ -1,0 +1,166 @@
+- description: "Code style routing: select when implementing an async function"
+  metadata:
+    skill: code-style-like-corbin
+    kind: trigger
+    caseId: code-style-like-corbin/trigger-implementation
+  providers:
+    - candidate
+  vars:
+    skill: code-style-like-corbin
+    kind: trigger
+    request: Implement a function that loads records and returns a collection of their names.
+    context: ""
+    shouldLoad: true
+  assert: &routing
+    - type: is-json
+      value:
+        type: object
+        additionalProperties: false
+        required:
+          - skills
+        properties:
+          skills:
+            type: array
+            uniqueItems: true
+            items:
+              type: string
+              minLength: 1
+              enum:
+                - architect-like-corbin
+                - choose-libraries-like-corbin
+                - code-style-like-corbin
+                - docs-like-corbin
+                - fetch-data-like-corbin
+                - git-like-corbin
+                - maintain-like-corbin
+                - make-change-descriptions-like-corbin
+                - modularize-prs-like-corbin
+                - perf-like-corbin
+                - rethink-code-like-corbin
+                - scaffold-like-corbin
+                - test-like-corbin
+                - ui-like-corbin
+                - web-stack-like-corbin
+                - write-like-corbin
+    - type: javascript
+      value: JSON.parse(output).skills.includes(context.vars.skill) === context.vars.shouldLoad
+- description: "Code style routing: select for reviewing nested expressions"
+  metadata:
+    skill: code-style-like-corbin
+    kind: trigger
+    caseId: code-style-like-corbin/trigger-readability-review
+  providers:
+    - candidate
+  vars:
+    skill: code-style-like-corbin
+    kind: trigger
+    request: Review `new Collection(records.map(toEntry))` and `save(await load())` for readability.
+    context: ""
+    shouldLoad: true
+  assert: *routing
+- description: "Code style routing: skip prose editing"
+  metadata:
+    skill: code-style-like-corbin
+    kind: trigger
+    caseId: code-style-like-corbin/trigger-skip-prose
+  providers:
+    - candidate
+  vars:
+    skill: code-style-like-corbin
+    kind: trigger
+    request: Rewrite this announcement to sound more conversational.
+    context: ""
+    shouldLoad: false
+  assert: *routing
+- description: "Code style routing: skip architecture planning without implementation"
+  metadata:
+    skill: code-style-like-corbin
+    kind: trigger
+    caseId: code-style-like-corbin/trigger-skip-architecture
+  providers:
+    - candidate
+  vars:
+    skill: code-style-like-corbin
+    kind: trigger
+    request: Should this capability live in the application or in a reusable package? Discuss the boundary without implementing anything.
+    context: ""
+    shouldLoad: false
+  assert: *routing
+- description: "Code style: name loaded and mapped values in a new implementation"
+  metadata:
+    skill: code-style-like-corbin
+    kind: behavior
+    behaviorId: named-computed-arguments
+    caseId: code-style-like-corbin/named-computed-arguments
+  vars:
+    skill: code-style-like-corbin
+    kind: behavior
+    request: Implement `async function buildNames()`. Return only the code.
+    context: |-
+      Existing APIs are `loadRecords(): Promise<Array<{ name: string }>>`,
+      `normalizeRecords(records): Array<{ name: string }>`, and
+      `new NameCollection(names: string[])`. Load the records, normalize them,
+      and return a NameCollection containing the normalized records' names.
+    skillSource: file://code-style-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent names and valid code.
+
+        - Implements the requested asynchronous function using the supplied APIs, in order.
+        - Awaits loadRecords into a named value before passing it to normalizeRecords.
+        - Stores normalized records in a named value and maps their name fields into another
+          named value before passing those names to the NameCollection constructor.
+        - Does not change the supplied APIs, add dependencies, or merely explain a proposed implementation.
+- description: "Code style: preserve argument order and method receiver when extracting an await"
+  metadata:
+    skill: code-style-like-corbin
+    kind: behavior
+    behaviorId: preserve-evaluation-order
+    caseId: code-style-like-corbin/preserve-evaluation-order
+  vars:
+    skill: code-style-like-corbin
+    kind: behavior
+    request: Make this function easier to read using named intermediate values. Return the revised code.
+    context: |-
+      async function recordNext() {
+        return recorder.record(nextId(), await load());
+      }
+      nextId increments a counter that load reads. recorder.record uses `this`.
+      recorder and its record method are stable throughout this function.
+    skillSource: file://code-style-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent names and valid code.
+
+        - Provides revised code with named values for both nextId() and the awaited load().
+        - Calls nextId exactly once before invoking load, and awaits load exactly once before recording.
+        - Preserves recorder as the receiver of record and returns the recording result.
+        - Does not introduce concurrent evaluation or unrelated changes.
+- description: "Code style: retain conditional loading and leave simple arguments inline"
+  metadata:
+    skill: code-style-like-corbin
+    kind: behavior
+    behaviorId: preserve-conditional-execution
+    caseId: code-style-like-corbin/preserve-conditional-execution
+  vars:
+    skill: code-style-like-corbin
+    kind: behavior
+    request: Improve the readability of the nested calls without changing behavior. Return the revised code.
+    context: |-
+      async function maybeSave(enabled) {
+        log("save", enabled);
+        return enabled ? save(await load()) : undefined;
+      }
+      log, load, and save are stable functions. load and save have side effects.
+    skillSource: file://code-style-like-corbin/SKILL.md
+  assert:
+    - type: llm-rubric
+      value: |-
+        Pass only if all of these requirements hold. Accept equivalent names and valid code.
+
+        - Provides revised code that names the awaited load result before passing it to save.
+        - Calls load and save only when enabled is truthy; preserves the false branch's undefined result.
+        - Calls log first with the same literal and enabled value, leaving these simple arguments inline.
+        - Preserves the save result as the function result when enabled and does not swallow errors.
